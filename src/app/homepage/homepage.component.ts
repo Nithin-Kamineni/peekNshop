@@ -6,6 +6,6 @@ import { Component, Input} from '@angular/core';
   styleUrls: ['./homepage.component.scss']
 })
 export class HomepageComponent {
-  title = 'Infinite summer ice cream store';
-  subtitle = 'Which one do you want?';
+  title = 'PeekNshop';
+  subtitle = 'choose where to shop?';
   }
