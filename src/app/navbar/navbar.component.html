@@ -1,6 +1,8 @@
-<mat-toolbar>
-  <button mat-icon-button aria-label="Home button" routerLink="/">
-    <mat-icon>home</mat-icon>
+<!-- <mat-toolbar>
+  <button class="hamburger hamburger--spin" type="button"
+        appHamburgerToggle>
+   <button mat-icon-button aria-label="sidebar" routerLink="/">
+    <mat-icon>view_sidebar</mat-icon> 
   </button>
   <span class="spacer"></span>
   <button
@@ -10,4 +12,52 @@
   >
     <mat-icon>shopping_cart</mat-icon>
   </button>
-</mat-toolbar>
+</mat-toolbar> -->
+
+
+<nav class="nav navbar navbar-expand-lg navbar-light bg-light">
+
+
+  
+
+  <div class="container-fluid">
+    
+
+    <!-- <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"><span class="dark-blue-text"><i class="fas fa-bars fa-1x"></i></span></button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent1"> -->
+    <!-- </div> -->
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <a class="navbar-brand" routerLink="">PeekNshop</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+    
+
+
+    <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div> -->
+
+
+
+    <div class="collapse navbar-collapse" id="loginlogout">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" id="login" aria-current="page" routerLink="/create">login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" routerLink="/create">signup</a>
+        </li>
+      </ul>
+    </div>
+
+      
+    
+  </div>
+</nav>
+

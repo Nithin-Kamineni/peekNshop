@@ -1,3 +1,23 @@
 .spacer {
     flex: 1 1 auto;
   }
+  .nav{
+    width: 1440;
+  }
+
+  .container-fluid{
+    display: flex;
+    flex-direction: row;
+
+  }
+  #loginlogout{
+    justify-content: right;
+  }
+  #login{
+    background-color: rgb(164, 233, 164);
+    border-radius: 20%;
+  }
+
+  
+
+  
