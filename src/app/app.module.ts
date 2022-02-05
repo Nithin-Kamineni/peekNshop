@@ -17,6 +17,7 @@ import { ProductPageComponent } from './product-page/product-page.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NavbarComponent } from './navbar/navbar.component';
 import { CatogoriesComponent } from './catogories/catogories.component';
+import { MainSliderComponent } from './main-slider/main-slider.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { CatogoriesComponent } from './catogories/catogories.component';
     ProductPageComponent,
     NavbarComponent,
     CatogoriesComponent,
+    MainSliderComponent,
   ],
   imports: [
     BrowserModule,
