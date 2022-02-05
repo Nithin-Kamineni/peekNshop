@@ -18,6 +18,10 @@ import { ProductComponent } from './product/product.component';
 import { ProductPageComponent } from './product-page/product-page.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NavbarComponent } from './navbar/navbar.component';
+import { RouterModule } from '@angular/router'
+import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
+
 
 
 @NgModule({
@@ -28,6 +32,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     ProductComponent,
     ProductPageComponent,
     NavbarComponent,
+    SignupComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +53,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     MatSidenavModule,
     MatButtonModule,
     MatIconModule,
-    MatDividerModule
+    MatDividerModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
