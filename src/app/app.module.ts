@@ -16,6 +16,7 @@ import { ProductComponent } from './product/product.component';
 import { ProductPageComponent } from './product-page/product-page.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NavbarComponent } from './navbar/navbar.component';
+import { CatogoriesComponent } from './catogories/catogories.component';
 import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
@@ -26,6 +27,7 @@ import { FooterComponent } from './footer/footer.component';
     ProductComponent,
     ProductPageComponent,
     NavbarComponent,
+    CatogoriesComponent,
     FooterComponent,
   ],
   imports: [
