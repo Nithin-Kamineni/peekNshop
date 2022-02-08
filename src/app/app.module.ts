@@ -7,6 +7,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { HomepageComponent } from './homepage/homepage.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatCardModule} from '@angular/material/card';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatDividerModule} from '@angular/material/divider';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
@@ -16,8 +18,12 @@ import { ProductComponent } from './product/product.component';
 import { ProductPageComponent } from './product-page/product-page.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NavbarComponent } from './navbar/navbar.component';
+import { RouterModule } from '@angular/router'
+import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
 import { CatogoriesComponent } from './catogories/catogories.component';
 import { MainSliderComponent } from './main-slider/main-slider.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -27,8 +33,11 @@ import { MainSliderComponent } from './main-slider/main-slider.component';
     ProductComponent,
     ProductPageComponent,
     NavbarComponent,
+    SignupComponent,
+    LoginComponent,
     CatogoriesComponent,
     MainSliderComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,7 +49,16 @@ import { MainSliderComponent } from './main-slider/main-slider.component';
     MatChipsModule,
     MatIconModule,
     MatSelectModule,
-    MatToolbarModule
+    MatToolbarModule,
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]
