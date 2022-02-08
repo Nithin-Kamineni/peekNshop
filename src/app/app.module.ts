@@ -18,7 +18,6 @@ import { ProductComponent } from './product/product.component';
 import { ProductPageComponent } from './product-page/product-page.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NavbarComponent } from './navbar/navbar.component';
-import { RouterModule } from '@angular/router'
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { CatogoriesComponent } from './catogories/catogories.component';
@@ -39,7 +38,6 @@ import { FooterComponent } from './footer/footer.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
     MatButtonModule,
@@ -56,6 +54,7 @@ import { FooterComponent } from './footer/footer.component';
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
+    
     
   ],
   providers: [],
