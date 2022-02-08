@@ -21,6 +21,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { CatogoriesComponent } from './catogories/catogories.component';
+import { MainSliderComponent } from './main-slider/main-slider.component';
 import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
@@ -34,6 +35,7 @@ import { FooterComponent } from './footer/footer.component';
     SignupComponent,
     LoginComponent,
     CatogoriesComponent,
+    MainSliderComponent,
     FooterComponent,
   ],
   imports: [
