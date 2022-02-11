@@ -23,6 +23,7 @@ import { SignupComponent } from './signup/signup.component';
 import { CatogoriesComponent } from './catogories/catogories.component';
 import { MainSliderComponent } from './main-slider/main-slider.component';
 import { FooterComponent } from './footer/footer.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { FooterComponent } from './footer/footer.component';
     MatButtonModule,
     MatIconModule,
     MatDividerModule,
+    ReactiveFormsModule,
     
     
   ],

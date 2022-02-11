@@ -1,29 +1,6 @@
-<!-- <mat-toolbar>
-  <button class="hamburger hamburger--spin" type="button"
-        appHamburgerToggle>
-   <button mat-icon-button aria-label="sidebar" routerLink="/">
-    <mat-icon>view_sidebar</mat-icon> 
-  </button>
-  <span class="spacer"></span>
-  <button
-    mat-icon-button
-    aria-label="Checkout button"
-    class="snipcart-checkout"
-  >
-    <mat-icon>shopping_cart</mat-icon>
-  </button>
-</mat-toolbar> -->
-
-
 <nav class="nav navbar navbar-expand-lg navbar-light bg-light">
 
   <div class="container-fluid">
-    
-
-    <!-- <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation"><span class="dark-blue-text"><i class="fas fa-bars fa-1x"></i></span></button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent1"> -->
-    <!-- </div> -->
-
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <a class="navbar-brand" routerLink="">PeekNshop</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,39 +21,55 @@
 
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <!-- <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form> -->
-      
     </div>
-
-    
-    
-
-
-    <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div> -->
-
-
-
-    <div class="collapse navbar-collapse" id="loginlogout">
+    <div class="right" id="loginsignup">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" id="loginbutton" aria-current="page" routerLink="/login">login</a>
+          <!-- <a class="nav-link active" id="loginbutton" aria-current="page" routerLink="/login">login</a> -->
+          <button type="button" class="nav-link active" id="loginbutton" data-bs-toggle="modal" data-bs-target="#loginModal">
+            Login
+          </button>
         </li>
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" routerLink="/signup">signup</a>
         </li>
       </ul>
     </div>
-
-      
-    
   </div>
 </nav>
 
+<!-- For login popup form -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">PeekNshop login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="loginForm" (ngSubmit)="loginFormSubmit">
+          <div class="mb-3">
+            <label for="id_email" class="form-label">Email address</label>
+            <input formControlName="email" [class.is-invalid]="emailField.touched && emailField.invalid" type="email"
+              class="form-control" id="id_email">
+            <div *ngIf="emailField.touched && emailField.hasError('required')" class="d-block invalid-feedback">Please
+              provide a Email.</div>
+            <div *ngIf="emailField.touched && emailField.hasError('email')" class="d-block invalid-feedback">Email
+              address is
+              not valid</div>
+          </div>
+          <div class="mb-3">
+            <label for="id_Password" class="form-label">Password</label>
+            <input formControlName="password" [class.is-invalid]="passwordField.touched && passwordField.invalid"
+              type="password" class="form-control" id="id_Password">
+            <div *ngIf="passwordField.touched && passwordField.hasError('required')" class="d-block invalid-feedback">
+              Please
+              provide a Password.</div>
+          </div>
+          <button [disabled]="loginForm.invalid" type="submit" class=" mt-3 btn btn-primary w-100">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- For login popup form -->
