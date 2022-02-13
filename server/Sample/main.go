@@ -26,7 +26,7 @@ func main() {
 type student struct {
 	ID       string `gorm:"primary_key" json:"id"`
 	Email    string `json:"email"`
-	Password int    `json:"password"`
+	Password string `json:"password"`
 }
 
 type App struct {
