@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-navbar',
@@ -7,10 +8,14 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  title = 'bootstrap-popup';
+  
   loginForm!: FormGroup;
-  constructor() { }
+
+  constructor(private http: HttpClient) { }
   ngOnInit(): void {
+
+    
+    
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
@@ -22,8 +27,19 @@ export class NavbarComponent implements OnInit {
   get passwordField(): any {
     return this.loginForm.get('password');
   }
+
   loginFormSubmit(): void {
-    console.log(this.loginForm.value);
+
+    if (this.loginForm.valid) {
+      var email = this.loginForm.getRawValue().email;
+      var password = this.loginForm.getRawValue().password;
+      console.log(email,password)
+      this.http.post<any>('https://reqres.in/api/posts', { email: email, password: password }).subscribe(data => {
+            
+        })
+  } else {
+      console.log('There is a problem with the form');
+  }
     // Call Api
   }
 }

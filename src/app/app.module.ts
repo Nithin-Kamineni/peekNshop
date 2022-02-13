@@ -23,7 +23,9 @@ import { SignupComponent } from './signup/signup.component';
 import { CatogoriesComponent } from './catogories/catogories.component';
 import { MainSliderComponent } from './main-slider/main-slider.component';
 import { FooterComponent } from './footer/footer.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SidenavComponent } from './sidenav/sidenav.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CatogoriesComponent,
     MainSliderComponent,
     FooterComponent,
+    SidenavComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,6 +61,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatIconModule,
     MatDividerModule,
     ReactiveFormsModule,
+    FormsModule,
+    HttpClientModule,
     
     
   ],
