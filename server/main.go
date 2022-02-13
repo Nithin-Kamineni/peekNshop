@@ -2,101 +2,232 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
-// … // Existing code from above
-
-type Article struct {
-	Id      string `json:"Id"`
-	Title   string `json:"Title"`
-	Desc    string `json:"desc"`
-	Content string `json:"content"`
-}
-
-func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to the HomePage!")
-	fmt.Println("Endpoint Hit: homePage")
-}
-
-// let's declare a global Articles array
-// that we can then populate in our main function
-// to simulate a database
-var Articles []Article
-
 func main() {
-	Articles = []Article{
-		Article{Id: "1", Title: "Hello", Desc: "Article Description", Content: "Article Content"},
-		Article{Id: "2", Title: "Hello 2", Desc: "Article Description", Content: "Article Content"},
+	// pass := os.Getenv("DB_PASS")
+	// db, err := gorm.Open(
+	// 	"postgres",
+	// 	"host=students-db user=go password="+pass+" dbname=go sslmode=disable")
+	db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
+	if err != nil {
+		panic(err.Error())
 	}
-	handleRequests()
+	app := App{
+		db: db,
+		r:  mux.NewRouter(),
+	}
+	app.start()
 }
 
-func returnAllArticles(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: returnAllArticles")
-	json.NewEncoder(w).Encode(Articles)
+type student struct {
+	ID   string `gorm:"primary_key" json:"id"`
+	Name string `json:"name"`
+	Age  int    `json:"age"`
 }
 
-func handleRequests() {
-	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/", homePage)
-	myRouter.HandleFunc("/articles", returnAllArticles)
-	myRouter.HandleFunc("/article", createNewArticle).Methods("POST")
-	// add our new DELETE endpoint here
-	myRouter.HandleFunc("/article/{id}", deleteArticle).Methods("DELETE")
-	myRouter.HandleFunc("/article/{id}", returnSingleArticle)
-	log.Fatal(http.ListenAndServe(":10000", myRouter))
+type App struct {
+	db *gorm.DB
+	r  *mux.Router
 }
 
-func returnSingleArticle(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	key := vars["id"]
+func (a *App) start() {
+	a.db.AutoMigrate(&student{})
+	a.r.HandleFunc("/students/", a.getAllStudents).Methods("GET")
+	a.r.HandleFunc("/students/", a.addStudent).Methods("POST")
+	a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
+	a.r.HandleFunc("/students/{id}", a.deleteStudent).Methods("DELETE")
+	a.r.PathPrefix("/").Handler(http.FileServer(http.Dir("./webapp/dist/webapp/")))
+	log.Fatal(http.ListenAndServe(":10000", a.r))
+}
 
-	// Loop over all of our Articles
-	// if the article.Id equals the key we pass in
-	// return the article encoded as JSON
-	for _, article := range Articles {
-		if article.Id == key {
-			json.NewEncoder(w).Encode(article)
-		}
+func (a *App) getAllStudents(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var all []student
+	err := a.db.Find(&all).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	err = json.NewEncoder(w).Encode(all)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
 }
 
-func createNewArticle(w http.ResponseWriter, r *http.Request) {
-	// get the body of our POST request
-	// unmarshal this into a new Article struct
-	// append this to our Articles array.
-	reqBody, _ := ioutil.ReadAll(r.Body)
-	var article Article
-	json.Unmarshal(reqBody, &article)
-	// update our global Articles array to include
-	// our new Article
-	Articles = append(Articles, article)
-
-	json.NewEncoder(w).Encode(article)
-}
-
-func deleteArticle(w http.ResponseWriter, r *http.Request) {
-	// once again, we will need to parse the path parameters
-	vars := mux.Vars(r)
-	// we will need to extract the `id` of the article we
-	// wish to delete
-	id := vars["id"]
-
-	// we then need to loop through all our articles
-	for index, article := range Articles {
-		// if our id path parameter matches one of our
-		// articles
-		if article.Id == id {
-			// updates our Articles array to remove the
-			// article
-			Articles = append(Articles[:index], Articles[index+1:]...)
-		}
+func (a *App) addStudent(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s student
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
 	}
-
+	s.ID = uuid.New().String()
+	err = a.db.Save(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
 }
+
+func (a *App) updateStudent(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s student
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	s.ID = mux.Vars(r)["id"]
+	err = a.db.Save(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
+func (a *App) deleteStudent(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	err := a.db.Unscoped().Delete(student{ID: mux.Vars(r)["id"]}).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
+func sendErr(w http.ResponseWriter, code int, message string) {
+	resp, _ := json.Marshal(map[string]string{"error": message})
+	http.Error(w, string(resp), code)
+}
+
+// import (
+// 	"encoding/json"
+// 	"fmt"
+// 	"log"
+// 	"math/rand"
+// 	"net/http"
+// 	"strconv"
+
+// 	"github.com/gorilla/mux"
+// )
+
+// // … // Existing code from above
+
+// type Book struct {
+// 	ID     string  `json:"id"`
+// 	Isbn   string  `json:"isbn"`
+// 	Title  string  `json:"title"`
+// 	Author *Author `json:"author"`
+// }
+
+// // Author struct
+// type Author struct {
+// 	Firstname string `json:"firstname"`
+// 	Lastname  string `json:"lastname"`
+// }
+
+// // Init books var as a slice Book struct
+// var books []Book
+
+// // Get all books
+// func getBooks(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	json.NewEncoder(w).Encode(books)
+// }
+
+// // Get single book
+// func getBook(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	params := mux.Vars(r) // Gets params
+// 	// Loop through books and find one with the id from the params
+// 	for _, item := range books {
+// 		if item.ID == params["id"] {
+// 			json.NewEncoder(w).Encode(item)
+// 			return
+// 		}
+// 	}
+// 	json.NewEncoder(w).Encode(&Book{})
+// }
+
+// // Add new book
+// func createBook(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	var book Book
+// 	_ = json.NewDecoder(r.Body).Decode(&book)
+// 	book.ID = strconv.Itoa(rand.Intn(100000000)) // Mock ID - not safe
+// 	books = append(books, book)
+// 	json.NewEncoder(w).Encode(book)
+// }
+
+// // Update book
+// func updateBook(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	params := mux.Vars(r)
+// 	for index, item := range books {
+// 		if item.ID == params["id"] {
+// 			books = append(books[:index], books[index+1:]...)
+// 			var book Book
+// 			_ = json.NewDecoder(r.Body).Decode(&book)
+// 			book.ID = params["id"]
+// 			books = append(books, book)
+// 			json.NewEncoder(w).Encode(book)
+// 			return
+// 		}
+// 	}
+// }
+
+// // Delete book
+// func deleteBook(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	params := mux.Vars(r)
+// 	for index, item := range books {
+// 		if item.ID == params["id"] {
+// 			books = append(books[:index], books[index+1:]...)
+// 			break
+// 		}
+// 	}
+// 	json.NewEncoder(w).Encode(books)
+// }
+
+// type Article struct {
+// 	Id      string `json:"Id"`
+// 	Title   string `json:"Title"`
+// 	Desc    string `json:"desc"`
+// 	Content string `json:"content"`
+// }
+
+// func homePage(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Fprintf(w, "Welcome to the HomePage!")
+// 	fmt.Println("Endpoint Hit: homePage")
+// }
+
+// // let's declare a global Articles array
+// // that we can then populate in our main function
+// // to simulate a database
+// var Articles []Article
+
+// func main() {
+// 	books = append(books, Book{ID: "1", Isbn: "438227", Title: "Book One", Author: &Author{Firstname: "John", Lastname: "Doe"}})
+// 	books = append(books, Book{ID: "2", Isbn: "454555", Title: "Book Two", Author: &Author{Firstname: "Steve", Lastname: "Smith"}})
+// 	handleRequests()
+// }
+
+// func handleRequests() {
+// 	myRouter := mux.NewRouter().StrictSlash(true)
+
+// 	// Route handles & endpoints
+// 	myRouter.HandleFunc("/books", getBooks).Methods("GET")
+// 	myRouter.HandleFunc("/books/{id}", getBook).Methods("GET")
+// 	myRouter.HandleFunc("/books", createBook).Methods("POST")
+// 	myRouter.HandleFunc("/books/{id}", updateBook).Methods("PUT")
+// 	myRouter.HandleFunc("/books/{id}", deleteBook).Methods("DELETE")
+// 	myRouter.HandleFunc("/", homePage)
+// 	log.Fatal(http.ListenAndServe(":10000", myRouter))
+// }
