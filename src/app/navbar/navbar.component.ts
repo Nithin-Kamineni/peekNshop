@@ -10,15 +10,24 @@ import { HttpClient } from '@angular/common/http';
 export class NavbarComponent implements OnInit {
   
   loginForm!: FormGroup;
+  signupForm!: FormGroup;
 
   constructor(private http: HttpClient) { }
   ngOnInit(): void {
 
     
-    
+
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
+    })
+
+    this.signupForm = new FormGroup({
+      first_name: new FormControl('', [Validators.required]),
+      last_name: new FormControl('', [Validators.required]),
+      signup_email: new FormControl('', [Validators.required, Validators.email]),
+      signup_password: new FormControl('', [Validators.required]),
+      signup_confirm_password: new FormControl('', [Validators.required])
     })
   }
   get emailField(): any {
@@ -26,6 +35,12 @@ export class NavbarComponent implements OnInit {
   }
   get passwordField(): any {
     return this.loginForm.get('password');
+  }
+  get signupEmailField(): any {
+    return this.signupForm.get('signup_email');
+  }
+  get signupPasswordField(): any {
+    return this.signupForm.get('signup_password');
   }
 
   loginFormSubmit(): void {
@@ -40,6 +55,12 @@ export class NavbarComponent implements OnInit {
   } else {
       console.log('There is a problem with the form');
   }
-    // Call Api
-  }
+}
+  signupFormSubmit(): void {
+
+    console.log(this.signupForm.getRawValue())
+    console.log(this.signupForm.getRawValue().signup_mail)
+      
+  
+}
 }
