@@ -15,7 +15,6 @@ export class NavbarComponent implements OnInit {
   constructor(private http: HttpClient) { }
   ngOnInit(): void {
 
-    
 
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -49,18 +48,30 @@ export class NavbarComponent implements OnInit {
       var email = this.loginForm.getRawValue().email;
       var password = this.loginForm.getRawValue().password;
       console.log(email,password)
-      this.http.post<any>('https://reqres.in/api/posts', { email: email, password: password }).subscribe(data => {
+      this.http.post<any>('https://reqres.in/api/posts', { Email: email, Password: password }).subscribe(data => {
             
         })
   } else {
-      console.log('There is a problem with the form');
+      console.log('There is a problem with the login form');
   }
 }
   signupFormSubmit(): void {
 
     console.log(this.signupForm.getRawValue())
     console.log(this.signupForm.getRawValue().signup_mail)
+
+    if (this.signupForm.valid) {
+      var first_name = this.signupForm.getRawValue().first_name;
+      var last_name = this.signupForm.getRawValue().last_name;
+      var email = this.signupForm.getRawValue().signup_email;
+      var password = this.signupForm.getRawValue().signup_password;
       
+      this.http.post<any>('https://reqres.in/api/posts', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
+            
+        })
+  } else {
+      console.log('There is a problem with the signup form');
+  }  
   
 }
 }
