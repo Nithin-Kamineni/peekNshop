@@ -8,7 +8,6 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  
   loginForm!: FormGroup;
   signupForm!: FormGroup;
 
@@ -48,9 +47,7 @@ export class NavbarComponent implements OnInit {
       var email = this.loginForm.getRawValue().email;
       var password = this.loginForm.getRawValue().password;
       console.log(email,password)
-      this.http.post<any>('https://reqres.in/api/posts', { Email: email, Password: password }).subscribe(data => {
-            
-        })
+      this.http.post<any>('http://localhost:10000/students/', { Email: email, Password: password }).subscribe(data => { })
   } else {
       console.log('There is a problem with the login form');
   }

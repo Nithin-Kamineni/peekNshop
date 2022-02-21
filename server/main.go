@@ -2,10 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -16,7 +18,7 @@ func main() {
 	// db, err := gorm.Open(
 	// 	"postgres",
 	// 	"host=students-db user=go password="+pass+" dbname=go sslmode=disable")
-	db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("Users.db"), &gorm.Config{})
 	if err != nil {
 		panic(err.Error())
 	}
@@ -24,18 +26,41 @@ func main() {
 		db: db,
 		r:  mux.NewRouter(),
 	}
+	// We use our custom CORS Middleware
+	// app.r.Use(CORS)
 	app.start()
 }
 
 type student struct {
-	ID   string `gorm:"primary_key" json:"id"`
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+	ID       string `gorm:"primary_key" json:"id"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type App struct {
 	db *gorm.DB
 	r  *mux.Router
+}
+
+func CORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		// Set headers
+		w.Header().Set("Access-Control-Allow-Headers:", "*")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "*")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		fmt.Println("ok")
+
+		// Next
+		next.ServeHTTP(w, r)
+		return
+	})
 }
 
 func (a *App) start() {
@@ -44,8 +69,9 @@ func (a *App) start() {
 	a.r.HandleFunc("/students/", a.addStudent).Methods("POST")
 	a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
 	a.r.HandleFunc("/students/{id}", a.deleteStudent).Methods("DELETE")
-	a.r.PathPrefix("/").Handler(http.FileServer(http.Dir("./webapp/dist/webapp/")))
-	log.Fatal(http.ListenAndServe(":10000", a.r))
+	http.Handle("/", a.r)
+	log.Fatal(http.ListenAndServe(":10000", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(a.r)))
+	// log.Fatal(http.ListenAndServe(":10000", a.r))
 }
 
 func (a *App) getAllStudents(w http.ResponseWriter, r *http.Request) {
