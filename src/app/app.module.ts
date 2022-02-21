@@ -27,6 +27,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SearchBarComponent } from './search-bar/search-bar.component';
+import { UserComponent } from './user/user.component';
+import { UserHomepageComponent } from './user-homepage/user-homepage.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +45,8 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     FooterComponent,
     SidenavComponent,
     SearchBarComponent,
+    UserComponent,
+    UserHomepageComponent,
   ],
   imports: [
     BrowserModule,

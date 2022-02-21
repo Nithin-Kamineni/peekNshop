@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-navbar',
@@ -11,7 +12,7 @@ export class NavbarComponent implements OnInit {
   loginForm!: FormGroup;
   signupForm!: FormGroup;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
   ngOnInit(): void {
 
 
@@ -48,6 +49,7 @@ export class NavbarComponent implements OnInit {
       var password = this.loginForm.getRawValue().password;
       console.log(email,password)
       this.http.post<any>('http://localhost:10000/students/', { Email: email, Password: password }).subscribe(data => { })
+      this.router.navigate(['/user-homepage'])
   } else {
       console.log('There is a problem with the login form');
   }

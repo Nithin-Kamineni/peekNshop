@@ -1,0 +1,37 @@
+.spacer {
+    flex: 1 1 auto;
+  }
+  .nav{
+    width: 1440;
+  }
+
+  .container-fluid{
+    display: flex;
+    flex-direction: row;
+
+  }
+  #loginsignup{
+    justify-content: right;
+    
+  }
+  #loginbutton{
+    background-color: rgb(164, 233, 164);
+    border-radius: 20%;
+  }
+  #navigation{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    padding-top: 4px;
+    padding-bottom: 0px;
+    
+    
+
+  }
+  #signupbutton{
+    border-radius: 20%;
+    margin-left: 10px;
+  }
+  
