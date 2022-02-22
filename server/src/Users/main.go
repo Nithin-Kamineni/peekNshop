@@ -33,6 +33,16 @@ type App struct {
 	r  *mux.Router
 }
 
+type SignInReply struct {
+	Msg string
+}
+
+type LogInReply struct {
+	AccessKey  string
+	RefreshKey string
+	Msg        string
+}
+
 type user3 struct {
 	ID        string `gorm:"primary_key" json:"id"`
 	Firstname string `json:"firstname"`
@@ -64,7 +74,7 @@ func CORS(next http.Handler) http.Handler {
 
 func (a *App) start() {
 	a.db.AutoMigrate(&user3{})
-	a.r.HandleFunc("/user/", a.getAllUsers).Methods("GET")
+	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
 	a.r.HandleFunc("/user/", a.userSignUp).Methods("POST")
 	//a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
 	//a.r.HandleFunc("/students/{id}", a.deleteStudent).Methods("DELETE")
@@ -73,14 +83,29 @@ func (a *App) start() {
 	// log.Fatal(http.ListenAndServe(":10000", a.r))
 }
 
-func (a *App) getAllUsers(w http.ResponseWriter, r *http.Request) {
+func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	//params := mux.Vars(r)
+	//username := params["username"]
+	//fmt.Println(username)
+	var s user3
+
+	username := r.URL.Query().Get("email")
+	passkey := r.URL.Query().Get("passkey")
+	//credentials := a.db.First(&s, "email = ?", username)
+	a.db.Raw("SELECT * FROM user3 WHERE email = ? AND password = ?", username, passkey).Scan(&s)
+	// a.db.where("username = ?",username)
+	//fmt.Println(&s)
+	data, err := json.Marshal(&s)
+	fmt.Printf(string(data))
+
 	var all []user3
-	err := a.db.Find(&all).Error
+	err = a.db.Find(&all).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+	//reply := LogInReply(AccessKey:"", RefreshKey:"", Msg:"")
 	err = json.NewEncoder(w).Encode(all)
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
@@ -99,6 +124,7 @@ func sendErr(w http.ResponseWriter, code int, message string) {
 func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s user3
+	reply := SignInReply{Msg: "sucessfull"}
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -110,5 +136,9 @@ func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	} else {
 		w.WriteHeader(http.StatusCreated)
+	}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
 }
