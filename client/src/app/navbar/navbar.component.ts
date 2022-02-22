@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from "@angular/router";
+import {MapsService} from '../services/maps.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,9 +13,10 @@ export class NavbarComponent implements OnInit {
   loginForm!: FormGroup;
   signupForm!: FormGroup;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router,public service: MapsService) { }
   ngOnInit(): void {
 
+    
 
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -72,5 +74,12 @@ export class NavbarComponent implements OnInit {
       console.log('There is a problem with the signup form');
   }  
   
+}
+clickNavigation(){
+
+  console.log("Hi")
+
+  return this.service.getLocation();
+
 }
 }

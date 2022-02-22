@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+import {MapsService} from './services/maps.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -73,7 +74,7 @@ import { UserHomepageComponent } from './user-homepage/user-homepage.component';
     
     
   ],
-  providers: [],
+  providers: [MapsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
