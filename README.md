@@ -16,4 +16,7 @@ Angular, Golang, SQLserver
 ```
 
 ## Team Members:
-Nithin Kamineni, Vamsi Pachamatla, Sai reddy, Nitish Veera.
+Venkata Nithin Kamineni: github - Nithin-Kamineni, 
+Vamsi Pachamatla: github - vamsi3379, 
+Saieswar Reddy Vaka: github - sai6221,
+Mattaparthi Nitish Veera: github - VeeraNitish7.
