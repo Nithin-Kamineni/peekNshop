@@ -14,10 +14,7 @@ import (
 )
 
 func main() {
-	// pass := os.Getenv("DB_PASS")
-	// db, err := gorm.Open(
-	// 	"postgres",
-	// 	"host=students-db user=go password="+pass+" dbname=go sslmode=disable")
+
 	db, err := gorm.Open(sqlite.Open("Users.db"), &gorm.Config{})
 	if err != nil {
 		panic(err.Error())
@@ -26,8 +23,6 @@ func main() {
 		db: db,
 		r:  mux.NewRouter(),
 	}
-	// We use our custom CORS Middleware
-	// app.r.Use(CORS)
 	app.start()
 }
 
@@ -70,6 +65,34 @@ func (a *App) start() {
 	a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
 	a.r.HandleFunc("/students/{id}", a.deleteStudent).Methods("DELETE")
 	http.Handle("/", a.r)
+
+	// Users -> main.go
+
+	// r := mux.NewRouter()
+
+	// stores = append(stores, Stores{StoresID: "1", StoreName: "IndiMart", Catogiry: "Glosseries"})
+	// //Rought handeler or endpoints
+	// r.HandleFunc("/user/{id}/searchResults/{searchItem}", getSearchResults).Methods("POST")
+	// r.HandleFunc("/user/{id}/stores", getNearestStores).Methods("GET")
+	// r.HandleFunc("/user/{id}/stores/{storeId}", getStoresDetails).Methods("GET")
+	// r.HandleFunc("/user/{id}/stores/{storeId}/{productId}", getProductDetails).Methods("GET")
+
+	// log.Fatal(http.ListenAndServe(":10000", r))
+
+	// latNlon -> main.go
+
+	// myRouter := mux.NewRouter().StrictSlash(true)
+	// myRouter.HandleFunc("/address", returnLat)
+	// log.Fatal(http.ListenAndServe(":10000", myRouter))
+
+	// nearBy -> main.go
+
+	// myRouter := mux.NewRouter().StrictSlash(true)
+	// myRouter.HandleFunc("/address", returnNearBy)
+	// log.Fatal(http.ListenAndServe(":10000", myRouter))
+
+	// places -> main.go
+
 	log.Fatal(http.ListenAndServe(":10000", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(a.r)))
 	// log.Fatal(http.ListenAndServe(":10000", a.r))
 }

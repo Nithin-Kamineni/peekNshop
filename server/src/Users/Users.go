@@ -1,11 +1,8 @@
-package main
+package Users
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
-
-	"github.com/gorilla/mux"
 )
 
 type Stores struct {
@@ -39,14 +36,5 @@ func getProductDetails(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	// Init Router
-	r := mux.NewRouter()
 
-	stores = append(stores, Stores{StoresID: "1", StoreName: "IndiMart", Catogiry: "Glosseries"})
-	//Rought handeler or endpoints
-	r.HandleFunc("/user/{id}/searchResults/{searchItem}", getSearchResults).Methods("POST")
-	r.HandleFunc("/user/{id}/stores", getNearestStores).Methods("GET")
-	r.HandleFunc("/user/{id}/stores/{storeId}", getStoresDetails).Methods("GET")
-	r.HandleFunc("/user/{id}/stores/{storeId}/{productId}", getProductDetails).Methods("GET")
-
-	log.Fatal(http.ListenAndServe(":8000", r))
 }

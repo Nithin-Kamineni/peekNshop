@@ -1,4 +1,4 @@
-package main
+package nearBy
 
 import (
 	"encoding/json"
@@ -7,8 +7,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-
-	"github.com/gorilla/mux"
 )
 
 type result struct {
@@ -52,9 +50,9 @@ func main() {
 }
 
 func handleRequests() {
-	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/address", returnNearBy)
-	log.Fatal(http.ListenAndServe(":10000", myRouter))
+	// myRouter := mux.NewRouter().StrictSlash(true)
+	// myRouter.HandleFunc("/address", returnNearBy)
+	// log.Fatal(http.ListenAndServe(":10000", myRouter))
 }
 
 func returnNearBy(w http.ResponseWriter, r *http.Request) {
