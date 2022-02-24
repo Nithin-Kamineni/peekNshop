@@ -93,11 +93,25 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("email")
 	passkey := r.URL.Query().Get("passkey")
 	//credentials := a.db.First(&s, "email = ?", username)
-	a.db.Raw("SELECT * FROM user3 WHERE email = ? AND password = ?", username, passkey).Scan(&s)
+	a.db.Raw("SELECT id FROM user3 WHERE email = ?", username).Scan(&s)
+
 	// a.db.where("username = ?",username)
 	//fmt.Println(&s)
 	data, err := json.Marshal(&s)
-	fmt.Printf(string(data))
+
+	if s.ID == "" {
+		fmt.Println("User does not exist/registered")
+	} else {
+		fmt.Println(s.ID)
+		a.db.Raw("SELECT * FROM user3 WHERE id = ? AND password = ?", s.ID, passkey).Scan(&s)
+		if s.Email == "" {
+			fmt.Println("Password is incorrect")
+		} else {
+			fmt.Println("Login Sucessfull")
+		}
+	}
+	fmt.Println(string(data))
+	fmt.Println()
 
 	var all []user3
 	err = a.db.Find(&all).Error
