@@ -38,9 +38,10 @@ type SignInReply struct {
 }
 
 type LogInReply struct {
-	AccessKey  string
-	RefreshKey string
-	Msg        string
+	AccessKey   string
+	RefreshKey  string
+	Msg         string
+	UserDetails user3
 }
 
 type user3 struct {
@@ -89,41 +90,53 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	//username := params["username"]
 	//fmt.Println(username)
 	var s user3
-
+	var reply LogInReply
 	username := r.URL.Query().Get("email")
 	passkey := r.URL.Query().Get("passkey")
 	//credentials := a.db.First(&s, "email = ?", username)
-	a.db.Raw("SELECT id FROM user3 WHERE email = ?", username).Scan(&s)
-
+	err := a.db.Raw("SELECT id FROM user3 WHERE email = ?", username).Scan(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
 	// a.db.where("username = ?",username)
 	//fmt.Println(&s)
 	data, err := json.Marshal(&s)
 
 	if s.ID == "" {
 		fmt.Println("User does not exist/registered")
+		reply = LogInReply{AccessKey: "", RefreshKey: "", Msg: "User does not exist/registered", UserDetails: s}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+
 	} else {
 		fmt.Println(s.ID)
-		a.db.Raw("SELECT * FROM user3 WHERE id = ? AND password = ?", s.ID, passkey).Scan(&s)
+		err = a.db.Raw("SELECT * FROM user3 WHERE id = ? AND password = ?", s.ID, passkey).Scan(&s).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
 		if s.Email == "" {
 			fmt.Println("Password is incorrect")
+			reply = LogInReply{AccessKey: "", RefreshKey: "", Msg: "Password is incorrect", UserDetails: s}
+			err = json.NewEncoder(w).Encode(reply)
+			if err != nil {
+				sendErr(w, http.StatusInternalServerError, err.Error())
+			}
 		} else {
 			fmt.Println("Login Sucessfull")
+			reply = LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s}
+			err = json.NewEncoder(w).Encode(reply)
+			if err != nil {
+				sendErr(w, http.StatusInternalServerError, err.Error())
+			}
 		}
 	}
 	fmt.Println(string(data))
 	fmt.Println()
-
-	var all []user3
-	err = a.db.Find(&all).Error
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	//reply := LogInReply(AccessKey:"", RefreshKey:"", Msg:"")
-	err = json.NewEncoder(w).Encode(all)
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
-	}
 }
 
 // func sendErr(w http.ResponseWriter, i int, s string) {
