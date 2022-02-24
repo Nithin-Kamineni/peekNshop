@@ -1,4 +1,4 @@
-package main
+package Users
 
 import (
 	"encoding/json"
@@ -13,7 +13,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func main() {
+func user() {
 	db, err := gorm.Open(sqlite.Open("../Users.db"), &gorm.Config{})
 
 	if err != nil {

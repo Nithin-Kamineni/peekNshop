@@ -1,15 +1,4 @@
-package main
-
-import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"net/url"
-
-	"github.com/gorilla/mux"
-)
+package latNlon
 
 type result struct {
 	results []struct{ results_info } `json:"results"`
@@ -45,46 +34,4 @@ type bounds_info struct {
 type cord_info struct {
 	lat float64 `json:"lat"`
 	lng float64 `json:"lng"`
-}
-
-func main() {
-	handleRequests()
-}
-
-func handleRequests() {
-	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/address", returnLat)
-	log.Fatal(http.ListenAndServe(":10000", myRouter))
-}
-
-func returnLat(w http.ResponseWriter, r *http.Request) {
-
-	w.Header().Set("Content-Type", "application/json")
-
-	address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
-	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
-
-	params := "address=" + url.QueryEscape(address) + "&" +
-		"key=" + url.QueryEscape(Key)
-	path := fmt.Sprint("https://maps.googleapis.com/maps/api/geocode/json?", params)
-	fmt.Println(path)
-	resp, err := http.Get(path)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	//data1 := result{}
-	var f interface{}
-	json.Unmarshal(body, &f)
-	fmt.Println(f)
-
-	json.NewEncoder(w).Encode(f)
-	defer resp.Body.Close()
 }
