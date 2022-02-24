@@ -8,24 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-<<<<<<< HEAD
-func Users() {
-	db, err := gorm.Open(sqlite.Open("../Users.db"), &gorm.Config{})
-
-	if err != nil {
-		panic(err.Error())
-	}
-
-	app := App{
-		db: db,
-		r:  mux.NewRouter(),
-	}
-
-	app.start()
-}
-
-=======
->>>>>>> 61f948a04056ba650454670932e43725220cf9d4
 type App struct {
 	db *gorm.DB
 	r  *mux.Router
@@ -43,11 +25,13 @@ type LogInReply struct {
 }
 
 type User3 struct {
-	ID        string `gorm:"primary_key" json:"id"`
-	Firstname string `json:"firstname"`
-	Lastname  string `json:"lastname"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
+	ID         string `gorm:"primary_key" json:"id"`
+	Firstname  string `json:"firstname"`
+	Lastname   string `json:"lastname"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Acesskey   string
+	RefreshKey string
 }
 
 func CORS(next http.Handler) http.Handler {

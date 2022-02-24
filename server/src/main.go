@@ -9,11 +9,15 @@ import (
 	"net/url"
 	"src/Users"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+
+	//"strconv"
+	"time"
 )
 
 type student struct {
@@ -67,7 +71,8 @@ func (a *App) start() {
 	a.r.HandleFunc("/address", a.returnLat)
 	a.r.HandleFunc("/address/", a.returnNearBy)
 	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
-	a.r.HandleFunc("/user/", a.userSignUp).Methods("POST")
+	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
+	a.r.HandleFunc("/user", a.changeUserDetails).Methods("PUT")
 	a.r.HandleFunc("/students/", a.getAllStudents).Methods("GET")
 	a.r.HandleFunc("/students/", a.addStudent).Methods("POST")
 	a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
@@ -84,6 +89,44 @@ func (a *App) start() {
 	// log.Fatal(http.ListenAndServe(":10000", a.r))
 }
 
+func (a *App) changeUserDetails(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s1 Users.User3
+	var s2 Users.User3
+	err := json.NewDecoder(r.Body).Decode(&s1)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = a.db.Raw("SELECT ID,acessKey FROM user3 WHERE id = ?", s1.ID).Scan(&s2).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	fmt.Println(s1.Acesskey)
+	fmt.Println(s2.Acesskey)
+	fmt.Println()
+	if s2.Acesskey == s1.Acesskey {
+		err = a.db.Exec("UPDATE user3 SET firstname = ?, lastname = ?, email = ?, password = ? where ID = ?", s1.Firstname, s1.Lastname, s1.Email, s1.Password, s2.ID).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+
+		//a.db.Raw("SELECT  FROM user3 WHERE acesskey = ?", username)
+		// err = a.db.Save(&s).Error
+		// if err != nil {
+		// 	sendErr(w, http.StatusInternalServerError, err.Error())
+		// }
+	}
+}
+
 func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	//params := mux.Vars(r)
@@ -91,6 +134,7 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(username)
 	var s Users.User3
 	var reply Users.LogInReply
+	SecretKey := "SaiReddyWedsMona"
 	username := r.URL.Query().Get("email")
 	passkey := r.URL.Query().Get("passkey")
 	//credentials := a.db.First(&s, "email = ?", username)
@@ -128,15 +172,41 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			fmt.Println("Login Sucessfull")
-			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s}
+
+			claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
+				Issuer:    s.ID,
+				ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), //1 day
+			})
+
+			tokens, err := claims.SignedString([]byte(SecretKey))
+			if err != nil {
+				reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Could not login...", UserDetails: s}
+				sendErr(w, http.StatusInternalServerError, err.Error())
+				return
+			}
+
+			err = a.db.Exec("UPDATE user3 SET AcessKey = ? where ID = ?", tokens, s.ID).Error
+			if err != nil {
+				sendErr(w, http.StatusInternalServerError, err.Error())
+				return
+			}
+
+			reply = Users.LogInReply{AccessKey: tokens, RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s}
+
+			http.SetCookie(w, &http.Cookie{
+				Name:    "session_token",
+				Value:   tokens,
+				Expires: time.Now().Add(time.Hour * 24),
+			})
+
 			err = json.NewEncoder(w).Encode(reply)
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
 			}
 		}
+		fmt.Println(string(data))
+		fmt.Println()
 	}
-	fmt.Println(string(data))
-	fmt.Println()
 }
 
 // func sendErr(w http.ResponseWriter, i int, s string) {
