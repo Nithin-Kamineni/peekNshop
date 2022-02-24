@@ -13,7 +13,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func user() {
+func Users() {
 	db, err := gorm.Open(sqlite.Open("../Users.db"), &gorm.Config{})
 
 	if err != nil {
