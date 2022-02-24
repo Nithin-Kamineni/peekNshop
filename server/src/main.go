@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
@@ -12,19 +14,6 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
-
-func main() {
-
-	db, err := gorm.Open(sqlite.Open("Users.db"), &gorm.Config{})
-	if err != nil {
-		panic(err.Error())
-	}
-	app := App{
-		db: db,
-		r:  mux.NewRouter(),
-	}
-	app.start()
-}
 
 type student struct {
 	ID       string `gorm:"primary_key" json:"id"`
@@ -58,8 +47,23 @@ func CORS(next http.Handler) http.Handler {
 	})
 }
 
+func main() {
+
+	db, err := gorm.Open(sqlite.Open("Users.db"), &gorm.Config{})
+	if err != nil {
+		panic(err.Error())
+	}
+	app := App{
+		db: db,
+		r:  mux.NewRouter(),
+	}
+	app.start()
+}
+
 func (a *App) start() {
 	a.db.AutoMigrate(&student{})
+	a.r.HandleFunc("/address", a.returnLat)
+	a.r.HandleFunc("/address/", a.returnNearBy)
 	a.r.HandleFunc("/students/", a.getAllStudents).Methods("GET")
 	a.r.HandleFunc("/students/", a.addStudent).Methods("POST")
 	a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
@@ -68,33 +72,82 @@ func (a *App) start() {
 
 	// Users -> main.go
 
-	// r := mux.NewRouter()
-
-	// stores = append(stores, Stores{StoresID: "1", StoreName: "IndiMart", Catogiry: "Glosseries"})
-	// //Rought handeler or endpoints
-	// r.HandleFunc("/user/{id}/searchResults/{searchItem}", getSearchResults).Methods("POST")
-	// r.HandleFunc("/user/{id}/stores", getNearestStores).Methods("GET")
-	// r.HandleFunc("/user/{id}/stores/{storeId}", getStoresDetails).Methods("GET")
-	// r.HandleFunc("/user/{id}/stores/{storeId}/{productId}", getProductDetails).Methods("GET")
-
-	// log.Fatal(http.ListenAndServe(":10000", r))
-
 	// latNlon -> main.go
-
-	// myRouter := mux.NewRouter().StrictSlash(true)
-	// myRouter.HandleFunc("/address", returnLat)
-	// log.Fatal(http.ListenAndServe(":10000", myRouter))
 
 	// nearBy -> main.go
 
-	// myRouter := mux.NewRouter().StrictSlash(true)
-	// myRouter.HandleFunc("/address", returnNearBy)
-	// log.Fatal(http.ListenAndServe(":10000", myRouter))
-
-	// places -> main.go
-
 	log.Fatal(http.ListenAndServe(":10000", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(a.r)))
 	// log.Fatal(http.ListenAndServe(":10000", a.r))
+}
+
+func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+
+	keyword := "foods"
+	radius := "1500"
+	field := "formatted_address,name,rating,opening_hours,geometry"
+	location := "29.61872,-82.37299"
+	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
+
+	params := "keyword=" + url.QueryEscape(keyword) + "&" +
+		"radius=" + url.QueryEscape(radius) + "&" +
+		"field=" + url.QueryEscape(field) + "&" +
+		"location=" + url.QueryEscape(location) + "&" +
+		"key=" + url.QueryEscape(Key)
+	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
+	fmt.Println(path)
+	resp, err := http.Get(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//data1 := result{}
+	var f interface{}
+	json.Unmarshal(body, &f)
+	fmt.Println(f)
+
+	json.NewEncoder(w).Encode(f)
+	defer resp.Body.Close()
+}
+
+func (a *App) returnLat(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+
+	address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
+	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
+
+	params := "address=" + url.QueryEscape(address) + "&" +
+		"key=" + url.QueryEscape(Key)
+	path := fmt.Sprint("https://maps.googleapis.com/maps/api/geocode/json?", params)
+	fmt.Println(path)
+	resp, err := http.Get(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//data1 := result{}
+	var f interface{}
+	json.Unmarshal(body, &f)
+	fmt.Println(f)
+
+	json.NewEncoder(w).Encode(f)
+	defer resp.Body.Close()
 }
 
 func (a *App) getAllStudents(w http.ResponseWriter, r *http.Request) {
