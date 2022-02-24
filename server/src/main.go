@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"src/Users"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
@@ -62,8 +63,11 @@ func main() {
 
 func (a *App) start() {
 	a.db.AutoMigrate(&student{})
+	a.db.AutoMigrate(&Users.User3{})
 	a.r.HandleFunc("/address", a.returnLat)
 	a.r.HandleFunc("/address/", a.returnNearBy)
+	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
+	a.r.HandleFunc("/user/", a.userSignUp).Methods("POST")
 	a.r.HandleFunc("/students/", a.getAllStudents).Methods("GET")
 	a.r.HandleFunc("/students/", a.addStudent).Methods("POST")
 	a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
@@ -78,6 +82,87 @@ func (a *App) start() {
 
 	log.Fatal(http.ListenAndServe(":10000", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(a.r)))
 	// log.Fatal(http.ListenAndServe(":10000", a.r))
+}
+
+func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	//params := mux.Vars(r)
+	//username := params["username"]
+	//fmt.Println(username)
+	var s Users.User3
+	var reply Users.LogInReply
+	username := r.URL.Query().Get("email")
+	passkey := r.URL.Query().Get("passkey")
+	//credentials := a.db.First(&s, "email = ?", username)
+	err := a.db.Raw("SELECT id FROM user3 WHERE email = ?", username).Scan(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	// a.db.where("username = ?",username)
+	//fmt.Println(&s)
+	data, err := json.Marshal(&s)
+
+	if s.ID == "" {
+		fmt.Println("User does not exist/registered")
+		reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "User does not exist/registered", UserDetails: s}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+
+	} else {
+		fmt.Println(s.ID)
+		err = a.db.Raw("SELECT * FROM user3 WHERE id = ? AND password = ?", s.ID, passkey).Scan(&s).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		if s.Email == "" {
+			fmt.Println("Password is incorrect")
+			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Password is incorrect", UserDetails: s}
+			err = json.NewEncoder(w).Encode(reply)
+			if err != nil {
+				sendErr(w, http.StatusInternalServerError, err.Error())
+			}
+		} else {
+			fmt.Println("Login Sucessfull")
+			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s}
+			err = json.NewEncoder(w).Encode(reply)
+			if err != nil {
+				sendErr(w, http.StatusInternalServerError, err.Error())
+			}
+		}
+	}
+	fmt.Println(string(data))
+	fmt.Println()
+}
+
+// func sendErr(w http.ResponseWriter, i int, s string) {
+// 	panic("unimplemented")
+// }
+
+func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s Users.User3
+	reply := Users.SignInReply{Msg: "sucessfull"}
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	s.ID = uuid.New().String()
+	err = a.db.Save(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
 }
 
 func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
