@@ -1,9 +1,9 @@
 <div id="searchcontainer">
   <div class="container">
-    <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search for products...">
+    <div class="input-group" [formGroup]="searchForm" (ngsubmit)="searchRequest()">
+      <input type="text" class="form-control" formControlName="searchText" id= "searchText"placeholder="Search for products...">
           <span class="input-group-btn">
-            <button class="btn btn-search" type="button"><i class="fa fa-search fa-fw"></i> Search</button>
+            <button class="btn btn-search" type="button" (click)="searchRequest()"><i class="fa fa-search fa-fw"></i> Search</button>
           </span>
     </div>
 </div>

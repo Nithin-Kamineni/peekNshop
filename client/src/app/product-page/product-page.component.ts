@@ -4,7 +4,7 @@ import { Flavor } from '../core/flavor';
 import { Product } from '../core/product';
 import { SelectedProductAttributes } from '../core/selectedProductAttributes';
 import { Size } from '../core/size';
-import { ProductService } from '../product.service';
+import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-product-page',
