@@ -68,7 +68,7 @@ func main() {
 func (a *App) start() {
 	a.db.AutoMigrate(&student{})
 	a.db.AutoMigrate(&Users.User3{})
-	a.r.HandleFunc("/address", a.returnLat)
+	a.r.HandleFunc("/address", a.returnLat) //returning lat
 	a.r.HandleFunc("/address/", a.returnNearBy)
 	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
 	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
@@ -79,6 +79,7 @@ func (a *App) start() {
 	a.r.HandleFunc("/students/", a.addStudent).Methods("POST")
 	a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
 	a.r.HandleFunc("/students/{id}", a.deleteStudent).Methods("DELETE")
+
 	http.Handle("/", a.r)
 
 	// Users -> main.go
@@ -329,6 +330,38 @@ func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
 		"location=" + url.QueryEscape(location) + "&" +
 		"key=" + url.QueryEscape(Key)
 	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
+	fmt.Println(path)
+	resp, err := http.Get(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//data1 := result{}
+	var f interface{}
+	json.Unmarshal(body, &f)
+	fmt.Println(f)
+
+	json.NewEncoder(w).Encode(f)
+	defer resp.Body.Close()
+}
+
+func (a *App) ConvAddressToCord(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+
+	address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
+	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
+
+	params := "address=" + url.QueryEscape(address) + "&" +
+		"key=" + url.QueryEscape(Key)
+	path := fmt.Sprint("https://maps.googleapis.com/maps/api/geocode/json?", params)
 	fmt.Println(path)
 	resp, err := http.Get(path)
 
