@@ -30,6 +30,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { UserComponent } from './user/user.component';
 import { UserHomepageComponent } from './user-homepage/user-homepage.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { UserHomepageComponent } from './user-homepage/user-homepage.component';
     SearchBarComponent,
     UserComponent,
     UserHomepageComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,
