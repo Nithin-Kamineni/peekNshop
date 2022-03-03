@@ -14,6 +14,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
+import {MatListModule} from '@angular/material/list';
 import { ProductsComponent } from './products/products.component';
 import { ProductComponent } from './product/product.component';
 import { ProductPageComponent } from './product-page/product-page.component';
@@ -72,6 +73,7 @@ import { AboutComponent } from './about/about.component';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    MatListModule,
     
     
     
