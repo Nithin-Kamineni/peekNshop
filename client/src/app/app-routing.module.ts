@@ -13,14 +13,14 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 
 const routes: Routes = [
   {path: "product/:id", component: ProductPageComponent},
-  {path: "", component: HomepageComponent},
+  {path: "home", component: HomepageComponent},
   {path: "login", component: LoginComponent},
   {path: "signup", component: SignupComponent},
   {path: "user", component: UserComponent},
   {path: "user-homepage", component: UserHomepageComponent},
   {path: "products", component: ProductsComponent},
   {path: "about", component: AboutComponent},
-  {path: "sidenav", component: SidenavComponent}
+  {path: "", component: SidenavComponent}
 ];
 
 @NgModule({
