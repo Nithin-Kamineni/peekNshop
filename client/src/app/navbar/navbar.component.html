@@ -1,3 +1,44 @@
+<!-- <mat-toolbar>
+  <mat-icon style='padding-right: 10px;'>auto_stories</mat-icon>
+  <span>Good Reads</span>
+  <button mat-icon-button *ngIf="sidenav.mode === 'over'" (click)="sidenav.toggle()" class='side-menu-icon' autosize="true">
+      <mat-icon *ngIf="!sidenav.opened" >menu</mat-icon>
+      <mat-icon *ngIf="sidenav.opened">close</mat-icon>
+  </button>
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav #drawer #sidenav="matSidenav" [(opened)]="opened" position='end' [fixedInViewport]="false">
+      <button mat-button class="menu-items" (click)="goToHome()">
+          <mat-icon>home</mat-icon>
+          <span>Home</span>
+      </button>
+      <button mat-button class="menu-items" (click)="goToMyBooks()">
+          <mat-icon>menu_book</mat-icon>
+          <span>My Books</span>
+      </button>
+      <mat-list-item [matMenuTriggerFor]="genresMenu" style="padding: 0px; margin: 0px;">
+          <button mat-button>
+              <mat-icon>pageview</mat-icon>
+              <span>Browse</span>
+          </button>
+      </mat-list-item>
+      <mat-menu #genresMenu="matMenu">
+              <button mat-menu-item *ngFor="let genre of genres" (click)="goToGenre(genre.Id)">{{genre.Name}}</button>
+      </mat-menu>
+      <mat-divider></mat-divider>
+      <button mat-button class="menu-items" (click)="goToCommunity()">
+          <mat-icon>people</mat-icon>
+          <span>Community</span>
+      </button>
+  </mat-sidenav>
+  <mat-sidenav-content>
+      
+  </mat-sidenav-content>
+</mat-sidenav-container> -->
+
+
+
+
 <nav class="nav navbar navbar-expand-lg navbar-light bg-light">
 
   <div class="container-fluid">
