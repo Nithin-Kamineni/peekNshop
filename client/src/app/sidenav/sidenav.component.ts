@@ -13,6 +13,7 @@ export class SidenavComponent implements OnInit {
   loginForm!: FormGroup;
   signupForm!: FormGroup;
   city = "Gainesville"
+  IsmodelShow!: boolean;
 
   constructor(private http: HttpClient, private router: Router,public service: MapsService) { }
   ngOnInit(): void {
@@ -40,11 +41,22 @@ export class SidenavComponent implements OnInit {
   get passwordField(): any {
     return this.loginForm.get('password');
   }
+  get firstNameField(): any {
+    return this.signupForm.get('first_name');
+  }
+  get lastNameField(): any {
+    return this.signupForm.get('last_name');
+  }
   get signupEmailField(): any {
     return this.signupForm.get('signup_email');
   }
   get signupPasswordField(): any {
     return this.signupForm.get('signup_password');
+  }
+
+  close() {
+    //Can I close modal window manually?
+    this.IsmodelShow=false;
   }
 
   loginFormSubmit(): void {
@@ -55,6 +67,7 @@ export class SidenavComponent implements OnInit {
       console.log(email,password)
       this.http.post<any>('http://localhost:10000/students/', { Email: email, Password: password }).subscribe(data => { })
       this.router.navigate(['/user-homepage'])
+      
   } else {
       console.log('There is a problem with the login form');
   }
