@@ -6,6 +6,9 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { UserComponent } from './user/user.component';
 import { UserHomepageComponent } from './user-homepage/user-homepage.component';
+import { ProductsComponent } from './products/products.component';
+import { AboutComponent } from './about/about.component';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
 
 const routes: Routes = [
@@ -15,6 +18,9 @@ const routes: Routes = [
   {path: "signup", component: SignupComponent},
   {path: "user", component: UserComponent},
   {path: "user-homepage", component: UserHomepageComponent},
+  {path: "products", component: ProductsComponent},
+  {path: "about", component: AboutComponent},
+  // {path: "", component: SidenavComponent},
 ];
 
 @NgModule({

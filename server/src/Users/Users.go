@@ -25,11 +25,13 @@ type LogInReply struct {
 }
 
 type User3 struct {
-	ID        string `gorm:"primary_key" json:"id"`
-	Firstname string `json:"firstname"`
-	Lastname  string `json:"lastname"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
+	ID         string `gorm:"primary_key" json:"id"`
+	Firstname  string `json:"firstname"`
+	Lastname   string `json:"lastname"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Acesskey   string
+	RefreshKey string
 }
 
 func CORS(next http.Handler) http.Handler {

@@ -1,0 +1,29 @@
+#right{
+    justify-content: right;
+}
+.example-spacer {
+    flex: 1 1 auto;
+  }
+#loginbutton{
+    
+    border-radius: 20%;
+}
+#signupbutton{
+    border-radius: 20%;
+    margin-left: 10px;
+}
+#city{
+    padding-top: 10px;
+    margin-right: 20px;
+}
+mat-sidenav-container {
+    height: calc(100vh - 65px);
+    background-color: grey;
+}
+mat-toolbar {
+    background: #004a9f;
+    color: white;
+}
+
+// For sidenav color
+// .background-primary { background-color: #3f51b5; }
