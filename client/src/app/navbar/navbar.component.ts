@@ -12,9 +12,12 @@ import {MapsService} from '../services/maps.service';
 export class NavbarComponent implements OnInit {
   loginForm!: FormGroup;
   signupForm!: FormGroup;
+  city = "Gainesville"
 
   constructor(private http: HttpClient, private router: Router,public service: MapsService) { }
   ngOnInit(): void {
+
+    
 
     
 
@@ -59,7 +62,7 @@ export class NavbarComponent implements OnInit {
   signupFormSubmit(): void {
 
     console.log(this.signupForm.getRawValue())
-    console.log(this.signupForm.getRawValue().signup_mail)
+    console.log(this.signupForm.getRawValue().signup_email)
 
     if (this.signupForm.valid) {
       var first_name = this.signupForm.getRawValue().first_name;
@@ -75,11 +78,5 @@ export class NavbarComponent implements OnInit {
   }  
   
 }
-clickNavigation(){
 
-  console.log("Hi")
-
-  return this.service.getLocation();
-
-}
 }

@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./catogories.component.scss']
 })
 export class CatogoriesComponent implements OnInit {
+  city = "Gainesville"
 
   constructor() { }
 

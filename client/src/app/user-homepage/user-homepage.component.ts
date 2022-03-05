@@ -10,6 +10,8 @@ export class UserHomepageComponent implements OnInit {
 
   title = 'PeekNshop';
   subtitle = 'choose where to shop?';
+  city = "Gainesville";
+  user = "Nithin Kamineni"
   
 
   constructor(private router: Router) { }

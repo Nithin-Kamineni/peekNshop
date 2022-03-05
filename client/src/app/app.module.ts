@@ -14,6 +14,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
+import {MatListModule} from '@angular/material/list';
 import { ProductsComponent } from './products/products.component';
 import { ProductComponent } from './product/product.component';
 import { ProductPageComponent } from './product-page/product-page.component';
@@ -30,6 +31,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { UserComponent } from './user/user.component';
 import { UserHomepageComponent } from './user-homepage/user-homepage.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,7 @@ import { UserHomepageComponent } from './user-homepage/user-homepage.component';
     SearchBarComponent,
     UserComponent,
     UserHomepageComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +73,7 @@ import { UserHomepageComponent } from './user-homepage/user-homepage.component';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
+    MatListModule,
     
     
     

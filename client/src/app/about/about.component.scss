@@ -1,0 +1,33 @@
+.about-section {
+    width: 80vw;
+    margin-top: 10vh;
+    display: flex;
+    justify-content: space-between;
+    
+    }
+    .content {
+      width: 50%;
+      
+  
+      h1 {
+        font-size: 3rem;
+        line-height: 20px;
+        
+      }
+      
+      
+    }
+    .image-wrapper {
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      
+    }
+    .row p{
+        font-weight: 700px;
+        color:black;
+        
+    }
+  
