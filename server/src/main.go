@@ -73,7 +73,7 @@ func (a *App) start() {
 	a.r.HandleFunc("/address/", a.returnNearBy)
 	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
 	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
-	a.r.HandleFunc("/user", a.userStatus).Methods("POST")           //this
+	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")           //this
 	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST") //this
 	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")          //this
 	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST") //this
@@ -210,7 +210,9 @@ func (a *App) changeUserDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(statusCode: 200)
 	w.Header().Set("Content-Type", "application/json")
+
 	//params := mux.Vars(r)
 	//username := params["username"]
 	//fmt.Println(username)
