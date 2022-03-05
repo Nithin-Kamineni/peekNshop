@@ -15,4 +15,5 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/mattn/go-sqlite3 v1.14.9 // indirect
+	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 )
