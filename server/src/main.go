@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"src/Carts"
 	"src/Users"
 
 	"github.com/dgrijalva/jwt-go"
@@ -74,6 +75,8 @@ func (a *App) start() {
 	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
 	a.r.HandleFunc("/user", a.userStatus).Methods("POST")           //this
 	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST") //this
+	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")          //this
+	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST") //this
 	a.r.HandleFunc("/user", a.changeUserDetails).Methods("PUT")
 	a.r.HandleFunc("/students/", a.getAllStudents).Methods("GET")
 	a.r.HandleFunc("/students/", a.addStudent).Methods("POST")
@@ -293,6 +296,44 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 // }
 
 func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s Users.User3
+	reply := Users.SignInReply{Msg: "sucessfull"}
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	s.ID = uuid.New().String()
+	err = a.db.Save(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
+func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var cart Carts.Cart
+	err := json.NewDecoder(r.Body).Decode(&cart)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = a.db.Save(&cart).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
+}
+
+func (a *App) cartDisplay(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s Users.User3
 	reply := Users.SignInReply{Msg: "sucessfull"}
