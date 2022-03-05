@@ -2,68 +2,14 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 
 	"github.com/gorilla/mux"
 )
-
-// {
-// 	"business_status": "OPERATIONAL",
-// 	"geometry": {
-// 		"location": {
-// 			"lat": 29.6254076,
-// 			"lng": -82.37590070000002
-// 		},
-// 		"viewport": {
-// 			"northeast": {
-// 				"lat": 29.62690757989272,
-// 				"lng": -82.37484922010728
-// 			},
-// 			"southwest": {
-// 				"lat": 29.62420792010728,
-// 				"lng": -82.37754887989271
-// 			}
-// 		}
-// 	},
-// 	"icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
-// 	"icon_background_color": "#4B96F3",
-// 	"icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shoppingcart_pinlet",
-// 	"name": "Whole Foods Market",
-// 	"opening_hours": {
-// 		"open_now": true
-// 	},
-// 	"photos": [
-// 		{
-// 			"height": 4096,
-// 			"html_attributions": [
-// 				"<a href=\"https://maps.google.com/maps/contrib/103293559241366476507\">A Google User</a>"
-// 			],
-// 			"photo_reference": "Aap_uECJQ1rkr7kPy2hd_Hh3EmoN8kRWt-uD36_gv6y94a-GkRZb1xd1fw5MxfF6s4S5Zmm4FsSlNoVIXn4IuMHnWkZ3Hr-uhZY9WLvwTn9yYivvM1nkGpAXIRX1Ys5aT4XO_LEhQR8UUS08CC5jyoE71ZjhjGIkkYFcnoWBPKareVYihUU9",
-// 			"width": 3072
-// 		}
-// 	],
-// 	"place_id": "ChIJbxdDECWj6IgRNRNDwpIAZjI",
-// 	"plus_code": {
-// 		"compound_code": "JJGF+5J Gainesville, Florida",
-// 		"global_code": "76XVJJGF+5J"
-// 	},
-// 	"price_level": 3,
-// 	"rating": 4.3,
-// 	"reference": "ChIJbxdDECWj6IgRNRNDwpIAZjI",
-// 	"scope": "GOOGLE",
-// 	"types": [
-// 		"grocery_or_supermarket",
-// 		"supermarket",
-// 		"food",
-// 		"health",
-// 		"point_of_interest",
-// 		"store",
-// 		"establishment"
-// 	],
-// 	"user_ratings_total": 805,
-// 	"vicinity": "3490 SW Archer Rd, Gainesville"
-// }
 
 type Stores struct {
 	html_attributions []string                   `json:"html_attributions"`
@@ -126,8 +72,46 @@ var stores []Stores
 
 //sending search results
 func getSearchResults(w http.ResponseWriter, r *http.Request) {
+
+	search := r.URL.Query().Get("search")
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(stores)
+
+	w.Header().Set("Content-Type", "application/json")
+
+	keyword := search
+	radius := "1500"
+	field := "formatted_address,name,rating,opening_hours,geometry"
+	location := "29.61872,-82.37299"
+	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
+
+	params := "keyword=" + url.QueryEscape(keyword) + "&" +
+		"radius=" + url.QueryEscape(radius) + "&" +
+		"field=" + url.QueryEscape(field) + "&" +
+		"location=" + url.QueryEscape(location) + "&" +
+		"key=" + url.QueryEscape(Key)
+	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
+	fmt.Println(path)
+	resp, err := http.Get(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//data1 := result{}
+	var f interface{}
+	json.Unmarshal(body, &f)
+	fmt.Println(f)
+
+	json.NewEncoder(w).Encode(f)
+	defer resp.Body.Close()
 }
 
 //getting nearest stores avilable based on the location of the user
@@ -158,3 +142,63 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":8000", r))
 }
+
+// func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	//params := mux.Vars(r)
+// 	//username := params["username"]
+// 	//fmt.Println(username)
+// 	var s Stores
+// 	var reply Stores.status
+
+// 	// var s Users.User3
+// 	// var reply Users.LogInReply
+
+// 	search := r.URL.Query().Get("search")
+// 	// username := r.URL.Query().Get("email")
+// 	// passkey := r.URL.Query().Get("passkey")
+// 	//credentials := a.db.First(&s, "email = ?", username)
+// 	err := a.db.Raw("SELECT id FROM user3 WHERE email = ?", username).Scan(&s).Error
+// 	if err != nil {
+// 		sendErr(w, http.StatusInternalServerError, err.Error())
+// 		return
+// 	}
+// 	// a.db.where("username = ?",username)
+// 	//fmt.Println(&s)
+// 	data, err := json.Marshal(&s)
+
+// 	if s.ID == "" {
+// 		fmt.Println("User does not exist/registered")
+// 		reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "User does not exist/registered", UserDetails: s}
+// 		err = json.NewEncoder(w).Encode(reply)
+// 		if err != nil {
+// 			sendErr(w, http.StatusInternalServerError, err.Error())
+// 		}
+
+// 	} else {
+// 		fmt.Println(s.ID)
+// 		err = a.db.Raw("SELECT * FROM user3 WHERE id = ? AND password = ?", s.ID, passkey).Scan(&s).Error
+// 		if err != nil {
+// 			sendErr(w, http.StatusInternalServerError, err.Error())
+// 			return
+// 		}
+
+// 		if s.Email == "" {
+// 			fmt.Println("Password is incorrect")
+// 			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Password is incorrect", UserDetails: s}
+// 			err = json.NewEncoder(w).Encode(reply)
+// 			if err != nil {
+// 				sendErr(w, http.StatusInternalServerError, err.Error())
+// 			}
+// 		} else {
+// 			fmt.Println("Login Sucessfull")
+// 			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s}
+// 			err = json.NewEncoder(w).Encode(reply)
+// 			if err != nil {
+// 				sendErr(w, http.StatusInternalServerError, err.Error())
+// 			}
+// 		}
+// 	}
+// 	fmt.Println(string(data))
+// 	fmt.Println()
+// }
