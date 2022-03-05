@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CatogoriesService} from './catogories.service';
 
 @Component({
   selector: 'app-catogories',
@@ -8,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 export class CatogoriesComponent implements OnInit {
   city = "Gainesville"
 
-  constructor() { }
+  constructor(public service: CatogoriesService) { }
+
+  offers: any;
 
   ngOnInit(): void {
+    this.service.getOffers().subscribe(data => {
+      this.offers = data;
+  })
   }
 
 }
