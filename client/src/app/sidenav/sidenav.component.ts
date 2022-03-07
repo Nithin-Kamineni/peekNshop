@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from "@angular/router";
 import {MapsService} from '../services/maps.service';
-
+import {LoginModel} from '../models/common_models'
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -14,13 +14,15 @@ export class SidenavComponent implements OnInit {
   signupForm!: FormGroup;
   city = "Gainesville"
   IsmodelShow!: boolean;
+  msg!: string;
+  
 
   constructor(private http: HttpClient, private router: Router,public service: MapsService) { }
   ngOnInit(): void {
 
      
 
-    
+     
 
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -65,8 +67,21 @@ export class SidenavComponent implements OnInit {
       var email = this.loginForm.getRawValue().email;
       var password = this.loginForm.getRawValue().password;
       console.log(email,password)
-      this.http.post<any>('http://localhost:10000/students/', { Email: email, Password: password }).subscribe(data => { })
-      this.router.navigate(['/user-homepage'])
+      // this.http.post<any>('http://localhost:10000/students/', { Email: email, Password: password }).subscribe(data => { })
+      var user = "email=" + email + "&passkey=" + password
+      this.http.get<LoginModel>('http://localhost:10000/user?'+"email=" + email + "&passkey=" + password, {}).subscribe( (data: LoginModel) => {
+          this.msg = data.Msg;
+          console.log(data);
+          console.log(this.msg)
+          console.log("sai")
+          if (this.msg == "Login Sucessfull"){
+            this.router.navigate(['/user-homepage'])
+          }else{
+            this.router.navigate([''])
+          }
+        })
+        
+      
       
   } else {
       console.log('There is a problem with the login form');
@@ -83,9 +98,19 @@ export class SidenavComponent implements OnInit {
       var email = this.signupForm.getRawValue().signup_email;
       var password = this.signupForm.getRawValue().signup_password;
       
-      this.http.post<any>('https://reqres.in/api/posts', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
+      // this.http.post<any>('https://reqres.in/api/posts', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
             
-        })
+      //   })
+
+       //Headers
+       const httpHeaders = new HttpHeaders();
+       httpHeaders.append('content-type','application/json')
+
+       //Get the HTTP Method working for you
+      //  this.http.get('https://localhost:10000/user', { First_name: first_name, Last_name: last_name, Email: email, Password: password}).subscribe(data => {
+            
+      // })
+
   } else {
       console.log('There is a problem with the signup form');
   }  
