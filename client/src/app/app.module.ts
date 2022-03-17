@@ -32,6 +32,7 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
 import { UserComponent } from './user/user.component';
 import { UserHomepageComponent } from './user-homepage/user-homepage.component';
 import { AboutComponent } from './about/about.component';
+import { DeliveryComponent } from './delivery/delivery.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { AboutComponent } from './about/about.component';
     UserComponent,
     UserHomepageComponent,
     AboutComponent,
+    DeliveryComponent,
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,7 @@ import { UserHomepageComponent } from './user-homepage/user-homepage.component';
 import { ProductsComponent } from './products/products.component';
 import { AboutComponent } from './about/about.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
+import { DeliveryComponent } from './delivery/delivery.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
   {path: "user-homepage", component: UserHomepageComponent},
   {path: "products", component: ProductsComponent},
   {path: "about", component: AboutComponent},
+  {path: "delivery", component: DeliveryComponent},
   // {path: "", component: SidenavComponent},
 ];
 
