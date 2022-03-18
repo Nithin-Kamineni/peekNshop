@@ -76,7 +76,6 @@ export class SidenavComponent implements OnInit {
           this.msg = data.Msg;
           console.log(data);
           console.log(this.msg)
-          console.log("sai")
           if (this.msg == "Login Sucessfull"){
             this.router.navigate(['/user-homepage'])
           }else{
