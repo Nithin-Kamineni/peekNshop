@@ -10,15 +10,12 @@ import (
 	"src/Carts"
 	"src/Users"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-
 	//"strconv"
-	"time"
 )
 
 type student struct {
@@ -218,7 +215,7 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(username)
 	var s Users.User3
 	var reply Users.LogInReply
-	SecretKey := "SaiReddyWedsMona"
+	// SecretKey := "SaiReddyWedsMona"
 	username := r.URL.Query().Get("email")
 	passkey := r.URL.Query().Get("passkey")
 	//credentials := a.db.First(&s, "email = ?", username)
@@ -233,7 +230,7 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 
 	if s.ID == "" {
 		fmt.Println("User does not exist/registered")
-		reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "User does not exist/registered", UserDetails: s}
+		reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "User does not exist/registered", UserDetails: s, AllowUsers: false}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -249,40 +246,14 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 
 		if s.Email == "" {
 			fmt.Println("Password is incorrect")
-			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Password is incorrect", UserDetails: s}
+			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Password is incorrect", UserDetails: s, AllowUsers: false}
 			err = json.NewEncoder(w).Encode(reply)
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
 			}
 		} else {
 			fmt.Println("Login Sucessfull")
-
-			claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-				Issuer:    s.ID,
-				ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), //1 day
-			})
-
-			tokens, err := claims.SignedString([]byte(SecretKey))
-			if err != nil {
-				reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Could not login...", UserDetails: s}
-				sendErr(w, http.StatusInternalServerError, err.Error())
-				return
-			}
-
-			err = a.db.Exec("UPDATE user3 SET AcessKey = ? where ID = ?", tokens, s.ID).Error
-			if err != nil {
-				sendErr(w, http.StatusInternalServerError, err.Error())
-				return
-			}
-
-			reply = Users.LogInReply{AccessKey: tokens, RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s}
-
-			http.SetCookie(w, &http.Cookie{
-				Name:    "session_token",
-				Value:   tokens,
-				Expires: time.Now().Add(time.Hour * 24),
-			})
-
+			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s, AllowUsers: true}
 			err = json.NewEncoder(w).Encode(reply)
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())

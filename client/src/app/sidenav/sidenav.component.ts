@@ -55,6 +55,9 @@ export class SidenavComponent implements OnInit {
   get signupPasswordField(): any {
     return this.signupForm.get('signup_password');
   }
+  get signupConfirmPasswordField(): any {
+    return this.signupForm.get('signup_confirm_password');
+  }
 
   close() {
     //Can I close modal window manually?
@@ -97,6 +100,8 @@ export class SidenavComponent implements OnInit {
       var last_name = this.signupForm.getRawValue().last_name;
       var email = this.signupForm.getRawValue().signup_email;
       var password = this.signupForm.getRawValue().signup_password;
+      var confirm_password = this.signupForm.getRawValue().signup_confirm_password;
+      console.log(first_name, last_name, email, password, confirm_password)
       
       // this.http.post<any>('https://reqres.in/api/posts', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
             

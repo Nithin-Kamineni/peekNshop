@@ -22,6 +22,7 @@ type LogInReply struct {
 	RefreshKey  string
 	Msg         string
 	UserDetails User3
+	AllowUsers  bool
 }
 
 type User3 struct {
