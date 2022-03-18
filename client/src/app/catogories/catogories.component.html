@@ -187,18 +187,32 @@
 
   <h1 id="categories_text"><b>Top offers in {{ city }}</b></h1>
 
-  <div class="card-columns">
+
+<div class="card-columns">
+  <div class="card" *ngFor="let offer of offers">
+    <img class="card-img-top" src="../../assets/Vegetablespng.png" height="250px" width="250px" alt="Card image cap">
+    <div class="card-body">
+      <h3 class="card-title" style="color: black;">{{offer.results.name}}</h3>
+      <p class="card-text" style="color: black;">{{offer.results.details}}</p>
+      <a href="#" class="btn btn-primary">Buy</a>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- <div class="card-columns">
     <div class="card">
-      <img class="card-img-top" src="../../assets/Vegetablespng.png" alt="Card image cap">
+      <img class="card-img-top" src="../../assets/Vegetablespng.png" height="250px" width="250px" alt="Card image cap">
       <div class="card-body">
         <h3 class="card-title" style="color: black;">Vegetables</h3>
         <p class="card-text" style="color: black;">Min 10% off on all vegitables at Sam's club</p>
         <a href="#" class="btn btn-primary">Buy</a>
       </div>
-    </div>
+    </div> 
 
     <div class="card">
-      <img class="card-img-top" src="../../assets/Car_accesories.png" alt="Card image cap">
+      <img class="card-img-top" src="../../assets/Car_accesories.png" height="250px" width="250px" alt="Card image cap">
       <div class="card-body">
         <h3 class="card-title" style="color: black;">Car accesories</h3>
         <p class="card-text" style="color: black;">Max 20% discount on car accesories at Bentley</p>
@@ -207,7 +221,7 @@
     </div>
 
     <div class="card">
-      <img class="card-img-top" src="../../assets/Vegetablespng.png" alt="Card image cap">
+      <img class="card-img-top" src="../../assets/Vegetablespng.png" height="250px" width="250px" alt="Card image cap">
       <div class="card-body">
         <h3 class="card-title" style="color: black;">Furniture</h3>
         <p class="card-text" style="color: black;">Min 20% off on furniture.</p>
@@ -216,7 +230,7 @@
     </div>
 
     <div class="card">
-      <img class="card-img-top" src="../../assets/Car_accesories.png" alt="Card image cap">
+      <img class="card-img-top" src="../../assets/Car_accesories.png" height="250px" width="250px" alt="Card image cap">
       <div class="card-body">
         <h3 class="card-title" style="color: black;">Mobile Phones</h3>
         <p class="card-text" style="color: black;">Get an iphone 13 pro at 0% interest.</p>
@@ -225,7 +239,7 @@
     </div>
 
     <div class="card">
-      <img class="card-img-top" src="../../assets/Vegetablespng.png" alt="Card image cap">
+      <img class="card-img-top" src="../../assets/Vegetablespng.png" height="250px" width="250px" alt="Card image cap">
       <div class="card-body">
         <h3 class="card-title" style="color: black;">Jeans</h3>
         <p class="card-text" style="color: black;">Buy one get one pant for free. </p>
@@ -234,14 +248,14 @@
     </div>
 
     <div class="card">
-      <img class="card-img-top" src="../../assets/Vegetablespng.png" alt="Card image cap">
+      <img class="card-img-top" src="../../assets/Vegetablespng.png" height="250px" width="250px" alt="Card image cap">
       <div class="card-body">
         <h3 class="card-title" style="color: black;">Shoes</h3>
         <p class="card-text" style="color: black;">Buy one pair of Van's shoes and get another pair at 50% off.</p>
         <a href="#" class="btn btn-primary">Buy</a>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <br>
   <br><br><br><br>

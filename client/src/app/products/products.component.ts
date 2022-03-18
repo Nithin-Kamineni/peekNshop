@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../core/product';
 import { ProductService } from '../services/product.service';
+import { SearchBarComponent } from '../search-bar/search-bar.component'
 
 @Component({
   selector: 'app-products',
@@ -9,11 +10,13 @@ import { ProductService } from '../services/product.service';
 })
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
+  
 
   constructor(private productService: ProductService) {}
 
   getProducts(): void {
     this.products = this.productService.getProducts();
+    
     // getProducts(){
       //     const httpHeaders = new HttpHeaders();
       //     httpHeaders.append('content-type','application/json')
@@ -24,5 +27,6 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit() {
     this.getProducts();
+    
   }
 }
