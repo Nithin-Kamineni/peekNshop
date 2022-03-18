@@ -11,8 +11,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./search-bar.component.scss']
 })
 export class SearchBarComponent implements OnInit{
-
+  searchText1! : string
   searchForm!: FormGroup;
+  
 
 
   ngOnInit(): void {
@@ -24,8 +25,9 @@ export class SearchBarComponent implements OnInit{
   constructor(private http: HttpClient, private router: Router) { }
 
   searchRequest(){
-    var searchText = this.searchForm.getRawValue().searchText
-    console.log(this.searchForm.getRawValue())
+    this.searchText1 = this.searchForm.getRawValue().searchText
+    console.log(this.searchText1)
+    // console.log(this.searchForm.getRawValue())
     // this.http.post<any>('http://localhost:10000/students/', { Searchdata: searchText }).subscribe(data => { })
       this.router.navigate(['/products'])
   }
