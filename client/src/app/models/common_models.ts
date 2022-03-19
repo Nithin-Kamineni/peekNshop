@@ -10,3 +10,6 @@ export interface SignupModel {
 export interface Products {  
     Msg:           string;
 }
+export interface Stores {  
+    icon:           string;
+}
