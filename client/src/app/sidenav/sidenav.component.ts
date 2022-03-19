@@ -15,6 +15,7 @@ export class SidenavComponent implements OnInit {
   city = "Gainesville"
   IsmodelShow!: boolean;
   msg!: string;
+
   
 
   constructor(private http: HttpClient, private router: Router,public service: MapsService) { }
@@ -59,10 +60,7 @@ export class SidenavComponent implements OnInit {
     return this.signupForm.get('signup_confirm_password');
   }
 
-  close() {
-    //Can I close modal window manually?
-    this.IsmodelShow=false;
-  }
+  
 
   loginFormSubmit(): void {
 
@@ -77,8 +75,13 @@ export class SidenavComponent implements OnInit {
           console.log(data);
           console.log(this.msg)
           if (this.msg == "Login Sucessfull"){
+            alert(this.msg) 
+            let element: HTMLElement = document.getElementsByClassName('btn-close')[0] as HTMLElement;
+            element.click();
+           
             this.router.navigate(['/user-homepage'])
           }else{
+            alert(this.msg)
             this.router.navigate([''])
           }
         })
