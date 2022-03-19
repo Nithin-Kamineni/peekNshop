@@ -330,12 +330,16 @@ func (a *App) cartDisplay(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
 
+	search := r.URL.Query().Get("search")
+	lat := r.URL.Query().Get("lat")
+	long := r.URL.Query().Get("long")
 	w.Header().Set("Content-Type", "application/json")
 
-	keyword := "foods"
+	keyword := search
 	radius := "1500"
 	field := "formatted_address,name,rating,opening_hours,geometry"
-	location := "29.61872,-82.37299"
+	location := lat + "," + long
+	// fmt.Println(location)
 	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
 
 	params := "keyword=" + url.QueryEscape(keyword) + "&" +
@@ -344,7 +348,7 @@ func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
 		"location=" + url.QueryEscape(location) + "&" +
 		"key=" + url.QueryEscape(Key)
 	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
-	fmt.Println(path)
+	// fmt.Println(path)
 	resp, err := http.Get(path)
 
 	if err != nil {
