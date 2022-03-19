@@ -120,7 +120,6 @@ export class SidenavComponent implements OnInit {
               alert("User already registered")
             }
         })
-        
 
   } else {
       console.log('There is a problem with the signup form');

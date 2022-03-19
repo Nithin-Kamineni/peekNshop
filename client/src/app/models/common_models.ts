@@ -7,3 +7,6 @@ export interface SignupModel {
     
     Msg:           string;
 }
+export interface Products {  
+    Msg:           string;
+}

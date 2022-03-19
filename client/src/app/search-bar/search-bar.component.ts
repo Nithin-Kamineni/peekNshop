@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Router } from "@angular/router";
 import {MapsService} from '../services/maps.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { environment } from '../environments/environments'
+import { Products } from '../models/common_models'
 
 
 @Component({
@@ -27,9 +29,13 @@ export class SearchBarComponent implements OnInit{
   searchRequest(){
     this.searchText1 = this.searchForm.getRawValue().searchText
     console.log(this.searchText1)
-    // console.log(this.searchForm.getRawValue())
-    // this.http.post<any>('http://localhost:10000/students/', { Searchdata: searchText }).subscribe(data => { })
-      this.router.navigate(['/products'])
+    environment.searchText = this.searchText1
+    // this.http.get<Products>('http://localhost:10000/user?'+"search_text=" +environment.searchText + "&lat=" + environment.lat + "&lon=" + environment.lon, {}).subscribe( (data: Products) => {
+    //   console.log(data.Msg)
+    // })
+    this.router.navigate(['/products'])
+    
+      
   }
 // We should give this in products page oninit
 //  
