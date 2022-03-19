@@ -64,7 +64,6 @@ func main() {
 }
 
 func (a *App) start() {
-	a.db.AutoMigrate(&student{})
 	a.db.AutoMigrate(&Users.User3{})
 	a.r.HandleFunc("/address", a.returnLat) //returning lat
 	a.r.HandleFunc("/address/", a.returnNearBy)
@@ -283,10 +282,7 @@ func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	} else {
 		w.WriteHeader(http.StatusCreated)
-	}
-	err = json.NewEncoder(w).Encode(reply)
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
+		err = json.NewEncoder(w).Encode(reply)
 	}
 }
 
