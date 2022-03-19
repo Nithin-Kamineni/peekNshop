@@ -28,9 +28,9 @@ export class CatogoriesComponent implements OnInit {
   this.service.getStores().subscribe(data => {
     this.stores = data;
     console.log(this.stores.results[0].rating)
-    for (var x of this.stores.results){
-      console.log(x.name)
-    }
+    // for (var x of this.stores.results){
+    //   console.log(x.photos[0].photo_reference)
+    // }
     console.log(this.stores.results.icon)
   }); }, 5000);
 
