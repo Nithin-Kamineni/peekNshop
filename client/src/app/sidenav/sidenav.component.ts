@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from "@angular/router";
 import {MapsService} from '../services/maps.service';
 import {LoginModel} from '../models/common_models'
+import { SignupModel } from '../models/common_models'
+import { data } from 'cypress/types/jquery';
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -14,7 +16,8 @@ export class SidenavComponent implements OnInit {
   signupForm!: FormGroup;
   city = "Gainesville"
   IsmodelShow!: boolean;
-  msg!: string;
+  loginmsg!: string;
+  signupmsg!: string
 
   
 
@@ -71,17 +74,17 @@ export class SidenavComponent implements OnInit {
       // this.http.post<any>('http://localhost:10000/students/', { Email: email, Password: password }).subscribe(data => { })
       var user = "email=" + email + "&passkey=" + password
       this.http.get<LoginModel>('http://localhost:10000/user?'+"email=" + email + "&passkey=" + password, {}).subscribe( (data: LoginModel) => {
-          this.msg = data.Msg;
+          this.loginmsg = data.Msg;
           console.log(data);
-          console.log(this.msg)
-          if (this.msg == "Login Sucessfull"){
-            alert(this.msg) 
+          console.log(this.loginmsg)
+          if (this.loginmsg == "Login Sucessfull"){
+            alert(this.loginmsg) 
             let element: HTMLElement = document.getElementsByClassName('btn-close')[0] as HTMLElement;
             element.click();
            
             this.router.navigate(['/user-homepage'])
           }else{
-            alert(this.msg)
+            alert(this.loginmsg)
             this.router.navigate([''])
           }
         })
@@ -105,18 +108,19 @@ export class SidenavComponent implements OnInit {
       var confirm_password = this.signupForm.getRawValue().signup_confirm_password;
       console.log(first_name, last_name, email, password, confirm_password)
       
-      // this.http.post<any>('https://reqres.in/api/posts', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
-            
-      //   })
-
-       //Headers
-       const httpHeaders = new HttpHeaders();
-       httpHeaders.append('content-type','application/json')
-
-       //Get the HTTP Method working for you
-      //  this.http.get('https://localhost:10000/user', { First_name: first_name, Last_name: last_name, Email: email, Password: password}).subscribe(data => {
-            
-      // })
+      this.http.post<SignupModel>('http://localhost:10000/user', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
+            console.log(data.Msg)
+            this.signupmsg = data.Msg
+            if (this.signupmsg == "sucessfull"){
+              alert("Signup Successful")
+              let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
+                element.click();
+              this.router.navigate(['/user-homepage'])
+            }else{
+              alert("User already registered")
+            }
+        })
+        
 
   } else {
       console.log('There is a problem with the signup form');
