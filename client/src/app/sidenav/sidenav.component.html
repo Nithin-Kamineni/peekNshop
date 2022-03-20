@@ -9,12 +9,21 @@
          <span class="example-spacer"></span>
          
         <h1 id="city"> {{ city }}</h1>
-        <button type="button" class="btn btn-outline-light" id="loginbutton" data-bs-toggle="modal" data-bs-target="#loginModal">
+        <button *ngIf = "isLogin" type="button" class="btn btn-outline-light" id="loginbutton" data-bs-toggle="modal" data-bs-target="#loginModal">
             Login
         </button>
-        <button type="button" class="btn btn-outline-light" id="signupbutton" data-bs-toggle="modal" data-bs-target="#signupModal">
+        <button *ngIf = "isLogin" type="button" class="btn btn-outline-light" id="signupbutton" data-bs-toggle="modal" data-bs-target="#signupModal">
             Signup
         </button>
+        <button type="button" class="btn btn-link" *ngIf = "!isLogin" (click)=userProfile() >
+          <h6  id="city"> {{ name }}</h6>
+        </button>
+        
+        <button type="button" class="btn btn-link" *ngIf = "!isLogin" >
+          <img *ngIf = "!isLogin" src="../../assets/cart.svg" alt="Cart">
+        </button>
+        
+        
          
          
          

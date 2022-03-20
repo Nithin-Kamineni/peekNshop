@@ -6,6 +6,7 @@ import {MapsService} from '../services/maps.service';
 import {LoginModel} from '../models/common_models'
 import { SignupModel } from '../models/common_models'
 import { data } from 'cypress/types/jquery';
+import { environment } from '../environments/environments'
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -15,16 +16,19 @@ export class SidenavComponent implements OnInit {
   loginForm!: FormGroup;
   signupForm!: FormGroup;
   city = "Gainesville"
+  name = "Nithin Kamineni"
   IsmodelShow!: boolean;
   loginmsg!: string;
-  signupmsg!: string
+  signupmsg!: string;
+  isLogin = environment.isLogin
+  
 
   
 
   constructor(private http: HttpClient, private router: Router,public service: MapsService) { }
   ngOnInit(): void {
 
-     
+    this.isLogin=true
 
      
 
@@ -63,7 +67,9 @@ export class SidenavComponent implements OnInit {
     return this.signupForm.get('signup_confirm_password');
   }
 
-  
+  userProfile(){
+    this.router.navigate(['/user'])
+  }
 
   loginFormSubmit(): void {
 
@@ -81,10 +87,13 @@ export class SidenavComponent implements OnInit {
             alert(this.loginmsg) 
             let element: HTMLElement = document.getElementsByClassName('btn-close')[0] as HTMLElement;
             element.click();
-           
+            this.isLogin=!this.isLogin
+            environment.isLogin=!environment.isLogin
             this.router.navigate(['/user-homepage'])
           }else{
             alert(this.loginmsg)
+            this.isLogin = this.isLogin
+            environment.isLogin=environment.isLogin
             this.router.navigate([''])
           }
         })
