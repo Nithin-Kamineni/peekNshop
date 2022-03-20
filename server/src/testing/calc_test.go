@@ -14,19 +14,6 @@ type TestCase struct {
 	actual   int
 }
 
-// func TestCalc(t *testing.T) {
-// 	testCase := TestCase{
-// 		valueA:   2,
-// 		valueB:   3,
-// 		expected: 5,
-// 	}
-
-// 	testCase.actual = calc.Add(testCase.valueA, testCase.valueB)
-// 	if testCase.actual != testCase.expected {
-// 		t.Fail()
-// 	}
-// }
-
 func Router(a *App) *mux.Router {
 	router := mux.NewRouter()
 	router.HandelFunc("/user", a.userLogin).Methods("GET")

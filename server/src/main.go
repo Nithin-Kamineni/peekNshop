@@ -69,11 +69,14 @@ func main() {
 func (a *App) start() {
 	a.db.AutoMigrate(&student{})
 	a.db.AutoMigrate(&Users.User3{})
+	a.db.AutoMigrate(&Carts.Cart_items{})
 	a.r.HandleFunc("/address", a.returnLat) //returning lat
-	a.r.HandleFunc("/address/", a.returnNearBy)
+	a.r.HandleFunc("/stores/", a.returnNearBy)
+	a.r.HandleFunc("/stores/items", a.returnStoreInv)
+	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)
 	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
 	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
-	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")           //this
+	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")     //this
 	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST") //this
 	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")          //this
 	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST") //this
@@ -210,7 +213,7 @@ func (a *App) changeUserDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(statusCode: 200)
+	//w.WriteHeader(statusCode: 200)
 	w.Header().Set("Content-Type", "application/json")
 
 	//params := mux.Vars(r)
@@ -321,7 +324,7 @@ func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart Carts.Cart
+	var cart Carts.Cart_items
 	err := json.NewDecoder(r.Body).Decode(&cart)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -337,27 +340,103 @@ func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) cartDisplay(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s Users.User3
-	reply := Users.SignInReply{Msg: "sucessfull"}
-	err := json.NewDecoder(r.Body).Decode(&s)
+	var cart Carts.Cart_items
+	var userID Carts.UserIDtab
+	err := json.NewDecoder(r.Body).Decode(&userID)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	s.ID = uuid.New().String()
-	err = a.db.Save(&s).Error
+
+	err = a.db.Raw("SELECT * FROM user3 WHERE userID = ?", userID).Scan(&cart).Error
 	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
-	} else {
-		w.WriteHeader(http.StatusCreated)
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
 	}
-	err = json.NewEncoder(w).Encode(reply)
+
+	err = json.NewEncoder(w).Encode(cart)
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
 }
 
 func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+
+	keyword := "foods"
+	radius := "1500"
+	field := "formatted_address,name,rating,opening_hours,geometry"
+	location := "29.61872,-82.37299"
+	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
+
+	params := "keyword=" + url.QueryEscape(keyword) + "&" +
+		"radius=" + url.QueryEscape(radius) + "&" +
+		"field=" + url.QueryEscape(field) + "&" +
+		"location=" + url.QueryEscape(location) + "&" +
+		"key=" + url.QueryEscape(Key)
+	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
+	fmt.Println(path)
+	resp, err := http.Get(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//data1 := result{}
+	var f interface{}
+	json.Unmarshal(body, &f)
+	fmt.Println(f)
+
+	json.NewEncoder(w).Encode(f)
+	defer resp.Body.Close()
+}
+
+func (a *App) returnStoreInv(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+
+	keyword := "foods"
+	radius := "1500"
+	field := "formatted_address,name,rating,opening_hours,geometry"
+	location := "29.61872,-82.37299"
+	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
+
+	params := "keyword=" + url.QueryEscape(keyword) + "&" +
+		"radius=" + url.QueryEscape(radius) + "&" +
+		"field=" + url.QueryEscape(field) + "&" +
+		"location=" + url.QueryEscape(location) + "&" +
+		"key=" + url.QueryEscape(Key)
+	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
+	fmt.Println(path)
+	resp, err := http.Get(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//data1 := result{}
+	var f interface{}
+	json.Unmarshal(body, &f)
+	fmt.Println(f)
+
+	json.NewEncoder(w).Encode(f)
+	defer resp.Body.Close()
+}
+
+func (a *App) returnProductPage(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 

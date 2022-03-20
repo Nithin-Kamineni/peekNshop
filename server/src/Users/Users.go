@@ -34,6 +34,14 @@ type User3 struct {
 	RefreshKey string
 }
 
+type Cart_items struct {
+	userID     string `gorm:"primary_key" json:"id"`
+	productID  string `json:"productID"`
+	quantity   string `json:"quantity"`
+	createdAt  string `json:"created"`
+	ModifiedAt string `json:"modified"`
+}
+
 func CORS(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
