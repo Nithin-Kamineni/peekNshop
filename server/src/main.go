@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"src/Carts"
+	"src/Offers"
 	"src/Users"
 
 	"github.com/google/uuid"
@@ -65,8 +66,10 @@ func main() {
 
 func (a *App) start() {
 	a.db.AutoMigrate(&Users.User3{})
+	a.db.AutoMigrate(Offers.Offer{})
 	a.r.HandleFunc("/address", a.returnLat) //returning lat
 	a.r.HandleFunc("/address/", a.returnNearBy)
+	a.r.HandleFunc("/offers", a.returnOffers)
 	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
 	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
 	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")     //this
@@ -283,6 +286,24 @@ func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusCreated)
 		err = json.NewEncoder(w).Encode(reply)
+	}
+}
+
+func (a *App) returnOffers(w http.ResponseWriter, r *http.Request) {
+	a.db.Model(&Offers.Offer{}).Create([]map[string]interface{}{
+		{"name": "jinzhu_1", "description": "10% off on all items"},
+		{"name": "jinzhu_2", "description": "20% off on all items"},
+	})
+	w.Header().Set("Content-Type", "application/json")
+	var all []Offers.Offer
+	err := a.db.Find(&all).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	err = json.NewEncoder(w).Encode(all)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
 }
 
