@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+
+	//"os/user"
 	"src/Carts"
 	"src/Users"
 
@@ -30,6 +32,14 @@ type student struct {
 type App struct {
 	db *gorm.DB
 	r  *mux.Router
+}
+
+type Cart_items_db struct {
+	userID     string `gorm:"-" json:"id"`
+	productID  string `json:"productID"`
+	quantity   string `json:"quantity"`
+	createdAt  string `json:"created"`
+	ModifiedAt string `json:"modified"`
 }
 
 func CORS(next http.Handler) http.Handler {
@@ -368,6 +378,14 @@ func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (p Cart_items_db) TableName() string {
+	// double check here, make sure the table does exist!!
+	if p.userID != "" {
+		return p.userID
+	}
+	return "cart_items_db" // default table name
+}
+
 func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var cart Carts.Cart_items
@@ -376,7 +394,17 @@ func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = a.db.Save(&cart).Error
+
+	a.db.AutoMigrate(&Cart_items_db{userID: cart.userID})
+	userCart := Cart_items_db{userID: cart.userID}
+
+	err = json.NewDecoder(r.Body).Decode(&userCart)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = a.db.Save(&userCart).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	} else {

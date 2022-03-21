@@ -1,7 +1,7 @@
 package Carts
 
 type Cart_items struct {
-	userID     string `gorm:"primary_key" json:"id"`
+	userID     string `json:"id"`
 	productID  string `json:"productID"`
 	quantity   string `json:"quantity"`
 	createdAt  string `json:"created"`
