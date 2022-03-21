@@ -72,6 +72,8 @@ func (a *App) start() {
 	a.db.AutoMigrate(&Carts.Cart_items{})
 	a.r.HandleFunc("/address", a.returnLat) //returning lat
 	a.r.HandleFunc("/stores/", a.returnNearBy)
+	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")
+	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")
 	a.r.HandleFunc("/stores/items", a.returnStoreInv)
 	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)
 	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
@@ -96,6 +98,50 @@ func (a *App) start() {
 
 	log.Fatal(http.ListenAndServe(":10000", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(a.r)))
 	// log.Fatal(http.ListenAndServe(":10000", a.r))
+}
+
+func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s Users.User3
+	reply := Users.SignInReply{Msg: "sucessfull"}
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	s.ID = uuid.New().String()
+	err = a.db.Save(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
+func (a *App) editInventory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s Users.User3
+	reply := Users.SignInReply{Msg: "sucessfull"}
+	err := json.NewDecoder(r.Body).Decode(&s)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	s.ID = uuid.New().String()
+	err = a.db.Save(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
 }
 
 func (a *App) userStatusCheck(w http.ResponseWriter, r *http.Request) {
