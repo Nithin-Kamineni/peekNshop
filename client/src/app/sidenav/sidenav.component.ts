@@ -115,7 +115,7 @@ export class SidenavComponent implements OnInit {
       var email = this.signupForm.getRawValue().signup_email;
       var password = this.signupForm.getRawValue().signup_password;
       var confirm_password = this.signupForm.getRawValue().signup_confirm_password;
-      console.log(first_name, last_name, email, password, confirm_password)
+      // console.log(first_name, last_name, email, password, confirm_password)
       
       this.http.post<SignupModel>('http://localhost:10000/user', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
             console.log(data.Msg)
@@ -126,7 +126,11 @@ export class SidenavComponent implements OnInit {
                 element.click();
               this.router.navigate(['/user-homepage'])
             }else{
+              console.log("Wrong User")
               alert("User already registered")
+              let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
+                element.click();
+              this.router.navigate([''])
             }
         })
 
