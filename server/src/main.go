@@ -231,6 +231,99 @@ func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func PaymentsCapture(w http.ResponseWriter, r *http.Request) {
+
+	// Read Path Parameters
+	vars := mux.Vars(r)
+
+	// Read body
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// Unmarshal
+	var successiveRequestDto dto.SuccessiveRequestDto
+	err = json.Unmarshal(b, &successiveRequestDto)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	w.Header().Set("content-type", "application/json")
+
+	// Basic Validation - Business Account
+	var businessAccountId = r.Header.Get("From")
+	var referenceId = vars["authorization_id"]
+	var businessAccount model.Account
+	if len(businessAccountId) > 0 {
+		businessAccount, _ = getAccount(db, businessAccountId)
+	} else {
+		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "3", "Invalid Merchant"))
+		return
+	}
+	if businessAccount.Id != businessAccountId {
+		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "15", "No Such Issuer"))
+		return
+	}
+
+	// Check if previous payment exists
+	successiveRequestDto.Type = constant.CAPTURE
+	successiveRequestDto.ReferenceId = referenceId
+	if len(referenceId) <= 0 {
+		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "12", "Invalid Transaction	"))
+		return
+	}
+	var referencedPayment, _ = getPayment(db, referenceId)
+	if referencedPayment.Id != referenceId {
+		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "12", "Invalid Transaction	"))
+		return
+	}
+
+	// Create successive payment
+	var successivePayment model.Payment
+	if referencedPayment.Operation == constant.AUTHORIZATION && referencedPayment.Status == "0" {
+		if referencedPayment.CurrentAmount < successiveRequestDto.Amount {
+			successivePayment = model.CreateSuccessivePayment(successiveRequestDto,
+				referencedPayment,
+				"13",
+				"Invalid Amount")
+			savePayment(db, successivePayment)
+			businessAccount.Statement = append(businessAccount.Statement, successivePayment.Id)
+			saveAccount(db, businessAccount)
+			json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id,
+				"13",
+				"Invalid Amount"))
+			return
+		} else {
+			referencedPayment.CurrentAmount = referencedPayment.CurrentAmount - successiveRequestDto.Amount
+			savePayment(db, referencedPayment)
+			successivePayment = model.CreateSuccessivePayment(successiveRequestDto,
+				referencedPayment,
+				"0",
+				"Approved")
+			savePayment(db, successivePayment)
+			var personalAccountId = fmt.Sprintf("%v", referencedPayment.CardNumber)
+			var personalAccount, _ = getAccount(db, personalAccountId)
+			personalAccount.Blocked = personalAccount.Blocked - successiveRequestDto.Amount
+			personalAccount.Statement = append(personalAccount.Statement, successivePayment.Id)
+			saveAccount(db, personalAccount)
+			businessAccount.Blocked = businessAccount.Blocked - successiveRequestDto.Amount
+			businessAccount.Available = businessAccount.Available + successiveRequestDto.Amount
+			businessAccount.Statement = append(businessAccount.Statement, successivePayment.Id)
+			saveAccount(db, businessAccount)
+			json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id,
+				"0",
+				"Approved"))
+			return
+		}
+
+	}
+
+	json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id, "12", "Invalid Transaction"))
+}
+
 func (a *App) editInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s Users.User3
