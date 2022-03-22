@@ -110,6 +110,105 @@ func (a *App) start() {
 	// log.Fatal(http.ListenAndServe(":10000", a.r))
 }
 
+func PaymentsAuthorization(w http.ResponseWriter, r *http.Request) {
+
+	// Read body
+	b, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// Unmarshal
+	var authorizationRequestDto dto.AuthorizationRequestDto
+	err = json.Unmarshal(b, &authorizationRequestDto)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	// Prepare Payment Response
+	w.Header().Set("content-type", "application/json")
+
+	// Basic Validation - Business Account
+	var businessAccountId = r.Header.Get("From")
+	var businessAccount model.Account
+	if len(businessAccountId) > 0 {
+		businessAccount, _ = getAccount(db, businessAccountId)
+	} else {
+		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "3", "Invalid Merchant"))
+		return
+	}
+	if businessAccount.Id != businessAccountId {
+		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "15", "No Such Issuer"))
+		return
+	}
+
+	// Basic Validation - Personal Account
+	var personalAccountId = fmt.Sprintf("%v", authorizationRequestDto.CardNumber)
+	var personalAccount model.Account
+	if len(personalAccountId) > 0 {
+		personalAccount, _ = getAccount(db, personalAccountId)
+	} else {
+		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "12", "Invalid Card Number"))
+		return
+	}
+	if personalAccount.Id != personalAccountId {
+		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "56", "No Card Record"))
+		return
+	}
+
+	if personalAccount.CardNumber != authorizationRequestDto.CardNumber ||
+		personalAccount.CardSecurityCode != authorizationRequestDto.CardSecurityCode ||
+		personalAccount.CardExpiryYear != authorizationRequestDto.CardExpiryYear ||
+		personalAccount.CardExpiryMonth != authorizationRequestDto.CardExpiryMonth {
+		var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
+			personalAccount,
+			businessAccount,
+			"5",
+			"Do Not Honour")
+		savePayment(db, payment)
+		businessAccount.Statement = append(businessAccount.Statement, payment.Id)
+		saveAccount(db, businessAccount)
+		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "5", "Do Not Honour"))
+		return
+	}
+
+	if personalAccount.Available < authorizationRequestDto.Amount {
+		var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
+			personalAccount,
+			businessAccount,
+			"51",
+			"Insufficient Funds")
+		savePayment(db, payment)
+		businessAccount.Statement = append(businessAccount.Statement, payment.Id)
+		saveAccount(db, businessAccount)
+		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "51", "Insufficient Funds"))
+		return
+	}
+
+	// Successful Payment
+	personalAccount.Available = personalAccount.Available - authorizationRequestDto.Amount
+	personalAccount.Blocked = personalAccount.Blocked + authorizationRequestDto.Amount
+	saveAccount(db, personalAccount)
+	businessAccount.Blocked = businessAccount.Blocked + authorizationRequestDto.Amount
+	saveAccount(db, businessAccount)
+	var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
+		personalAccount,
+		businessAccount,
+		"0",
+		"Approved")
+	savePayment(db, payment)
+	businessAccount.Statement = append(businessAccount.Statement, payment.Id)
+	saveAccount(db, businessAccount)
+	personalAccount.Statement = append(personalAccount.Statement, payment.Id)
+	saveAccount(db, personalAccount)
+	json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "0", "Approved"))
+
+	return
+}
+
 func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s Users.User3
