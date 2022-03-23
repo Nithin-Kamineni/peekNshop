@@ -15,3 +15,7 @@ export interface Stores {
     icon:           string;
     name:           string;
 }
+export interface offers {  
+    description:    string;
+    name:           string;
+}

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Stores } from '../models/common_models'
 import { environment } from '../environments/environments'
+import { offers } from '../models/common_models'
 @Injectable({
     providedIn: 'root'
 })
@@ -16,7 +17,7 @@ export class CatogoriesService{
         httpHeaders.append('content-type','application/json')
 
         //Get the HTTP Method working for you
-        return  this.http.get('http://localhost:8080/api/projects', {headers: httpHeaders});
+        return  this.http.get<offers>('http://localhost:10000/offers', {headers: httpHeaders});
 
     }
     getStores(){

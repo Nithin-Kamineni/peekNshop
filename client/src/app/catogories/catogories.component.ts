@@ -13,7 +13,7 @@ import { results } from '../models/results'
 export class CatogoriesComponent implements OnInit {
   city = "Gainesville"
   offers: any;
-  stores:any;
+  stores:any; 
 
   constructor(public service: CatogoriesService, private http: HttpClient) { }
 
@@ -32,7 +32,7 @@ export class CatogoriesComponent implements OnInit {
     //   console.log(x.photos[0].photo_reference)
     // }
     console.log(this.stores.results.icon)
-  }); }, 5000);
+  }); }, 3000);
 
 
   // setTimeout(() => {  this.http.get<Stores>('http://localhost:10000/address/?'+'search=store'+'&lat='+ environment.lat+'&long='+environment.lon, {}).subscribe( (data: Stores) => {
