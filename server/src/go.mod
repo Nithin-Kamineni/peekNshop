@@ -17,4 +17,5 @@ require (
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/mattn/go-sqlite3 v1.14.9 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	github.com/skratchdot/open-golang v0.0.0-20200116055534-eef842397966
 )

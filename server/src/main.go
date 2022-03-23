@@ -8,17 +8,15 @@ import (
 	"net/http"
 	"net/url"
 	"src/Carts"
+	"src/Offers"
 	"src/Users"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-
 	//"strconv"
-	"time"
 )
 
 type student struct {
@@ -67,13 +65,14 @@ func main() {
 }
 
 func (a *App) start() {
-	a.db.AutoMigrate(&student{})
 	a.db.AutoMigrate(&Users.User3{})
+	a.db.AutoMigrate(Offers.Offer{})
 	a.r.HandleFunc("/address", a.returnLat) //returning lat
 	a.r.HandleFunc("/address/", a.returnNearBy)
+	a.r.HandleFunc("/offers", a.returnOffers)
 	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
 	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
-	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")           //this
+	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")     //this
 	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST") //this
 	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")          //this
 	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST") //this
@@ -210,7 +209,7 @@ func (a *App) changeUserDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(statusCode: 200)
+	// w.WriteHeader(statusCode: 200)
 	w.Header().Set("Content-Type", "application/json")
 
 	//params := mux.Vars(r)
@@ -218,7 +217,7 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(username)
 	var s Users.User3
 	var reply Users.LogInReply
-	SecretKey := "SaiReddyWedsMona"
+	// SecretKey := "SaiReddyWedsMona"
 	username := r.URL.Query().Get("email")
 	passkey := r.URL.Query().Get("passkey")
 	//credentials := a.db.First(&s, "email = ?", username)
@@ -233,7 +232,7 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 
 	if s.ID == "" {
 		fmt.Println("User does not exist/registered")
-		reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "User does not exist/registered", UserDetails: s}
+		reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "User does not exist/registered", UserDetails: s, AllowUsers: false}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -249,40 +248,14 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 
 		if s.Email == "" {
 			fmt.Println("Password is incorrect")
-			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Password is incorrect", UserDetails: s}
+			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Password is incorrect", UserDetails: s, AllowUsers: false}
 			err = json.NewEncoder(w).Encode(reply)
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
 			}
 		} else {
 			fmt.Println("Login Sucessfull")
-
-			claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-				Issuer:    s.ID,
-				ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), //1 day
-			})
-
-			tokens, err := claims.SignedString([]byte(SecretKey))
-			if err != nil {
-				reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Could not login...", UserDetails: s}
-				sendErr(w, http.StatusInternalServerError, err.Error())
-				return
-			}
-
-			err = a.db.Exec("UPDATE user3 SET AcessKey = ? where ID = ?", tokens, s.ID).Error
-			if err != nil {
-				sendErr(w, http.StatusInternalServerError, err.Error())
-				return
-			}
-
-			reply = Users.LogInReply{AccessKey: tokens, RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s}
-
-			http.SetCookie(w, &http.Cookie{
-				Name:    "session_token",
-				Value:   tokens,
-				Expires: time.Now().Add(time.Hour * 24),
-			})
-
+			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s, AllowUsers: true}
 			err = json.NewEncoder(w).Encode(reply)
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
@@ -312,8 +285,23 @@ func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	} else {
 		w.WriteHeader(http.StatusCreated)
+		err = json.NewEncoder(w).Encode(reply)
 	}
-	err = json.NewEncoder(w).Encode(reply)
+}
+
+func (a *App) returnOffers(w http.ResponseWriter, r *http.Request) {
+	a.db.Model(&Offers.Offer{}).Create([]map[string]interface{}{
+		{"name": "jinzhu_1", "description": "10% off on all items"},
+		{"name": "jinzhu_2", "description": "20% off on all items"},
+	})
+	w.Header().Set("Content-Type", "application/json")
+	var all []Offers.Offer
+	err := a.db.Find(&all).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	err = json.NewEncoder(w).Encode(all)
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
@@ -359,12 +347,16 @@ func (a *App) cartDisplay(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
 
+	search := r.URL.Query().Get("search")
+	lat := r.URL.Query().Get("lat")
+	long := r.URL.Query().Get("long")
 	w.Header().Set("Content-Type", "application/json")
 
-	keyword := "foods"
+	keyword := search
 	radius := "1500"
 	field := "formatted_address,name,rating,opening_hours,geometry"
-	location := "29.61872,-82.37299"
+	location := lat + "," + long
+	// fmt.Println(location)
 	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
 
 	params := "keyword=" + url.QueryEscape(keyword) + "&" +
@@ -373,7 +365,7 @@ func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
 		"location=" + url.QueryEscape(location) + "&" +
 		"key=" + url.QueryEscape(Key)
 	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
-	fmt.Println(path)
+	// fmt.Println(path)
 	resp, err := http.Get(path)
 
 	if err != nil {

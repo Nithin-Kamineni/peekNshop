@@ -20,8 +20,6 @@ import { ProductComponent } from './product/product.component';
 import { ProductPageComponent } from './product-page/product-page.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NavbarComponent } from './navbar/navbar.component';
-import { LoginComponent } from './login/login.component';
-import { SignupComponent } from './signup/signup.component';
 import { CatogoriesComponent } from './catogories/catogories.component';
 import { MainSliderComponent } from './main-slider/main-slider.component';
 import { FooterComponent } from './footer/footer.component';
@@ -33,6 +31,7 @@ import { UserComponent } from './user/user.component';
 import { UserHomepageComponent } from './user-homepage/user-homepage.component';
 import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
+import { DeliveryComponent } from './delivery/delivery.component';
 
 @NgModule({
   declarations: [
@@ -42,8 +41,7 @@ import { ContactComponent } from './contact/contact.component';
     ProductComponent,
     ProductPageComponent,
     NavbarComponent,
-    SignupComponent,
-    LoginComponent,
+    
     CatogoriesComponent,
     MainSliderComponent,
     FooterComponent,
@@ -53,6 +51,7 @@ import { ContactComponent } from './contact/contact.component';
     UserHomepageComponent,
     AboutComponent,
     ContactComponent,
+    DeliveryComponent,
   ],
   imports: [
     BrowserModule,

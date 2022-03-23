@@ -1,33 +1,19 @@
-.about-section {
-    width: 80vw;
-    margin-top: 10vh;
-    display: flex;
-    justify-content: space-between;
-    
-    }
-    .content {
-      width: 50%;
-      
-  
-      h1 {
-        font-size: 3rem;
-        line-height: 20px;
-        
-      }
-      
-      
-    }
-    .image-wrapper {
-      width: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      
-    }
-    .row p{
-        font-weight: 700px;
-        color:black;
-        
-    }
-  
+.social-link {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  border-radius: 50%;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+}
+
+.social-link:hover,
+.social-link:focus {
+  background: #ddd;
+  text-decoration: none;
+  color: #555;
+}

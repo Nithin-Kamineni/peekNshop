@@ -11,11 +11,16 @@ export class HomepageComponent implements OnInit{
   title = 'PeekNshop';
   subtitle = 'choose where to shop?';
   
+  
+  
 
   constructor(public service: MapsService) { }
 
   ngOnInit(): void {
     this.service.getLocation();
+    
+    
+
   }
 
   

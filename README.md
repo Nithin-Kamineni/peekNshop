@@ -15,8 +15,10 @@ The application displays the inventories of the stores that the user wants to se
 Angular, Golang, SQLserver
 ```
 
-## Team Members:
+## Team Members
+### BackEnd
 Venkata Nithin Kamineni: github - Nithin-Kamineni, 
-Vamsi Pachamatla: github - vamsi3379, 
 Saieswar Reddy Vaka: github - sai6221,
+### FrontEnd
+Vamsi Pachamatla: github - vamsi3379
 Mattaparthi Nitish Veera: github - VeeraNitish7.
