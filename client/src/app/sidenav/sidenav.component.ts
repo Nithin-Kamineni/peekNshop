@@ -92,8 +92,8 @@ export class SidenavComponent implements OnInit {
             this.router.navigate(['/user-homepage'])
           }else{
             alert(this.loginmsg)
-            this.isLogin = this.isLogin
-            environment.isLogin=environment.isLogin
+            this.isLogin = true
+            environment.isLogin=true
             this.router.navigate([''])
           }
         })
@@ -124,12 +124,16 @@ export class SidenavComponent implements OnInit {
               alert("Signup Successful")
               let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
                 element.click();
+                this.isLogin=!this.isLogin
+            environment.isLogin=!environment.isLogin
               this.router.navigate(['/user-homepage'])
             }else{
               console.log("Wrong User")
               alert("User already registered")
               let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
                 element.click();
+                this.isLogin = true
+            environment.isLogin=true
               this.router.navigate([''])
             }
         })
