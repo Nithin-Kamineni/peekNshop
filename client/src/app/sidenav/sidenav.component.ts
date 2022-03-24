@@ -120,7 +120,7 @@ export class SidenavComponent implements OnInit {
       this.http.post<SignupModel>('http://localhost:10000/user', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
             console.log(data.Msg)
             this.signupmsg = data.Msg
-            if (this.signupmsg == "sucessfull"){
+            if (this.signupmsg == "Sucessfull"){
               alert("Signup Successful")
               let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
                 element.click();

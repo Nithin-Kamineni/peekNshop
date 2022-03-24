@@ -217,7 +217,6 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(username)
 	var s Users.User3
 	var reply Users.LogInReply
-	// SecretKey := "SaiReddyWedsMona"
 	username := r.URL.Query().Get("email")
 	passkey := r.URL.Query().Get("passkey")
 	//credentials := a.db.First(&s, "email = ?", username)
@@ -273,19 +272,24 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s Users.User3
-	reply := Users.SignInReply{Msg: "sucessfull"}
+	reply_on_succ := Users.SignInReply{Msg: "Sucessfull"}
+	reply_on_fail := Users.SignInReply{Msg: "Email already exists, try using another email."}
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
-		sendErr(w, http.StatusBadRequest, err.Error())
+		// sendErr(w, http.StatusBadRequest, err.Error())
+		w.WriteHeader(http.StatusCreated)
+		err = json.NewEncoder(w).Encode(reply_on_fail)
 		return
 	}
 	s.ID = uuid.New().String()
 	err = a.db.Save(&s).Error
 	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
+		// sendErr(w, http.StatusInternalServerError, err.Error())
+		w.WriteHeader(http.StatusCreated)
+		err = json.NewEncoder(w).Encode(reply_on_fail)
 	} else {
 		w.WriteHeader(http.StatusCreated)
-		err = json.NewEncoder(w).Encode(reply)
+		err = json.NewEncoder(w).Encode(reply_on_succ)
 	}
 }
 
