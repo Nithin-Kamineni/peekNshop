@@ -10,6 +10,7 @@ import (
 
 	//"os/user"
 	"src/Carts"
+	"src/Stores"
 	"src/Users"
 
 	"github.com/dgrijalva/jwt-go"
@@ -80,6 +81,7 @@ func (a *App) start() {
 	a.db.AutoMigrate(&student{})
 	a.db.AutoMigrate(&Users.User3{})
 	a.db.AutoMigrate(&Carts.Cart_items{})
+	a.db.AutoMigrate(&Stores.Store_inventory{})
 	a.r.HandleFunc("/address", a.returnLat) //returning lat
 	a.r.HandleFunc("/stores/", a.returnNearBy)
 	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")
@@ -250,15 +252,15 @@ func (a *App) sendUserOrders(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s Users.User3
+	var store Stores.Store_inventory
 	reply := Users.SignInReply{Msg: "sucessfull"}
-	err := json.NewDecoder(r.Body).Decode(&s)
+	err := json.NewDecoder(r.Body).Decode(&store)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	s.ID = uuid.New().String()
-	err = a.db.Save(&s).Error
+	store.StoreID = uuid.New().String()
+	err = a.db.Save(&store).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -268,6 +270,75 @@ func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
+}
+
+func (a *App) editInventory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var storeUser Stores.Store_inventory
+	//var storeDB Stores.Store_inventory
+	err := json.NewDecoder(r.Body).Decode(&storeUser)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// err = a.db.Raw("SELECT ID,acessKey FROM user3 WHERE StoreID = ? and ProductID = ?", s1.ID).Scan(&s2).Error
+	// if err != nil {
+	// 	sendErr(w, http.StatusInternalServerError, err.Error())
+	// 	return
+	// }
+	// fmt.Println(s1.Acesskey)
+	// fmt.Println(s2.Acesskey)
+	// fmt.Println()
+	//if s2.Acesskey == s1.Acesskey {
+	err = a.db.Exec("UPDATE store_inventory SET ProductPrice = ?, ProductName = ?, Quantity = ?, ModifiedAt = ? WHERE StoreID = ? and ProductID = ?", storeUser.ProductPrice, storeUser.ProductName, storeUser.Quantity, storeUser.ModifiedAt, storeUser.StoreID, storeUser.ProductID).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
+func (a *App) deleteInventory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var storeUser Stores.Store_inventory
+	//var storeDB Stores.Store_inventory
+	err := json.NewDecoder(r.Body).Decode(&storeUser)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// err = a.db.Raw("SELECT ID,acessKey FROM user3 WHERE StoreID = ? and ProductID = ?", s1.ID).Scan(&s2).Error
+	// if err != nil {
+	// 	sendErr(w, http.StatusInternalServerError, err.Error())
+	// 	return
+	// }
+	// fmt.Println(s1.Acesskey)
+	// fmt.Println(s2.Acesskey)
+	// fmt.Println()
+	//if s2.Acesskey == s1.Acesskey {
+	err = a.db.Exec("DELETE from store_inventory WHERE StoreID = ? and ProductID = ?", storeUser.StoreID, storeUser.ProductID).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+
+	//a.db.Raw("SELECT  FROM user3 WHERE acesskey = ?", username)
+	// err = a.db.Save(&s).Error
+	// if err != nil {
+	// 	sendErr(w, http.StatusInternalServerError, err.Error())
+	// }
+	//}
 }
 
 func PaymentsCapture(w http.ResponseWriter, r *http.Request) {
@@ -361,28 +432,6 @@ func PaymentsCapture(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id, "12", "Invalid Transaction"))
-}
-
-func (a *App) editInventory(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	var s Users.User3
-	reply := Users.SignInReply{Msg: "sucessfull"}
-	err := json.NewDecoder(r.Body).Decode(&s)
-	if err != nil {
-		sendErr(w, http.StatusBadRequest, err.Error())
-		return
-	}
-	s.ID = uuid.New().String()
-	err = a.db.Save(&s).Error
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
-	} else {
-		w.WriteHeader(http.StatusCreated)
-	}
-	err = json.NewEncoder(w).Encode(reply)
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
-	}
 }
 
 func (a *App) userStatusCheck(w http.ResponseWriter, r *http.Request) {
