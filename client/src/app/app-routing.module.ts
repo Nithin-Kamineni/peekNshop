@@ -10,6 +10,7 @@ import { AboutComponent } from './about/about.component';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { ContactComponent } from './contact/contact.component';
 import { DeliveryComponent } from './delivery/delivery.component';
+import { PaymentComponent } from './payment/payment.component';
 
 
 const routes: Routes = [
@@ -23,6 +24,7 @@ const routes: Routes = [
   {path: "delivery", component: DeliveryComponent},
   // {path: "", component: SidenavComponent},
   {path: "contact", component: ContactComponent},
+  {path: "payment", component: PaymentComponent},
 ];
 
 @NgModule({
