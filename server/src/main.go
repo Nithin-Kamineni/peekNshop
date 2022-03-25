@@ -93,6 +93,7 @@ func (a *App) start() {
 	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")          //this
 	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST") //this
 	a.r.HandleFunc("/user", a.changeUserDetails).Methods("PUT")
+	a.r.HandleFunc("/user/orders", a.sendUserOrders).Methods("POST")
 	a.r.HandleFunc("/students/", a.getAllStudents).Methods("GET")
 	a.r.HandleFunc("/students/", a.addStudent).Methods("POST")
 	a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
@@ -207,6 +208,44 @@ func PaymentsAuthorization(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "0", "Approved"))
 
 	return
+}
+
+func (a *App) sendUserOrders(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s1 Users.User3
+	var s2 Users.User3
+	err := json.NewDecoder(r.Body).Decode(&s1)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = a.db.Raw("SELECT ID,userOrders FROM user3 WHERE id = ?", s1.ID).Scan(&s2).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	fmt.Println(s1.Acesskey)
+	fmt.Println(s2.Acesskey)
+	fmt.Println()
+	if s2.Acesskey == s1.Acesskey {
+		err = a.db.Exec("UPDATE user3 SET firstname = ?, lastname = ?, email = ?, password = ? where ID = ?", s1.Firstname, s1.Lastname, s1.Email, s1.Password, s2.ID).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+
+		//a.db.Raw("SELECT  FROM user3 WHERE acesskey = ?", username)
+		// err = a.db.Save(&s).Error
+		// if err != nil {
+		// 	sendErr(w, http.StatusInternalServerError, err.Error())
+		// }
+	}
 }
 
 func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
@@ -587,16 +626,7 @@ func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.db.AutoMigrate(&Cart_items_db{userID: cart.userID})
-	userCart := Cart_items_db{userID: cart.userID}
-
-	err = json.NewDecoder(r.Body).Decode(&userCart)
-	if err != nil {
-		sendErr(w, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	err = a.db.Save(&userCart).Error
+	err = a.db.Save(&cart).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	} else {
