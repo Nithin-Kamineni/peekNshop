@@ -32,6 +32,7 @@ import { UserHomepageComponent } from './user-homepage/user-homepage.component';
 import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { DeliveryComponent } from './delivery/delivery.component';
+import { PaymentComponent } from './payment/payment.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { DeliveryComponent } from './delivery/delivery.component';
     AboutComponent,
     ContactComponent,
     DeliveryComponent,
+    PaymentComponent,
   ],
   imports: [
     BrowserModule,
