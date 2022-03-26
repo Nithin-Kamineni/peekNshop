@@ -771,7 +771,7 @@ func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) filterInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart Carts.Cart_items
+	var inv Carts.Cart_items
 	var userID Carts.UserIDtab
 	err := json.NewDecoder(r.Body).Decode(&userID)
 	if err != nil {
@@ -779,13 +779,13 @@ func (a *App) filterInventory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.db.Raw("SELECT * FROM user3 WHERE userID = ?", userID).Scan(&cart).Error
+	err = a.db.Raw("SELECT * FROM storesInventory WHERE storeID = ?", userID).Scan(&inv).Error
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(cart)
+	err = json.NewEncoder(w).Encode(inv)
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
