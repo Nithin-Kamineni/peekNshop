@@ -90,7 +90,7 @@ func (a *App) start() {
 	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")
 	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")
 	a.r.HandleFunc("/stores/delete/", a.deleteInventory).Methods("POST")
-	a.r.HandleFunc("/stores/items", a.returnStoreInv)
+	a.r.HandleFunc("/stores/items", a.returnStoreInv).Methods("POST")
 	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)
 	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
 	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
@@ -767,6 +767,28 @@ func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(f)
 	defer resp.Body.Close()
+}
+
+func (a *App) filterInventory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var cart Carts.Cart_items
+	var userID Carts.UserIDtab
+	err := json.NewDecoder(r.Body).Decode(&userID)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = a.db.Raw("SELECT * FROM user3 WHERE userID = ?", userID).Scan(&cart).Error
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(cart)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
 }
 
 func (a *App) returnStoreInv(w http.ResponseWriter, r *http.Request) {
