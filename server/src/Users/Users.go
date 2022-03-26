@@ -34,6 +34,10 @@ type User3 struct {
 	RefreshKey string
 }
 
+type RetrevalDetails struct {
+	Email string `json:"email"`
+}
+
 type Cart_items struct {
 	userID     string `gorm:"primary_key" json:"id"`
 	productID  string `json:"productID"`

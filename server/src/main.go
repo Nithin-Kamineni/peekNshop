@@ -86,10 +86,12 @@ func (a *App) start() {
 	a.r.HandleFunc("/stores/", a.returnNearBy)
 	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")
 	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")
+	a.r.HandleFunc("/stores/delete/", a.deleteInventory).Methods("POST")
 	a.r.HandleFunc("/stores/items", a.returnStoreInv)
 	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)
 	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
 	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
+	a.r.HandleFunc("/user/forgotpassword", a.ForgotUserDetails).Methods("POST")
 	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")     //this
 	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST") //this
 	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")          //this
@@ -113,104 +115,104 @@ func (a *App) start() {
 	// log.Fatal(http.ListenAndServe(":10000", a.r))
 }
 
-func PaymentsAuthorization(w http.ResponseWriter, r *http.Request) {
+// func PaymentsAuthorization(w http.ResponseWriter, r *http.Request) {
 
-	// Read body
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+// 	// Read body
+// 	b, err := ioutil.ReadAll(r.Body)
+// 	defer r.Body.Close()
+// 	if err != nil {
+// 		http.Error(w, err.Error(), 500)
+// 		return
+// 	}
 
-	// Unmarshal
-	var authorizationRequestDto dto.AuthorizationRequestDto
-	err = json.Unmarshal(b, &authorizationRequestDto)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+// 	// Unmarshal
+// 	var authorizationRequestDto dto.AuthorizationRequestDto
+// 	err = json.Unmarshal(b, &authorizationRequestDto)
+// 	if err != nil {
+// 		http.Error(w, err.Error(), 500)
+// 		return
+// 	}
 
-	// Prepare Payment Response
-	w.Header().Set("content-type", "application/json")
+// 	// Prepare Payment Response
+// 	w.Header().Set("content-type", "application/json")
 
-	// Basic Validation - Business Account
-	var businessAccountId = r.Header.Get("From")
-	var businessAccount model.Account
-	if len(businessAccountId) > 0 {
-		businessAccount, _ = getAccount(db, businessAccountId)
-	} else {
-		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "3", "Invalid Merchant"))
-		return
-	}
-	if businessAccount.Id != businessAccountId {
-		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "15", "No Such Issuer"))
-		return
-	}
+// 	// Basic Validation - Business Account
+// 	var businessAccountId = r.Header.Get("From")
+// 	var businessAccount model.Account
+// 	if len(businessAccountId) > 0 {
+// 		businessAccount, _ = getAccount(db, businessAccountId)
+// 	} else {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "3", "Invalid Merchant"))
+// 		return
+// 	}
+// 	if businessAccount.Id != businessAccountId {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "15", "No Such Issuer"))
+// 		return
+// 	}
 
-	// Basic Validation - Personal Account
-	var personalAccountId = fmt.Sprintf("%v", authorizationRequestDto.CardNumber)
-	var personalAccount model.Account
-	if len(personalAccountId) > 0 {
-		personalAccount, _ = getAccount(db, personalAccountId)
-	} else {
-		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "12", "Invalid Card Number"))
-		return
-	}
-	if personalAccount.Id != personalAccountId {
-		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "56", "No Card Record"))
-		return
-	}
+// 	// Basic Validation - Personal Account
+// 	var personalAccountId = fmt.Sprintf("%v", authorizationRequestDto.CardNumber)
+// 	var personalAccount model.Account
+// 	if len(personalAccountId) > 0 {
+// 		personalAccount, _ = getAccount(db, personalAccountId)
+// 	} else {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "12", "Invalid Card Number"))
+// 		return
+// 	}
+// 	if personalAccount.Id != personalAccountId {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "56", "No Card Record"))
+// 		return
+// 	}
 
-	if personalAccount.CardNumber != authorizationRequestDto.CardNumber ||
-		personalAccount.CardSecurityCode != authorizationRequestDto.CardSecurityCode ||
-		personalAccount.CardExpiryYear != authorizationRequestDto.CardExpiryYear ||
-		personalAccount.CardExpiryMonth != authorizationRequestDto.CardExpiryMonth {
-		var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
-			personalAccount,
-			businessAccount,
-			"5",
-			"Do Not Honour")
-		savePayment(db, payment)
-		businessAccount.Statement = append(businessAccount.Statement, payment.Id)
-		saveAccount(db, businessAccount)
-		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "5", "Do Not Honour"))
-		return
-	}
+// 	if personalAccount.CardNumber != authorizationRequestDto.CardNumber ||
+// 		personalAccount.CardSecurityCode != authorizationRequestDto.CardSecurityCode ||
+// 		personalAccount.CardExpiryYear != authorizationRequestDto.CardExpiryYear ||
+// 		personalAccount.CardExpiryMonth != authorizationRequestDto.CardExpiryMonth {
+// 		var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
+// 			personalAccount,
+// 			businessAccount,
+// 			"5",
+// 			"Do Not Honour")
+// 		savePayment(db, payment)
+// 		businessAccount.Statement = append(businessAccount.Statement, payment.Id)
+// 		saveAccount(db, businessAccount)
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "5", "Do Not Honour"))
+// 		return
+// 	}
 
-	if personalAccount.Available < authorizationRequestDto.Amount {
-		var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
-			personalAccount,
-			businessAccount,
-			"51",
-			"Insufficient Funds")
-		savePayment(db, payment)
-		businessAccount.Statement = append(businessAccount.Statement, payment.Id)
-		saveAccount(db, businessAccount)
-		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "51", "Insufficient Funds"))
-		return
-	}
+// 	if personalAccount.Available < authorizationRequestDto.Amount {
+// 		var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
+// 			personalAccount,
+// 			businessAccount,
+// 			"51",
+// 			"Insufficient Funds")
+// 		savePayment(db, payment)
+// 		businessAccount.Statement = append(businessAccount.Statement, payment.Id)
+// 		saveAccount(db, businessAccount)
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "51", "Insufficient Funds"))
+// 		return
+// 	}
 
-	// Successful Payment
-	personalAccount.Available = personalAccount.Available - authorizationRequestDto.Amount
-	personalAccount.Blocked = personalAccount.Blocked + authorizationRequestDto.Amount
-	saveAccount(db, personalAccount)
-	businessAccount.Blocked = businessAccount.Blocked + authorizationRequestDto.Amount
-	saveAccount(db, businessAccount)
-	var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
-		personalAccount,
-		businessAccount,
-		"0",
-		"Approved")
-	savePayment(db, payment)
-	businessAccount.Statement = append(businessAccount.Statement, payment.Id)
-	saveAccount(db, businessAccount)
-	personalAccount.Statement = append(personalAccount.Statement, payment.Id)
-	saveAccount(db, personalAccount)
-	json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "0", "Approved"))
+// 	// Successful Payment
+// 	personalAccount.Available = personalAccount.Available - authorizationRequestDto.Amount
+// 	personalAccount.Blocked = personalAccount.Blocked + authorizationRequestDto.Amount
+// 	saveAccount(db, personalAccount)
+// 	businessAccount.Blocked = businessAccount.Blocked + authorizationRequestDto.Amount
+// 	saveAccount(db, businessAccount)
+// 	var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
+// 		personalAccount,
+// 		businessAccount,
+// 		"0",
+// 		"Approved")
+// 	savePayment(db, payment)
+// 	businessAccount.Statement = append(businessAccount.Statement, payment.Id)
+// 	saveAccount(db, businessAccount)
+// 	personalAccount.Statement = append(personalAccount.Statement, payment.Id)
+// 	saveAccount(db, personalAccount)
+// 	json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "0", "Approved"))
 
-	return
-}
+// 	return
+// }
 
 func (a *App) sendUserOrders(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -341,98 +343,98 @@ func (a *App) deleteInventory(w http.ResponseWriter, r *http.Request) {
 	//}
 }
 
-func PaymentsCapture(w http.ResponseWriter, r *http.Request) {
+// func PaymentsCapture(w http.ResponseWriter, r *http.Request) {
 
-	// Read Path Parameters
-	vars := mux.Vars(r)
+// 	// Read Path Parameters
+// 	vars := mux.Vars(r)
 
-	// Read body
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
+// 	// Read body
+// 	b, err := ioutil.ReadAll(r.Body)
+// 	defer r.Body.Close()
+// 	if err != nil {
+// 		http.Error(w, err.Error(), 500)
+// 		return
+// 	}
 
-	// Unmarshal
-	var successiveRequestDto dto.SuccessiveRequestDto
-	err = json.Unmarshal(b, &successiveRequestDto)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
-	}
-	w.Header().Set("content-type", "application/json")
+// 	// Unmarshal
+// 	var successiveRequestDto dto.SuccessiveRequestDto
+// 	err = json.Unmarshal(b, &successiveRequestDto)
+// 	if err != nil {
+// 		http.Error(w, err.Error(), 500)
+// 		return
+// 	}
+// 	w.Header().Set("content-type", "application/json")
 
-	// Basic Validation - Business Account
-	var businessAccountId = r.Header.Get("From")
-	var referenceId = vars["authorization_id"]
-	var businessAccount model.Account
-	if len(businessAccountId) > 0 {
-		businessAccount, _ = getAccount(db, businessAccountId)
-	} else {
-		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "3", "Invalid Merchant"))
-		return
-	}
-	if businessAccount.Id != businessAccountId {
-		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "15", "No Such Issuer"))
-		return
-	}
+// 	// Basic Validation - Business Account
+// 	var businessAccountId = r.Header.Get("From")
+// 	var referenceId = vars["authorization_id"]
+// 	var businessAccount model.Account
+// 	if len(businessAccountId) > 0 {
+// 		businessAccount, _ = getAccount(db, businessAccountId)
+// 	} else {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "3", "Invalid Merchant"))
+// 		return
+// 	}
+// 	if businessAccount.Id != businessAccountId {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "15", "No Such Issuer"))
+// 		return
+// 	}
 
-	// Check if previous payment exists
-	successiveRequestDto.Type = constant.CAPTURE
-	successiveRequestDto.ReferenceId = referenceId
-	if len(referenceId) <= 0 {
-		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "12", "Invalid Transaction	"))
-		return
-	}
-	var referencedPayment, _ = getPayment(db, referenceId)
-	if referencedPayment.Id != referenceId {
-		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "12", "Invalid Transaction	"))
-		return
-	}
+// 	// Check if previous payment exists
+// 	successiveRequestDto.Type = constant.CAPTURE
+// 	successiveRequestDto.ReferenceId = referenceId
+// 	if len(referenceId) <= 0 {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "12", "Invalid Transaction	"))
+// 		return
+// 	}
+// 	var referencedPayment, _ = getPayment(db, referenceId)
+// 	if referencedPayment.Id != referenceId {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "12", "Invalid Transaction	"))
+// 		return
+// 	}
 
-	// Create successive payment
-	var successivePayment model.Payment
-	if referencedPayment.Operation == constant.AUTHORIZATION && referencedPayment.Status == "0" {
-		if referencedPayment.CurrentAmount < successiveRequestDto.Amount {
-			successivePayment = model.CreateSuccessivePayment(successiveRequestDto,
-				referencedPayment,
-				"13",
-				"Invalid Amount")
-			savePayment(db, successivePayment)
-			businessAccount.Statement = append(businessAccount.Statement, successivePayment.Id)
-			saveAccount(db, businessAccount)
-			json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id,
-				"13",
-				"Invalid Amount"))
-			return
-		} else {
-			referencedPayment.CurrentAmount = referencedPayment.CurrentAmount - successiveRequestDto.Amount
-			savePayment(db, referencedPayment)
-			successivePayment = model.CreateSuccessivePayment(successiveRequestDto,
-				referencedPayment,
-				"0",
-				"Approved")
-			savePayment(db, successivePayment)
-			var personalAccountId = fmt.Sprintf("%v", referencedPayment.CardNumber)
-			var personalAccount, _ = getAccount(db, personalAccountId)
-			personalAccount.Blocked = personalAccount.Blocked - successiveRequestDto.Amount
-			personalAccount.Statement = append(personalAccount.Statement, successivePayment.Id)
-			saveAccount(db, personalAccount)
-			businessAccount.Blocked = businessAccount.Blocked - successiveRequestDto.Amount
-			businessAccount.Available = businessAccount.Available + successiveRequestDto.Amount
-			businessAccount.Statement = append(businessAccount.Statement, successivePayment.Id)
-			saveAccount(db, businessAccount)
-			json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id,
-				"0",
-				"Approved"))
-			return
-		}
+// 	// Create successive payment
+// 	var successivePayment model.Payment
+// 	if referencedPayment.Operation == constant.AUTHORIZATION && referencedPayment.Status == "0" {
+// 		if referencedPayment.CurrentAmount < successiveRequestDto.Amount {
+// 			successivePayment = model.CreateSuccessivePayment(successiveRequestDto,
+// 				referencedPayment,
+// 				"13",
+// 				"Invalid Amount")
+// 			savePayment(db, successivePayment)
+// 			businessAccount.Statement = append(businessAccount.Statement, successivePayment.Id)
+// 			saveAccount(db, businessAccount)
+// 			json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id,
+// 				"13",
+// 				"Invalid Amount"))
+// 			return
+// 		} else {
+// 			referencedPayment.CurrentAmount = referencedPayment.CurrentAmount - successiveRequestDto.Amount
+// 			savePayment(db, referencedPayment)
+// 			successivePayment = model.CreateSuccessivePayment(successiveRequestDto,
+// 				referencedPayment,
+// 				"0",
+// 				"Approved")
+// 			savePayment(db, successivePayment)
+// 			var personalAccountId = fmt.Sprintf("%v", referencedPayment.CardNumber)
+// 			var personalAccount, _ = getAccount(db, personalAccountId)
+// 			personalAccount.Blocked = personalAccount.Blocked - successiveRequestDto.Amount
+// 			personalAccount.Statement = append(personalAccount.Statement, successivePayment.Id)
+// 			saveAccount(db, personalAccount)
+// 			businessAccount.Blocked = businessAccount.Blocked - successiveRequestDto.Amount
+// 			businessAccount.Available = businessAccount.Available + successiveRequestDto.Amount
+// 			businessAccount.Statement = append(businessAccount.Statement, successivePayment.Id)
+// 			saveAccount(db, businessAccount)
+// 			json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id,
+// 				"0",
+// 				"Approved"))
+// 			return
+// 		}
 
-	}
+// 	}
 
-	json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id, "12", "Invalid Transaction"))
-}
+// 	json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id, "12", "Invalid Transaction"))
+// }
 
 func (a *App) userStatusCheck(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -529,7 +531,7 @@ func (a *App) changeUserDetails(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(s2.Acesskey)
 	fmt.Println()
 	if s2.Acesskey == s1.Acesskey {
-		err = a.db.Exec("UPDATE user3 SET firstname = ?, lastname = ?, email = ?, password = ? where ID = ?", s1.Firstname, s1.Lastname, s1.Email, s1.Password, s2.ID).Error
+		err = a.db.Exec("UPDATE user3 SET firstname = ?, lastname = ?, email = ? where ID = ?", s1.Firstname, s1.Lastname, s1.Email, s2.ID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
@@ -546,6 +548,29 @@ func (a *App) changeUserDetails(w http.ResponseWriter, r *http.Request) {
 		// 	sendErr(w, http.StatusInternalServerError, err.Error())
 		// }
 	}
+}
+
+func (a *App) ForgotUserDetails(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var email Users.RetrevalDetails
+	var s Users.User3
+	err := json.NewDecoder(r.Body).Decode(&email)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = a.db.Raw("SELECT id,email,acesskey FROM user3 WHERE email = ?", email.Email).Scan(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(s)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+
 }
 
 func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
