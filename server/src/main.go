@@ -7,8 +7,11 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+
+	//"os/user"
 	"src/Carts"
 	"src/Offers"
+	"src/Stores"
 	"src/Users"
 
 	"github.com/google/uuid"
@@ -28,6 +31,14 @@ type student struct {
 type App struct {
 	db *gorm.DB
 	r  *mux.Router
+}
+
+type Cart_items_db struct {
+	UserID     string `gorm:"-" json:"id"`
+	ProductID  string `json:"productID"`
+	Quantity   string `json:"quantity"`
+	CreatedAt  string `json:"created"`
+	ModifiedAt string `json:"modified"`
 }
 
 func CORS(next http.Handler) http.Handler {
@@ -72,11 +83,24 @@ func (a *App) start() {
 	a.r.HandleFunc("/offers", a.returnOffers)
 	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
 	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
+	a.db.AutoMigrate(&Carts.Cart_items{})
+	a.db.AutoMigrate(&Stores.Store_inventory{})
+	a.r.HandleFunc("/address", a.returnLat) //returning lat
+	a.r.HandleFunc("/stores/", a.returnNearBy)
+	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")
+	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")
+	a.r.HandleFunc("/stores/delete/", a.deleteInventory).Methods("POST")
+	a.r.HandleFunc("/stores/items", a.returnStoreInv)
+	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)
+	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
+	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
+	a.r.HandleFunc("/user/forgotpassword", a.ForgotUserDetails).Methods("POST")
 	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")     //this
 	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST") //this
 	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")          //this
 	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST") //this
 	a.r.HandleFunc("/user", a.changeUserDetails).Methods("PUT")
+	a.r.HandleFunc("/user/orders", a.sendUserOrders).Methods("POST")
 	a.r.HandleFunc("/students/", a.getAllStudents).Methods("GET")
 	a.r.HandleFunc("/students/", a.addStudent).Methods("POST")
 	a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
@@ -93,6 +117,327 @@ func (a *App) start() {
 	log.Fatal(http.ListenAndServe(":10000", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(a.r)))
 	// log.Fatal(http.ListenAndServe(":10000", a.r))
 }
+
+// func PaymentsAuthorization(w http.ResponseWriter, r *http.Request) {
+
+// 	// Read body
+// 	b, err := ioutil.ReadAll(r.Body)
+// 	defer r.Body.Close()
+// 	if err != nil {
+// 		http.Error(w, err.Error(), 500)
+// 		return
+// 	}
+
+// 	// Unmarshal
+// 	var authorizationRequestDto dto.AuthorizationRequestDto
+// 	err = json.Unmarshal(b, &authorizationRequestDto)
+// 	if err != nil {
+// 		http.Error(w, err.Error(), 500)
+// 		return
+// 	}
+
+// 	// Prepare Payment Response
+// 	w.Header().Set("content-type", "application/json")
+
+// 	// Basic Validation - Business Account
+// 	var businessAccountId = r.Header.Get("From")
+// 	var businessAccount model.Account
+// 	if len(businessAccountId) > 0 {
+// 		businessAccount, _ = getAccount(db, businessAccountId)
+// 	} else {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "3", "Invalid Merchant"))
+// 		return
+// 	}
+// 	if businessAccount.Id != businessAccountId {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "15", "No Such Issuer"))
+// 		return
+// 	}
+
+// 	// Basic Validation - Personal Account
+// 	var personalAccountId = fmt.Sprintf("%v", authorizationRequestDto.CardNumber)
+// 	var personalAccount model.Account
+// 	if len(personalAccountId) > 0 {
+// 		personalAccount, _ = getAccount(db, personalAccountId)
+// 	} else {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "12", "Invalid Card Number"))
+// 		return
+// 	}
+// 	if personalAccount.Id != personalAccountId {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(authorizationRequestDto.OrderId, "56", "No Card Record"))
+// 		return
+// 	}
+
+// 	if personalAccount.CardNumber != authorizationRequestDto.CardNumber ||
+// 		personalAccount.CardSecurityCode != authorizationRequestDto.CardSecurityCode ||
+// 		personalAccount.CardExpiryYear != authorizationRequestDto.CardExpiryYear ||
+// 		personalAccount.CardExpiryMonth != authorizationRequestDto.CardExpiryMonth {
+// 		var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
+// 			personalAccount,
+// 			businessAccount,
+// 			"5",
+// 			"Do Not Honour")
+// 		savePayment(db, payment)
+// 		businessAccount.Statement = append(businessAccount.Statement, payment.Id)
+// 		saveAccount(db, businessAccount)
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "5", "Do Not Honour"))
+// 		return
+// 	}
+
+// 	if personalAccount.Available < authorizationRequestDto.Amount {
+// 		var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
+// 			personalAccount,
+// 			businessAccount,
+// 			"51",
+// 			"Insufficient Funds")
+// 		savePayment(db, payment)
+// 		businessAccount.Statement = append(businessAccount.Statement, payment.Id)
+// 		saveAccount(db, businessAccount)
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "51", "Insufficient Funds"))
+// 		return
+// 	}
+
+// 	// Successful Payment
+// 	personalAccount.Available = personalAccount.Available - authorizationRequestDto.Amount
+// 	personalAccount.Blocked = personalAccount.Blocked + authorizationRequestDto.Amount
+// 	saveAccount(db, personalAccount)
+// 	businessAccount.Blocked = businessAccount.Blocked + authorizationRequestDto.Amount
+// 	saveAccount(db, businessAccount)
+// 	var payment = model.CreateAuthorizationPayment(authorizationRequestDto,
+// 		personalAccount,
+// 		businessAccount,
+// 		"0",
+// 		"Approved")
+// 	savePayment(db, payment)
+// 	businessAccount.Statement = append(businessAccount.Statement, payment.Id)
+// 	saveAccount(db, businessAccount)
+// 	personalAccount.Statement = append(personalAccount.Statement, payment.Id)
+// 	saveAccount(db, personalAccount)
+// 	json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(payment.Id, "0", "Approved"))
+
+// 	return
+// }
+
+func (a *App) sendUserOrders(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s1 Users.User3
+	var s2 Users.User3
+	err := json.NewDecoder(r.Body).Decode(&s1)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = a.db.Raw("SELECT ID,userOrders FROM user3 WHERE id = ?", s1.ID).Scan(&s2).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	fmt.Println(s1.Acesskey)
+	fmt.Println(s2.Acesskey)
+	fmt.Println()
+	if s2.Acesskey == s1.Acesskey {
+		err = a.db.Exec("UPDATE user3 SET firstname = ?, lastname = ?, email = ?, password = ? where ID = ?", s1.Firstname, s1.Lastname, s1.Email, s1.Password, s2.ID).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+
+		//a.db.Raw("SELECT  FROM user3 WHERE acesskey = ?", username)
+		// err = a.db.Save(&s).Error
+		// if err != nil {
+		// 	sendErr(w, http.StatusInternalServerError, err.Error())
+		// }
+	}
+}
+
+func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var store Stores.Store_inventory
+	reply := Users.SignInReply{Msg: "sucessfull"}
+	err := json.NewDecoder(r.Body).Decode(&store)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	store.StoreID = uuid.New().String()
+	err = a.db.Save(&store).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
+func (a *App) editInventory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var storeUser Stores.Store_inventory
+	//var storeDB Stores.Store_inventory
+	err := json.NewDecoder(r.Body).Decode(&storeUser)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// err = a.db.Raw("SELECT ID,acessKey FROM user3 WHERE StoreID = ? and ProductID = ?", s1.ID).Scan(&s2).Error
+	// if err != nil {
+	// 	sendErr(w, http.StatusInternalServerError, err.Error())
+	// 	return
+	// }
+	// fmt.Println(s1.Acesskey)
+	// fmt.Println(s2.Acesskey)
+	// fmt.Println()
+	//if s2.Acesskey == s1.Acesskey {
+	err = a.db.Exec("UPDATE store_inventory SET ProductPrice = ?, ProductName = ?, Quantity = ?, ModifiedAt = ? WHERE StoreID = ? and ProductID = ?", storeUser.ProductPrice, storeUser.ProductName, storeUser.Quantity, storeUser.ModifiedAt, storeUser.StoreID, storeUser.ProductID).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
+func (a *App) deleteInventory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var storeUser Stores.Store_inventory
+	//var storeDB Stores.Store_inventory
+	err := json.NewDecoder(r.Body).Decode(&storeUser)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// err = a.db.Raw("SELECT ID,acessKey FROM user3 WHERE StoreID = ? and ProductID = ?", s1.ID).Scan(&s2).Error
+	// if err != nil {
+	// 	sendErr(w, http.StatusInternalServerError, err.Error())
+	// 	return
+	// }
+	// fmt.Println(s1.Acesskey)
+	// fmt.Println(s2.Acesskey)
+	// fmt.Println()
+	//if s2.Acesskey == s1.Acesskey {
+	err = a.db.Exec("DELETE from store_inventory WHERE StoreID = ? and ProductID = ?", storeUser.StoreID, storeUser.ProductID).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+
+	//a.db.Raw("SELECT  FROM user3 WHERE acesskey = ?", username)
+	// err = a.db.Save(&s).Error
+	// if err != nil {
+	// 	sendErr(w, http.StatusInternalServerError, err.Error())
+	// }
+	//}
+}
+
+// func PaymentsCapture(w http.ResponseWriter, r *http.Request) {
+
+// 	// Read Path Parameters
+// 	vars := mux.Vars(r)
+
+// 	// Read body
+// 	b, err := ioutil.ReadAll(r.Body)
+// 	defer r.Body.Close()
+// 	if err != nil {
+// 		http.Error(w, err.Error(), 500)
+// 		return
+// 	}
+
+// 	// Unmarshal
+// 	var successiveRequestDto dto.SuccessiveRequestDto
+// 	err = json.Unmarshal(b, &successiveRequestDto)
+// 	if err != nil {
+// 		http.Error(w, err.Error(), 500)
+// 		return
+// 	}
+// 	w.Header().Set("content-type", "application/json")
+
+// 	// Basic Validation - Business Account
+// 	var businessAccountId = r.Header.Get("From")
+// 	var referenceId = vars["authorization_id"]
+// 	var businessAccount model.Account
+// 	if len(businessAccountId) > 0 {
+// 		businessAccount, _ = getAccount(db, businessAccountId)
+// 	} else {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "3", "Invalid Merchant"))
+// 		return
+// 	}
+// 	if businessAccount.Id != businessAccountId {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "15", "No Such Issuer"))
+// 		return
+// 	}
+
+// 	// Check if previous payment exists
+// 	successiveRequestDto.Type = constant.CAPTURE
+// 	successiveRequestDto.ReferenceId = referenceId
+// 	if len(referenceId) <= 0 {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "12", "Invalid Transaction	"))
+// 		return
+// 	}
+// 	var referencedPayment, _ = getPayment(db, referenceId)
+// 	if referencedPayment.Id != referenceId {
+// 		json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(referenceId, "12", "Invalid Transaction	"))
+// 		return
+// 	}
+
+// 	// Create successive payment
+// 	var successivePayment model.Payment
+// 	if referencedPayment.Operation == constant.AUTHORIZATION && referencedPayment.Status == "0" {
+// 		if referencedPayment.CurrentAmount < successiveRequestDto.Amount {
+// 			successivePayment = model.CreateSuccessivePayment(successiveRequestDto,
+// 				referencedPayment,
+// 				"13",
+// 				"Invalid Amount")
+// 			savePayment(db, successivePayment)
+// 			businessAccount.Statement = append(businessAccount.Statement, successivePayment.Id)
+// 			saveAccount(db, businessAccount)
+// 			json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id,
+// 				"13",
+// 				"Invalid Amount"))
+// 			return
+// 		} else {
+// 			referencedPayment.CurrentAmount = referencedPayment.CurrentAmount - successiveRequestDto.Amount
+// 			savePayment(db, referencedPayment)
+// 			successivePayment = model.CreateSuccessivePayment(successiveRequestDto,
+// 				referencedPayment,
+// 				"0",
+// 				"Approved")
+// 			savePayment(db, successivePayment)
+// 			var personalAccountId = fmt.Sprintf("%v", referencedPayment.CardNumber)
+// 			var personalAccount, _ = getAccount(db, personalAccountId)
+// 			personalAccount.Blocked = personalAccount.Blocked - successiveRequestDto.Amount
+// 			personalAccount.Statement = append(personalAccount.Statement, successivePayment.Id)
+// 			saveAccount(db, personalAccount)
+// 			businessAccount.Blocked = businessAccount.Blocked - successiveRequestDto.Amount
+// 			businessAccount.Available = businessAccount.Available + successiveRequestDto.Amount
+// 			businessAccount.Statement = append(businessAccount.Statement, successivePayment.Id)
+// 			saveAccount(db, businessAccount)
+// 			json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id,
+// 				"0",
+// 				"Approved"))
+// 			return
+// 		}
+
+// 	}
+
+// 	json.NewEncoder(w).Encode(dto.CreatePaymentResponseDto(successivePayment.Id, "12", "Invalid Transaction"))
+// }
 
 func (a *App) userStatusCheck(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -189,7 +534,7 @@ func (a *App) changeUserDetails(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(s2.Acesskey)
 	fmt.Println()
 	if s2.Acesskey == s1.Acesskey {
-		err = a.db.Exec("UPDATE user3 SET firstname = ?, lastname = ?, email = ?, password = ? where ID = ?", s1.Firstname, s1.Lastname, s1.Email, s1.Password, s2.ID).Error
+		err = a.db.Exec("UPDATE user3 SET firstname = ?, lastname = ?, email = ? where ID = ?", s1.Firstname, s1.Lastname, s1.Email, s2.ID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
@@ -208,8 +553,32 @@ func (a *App) changeUserDetails(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (a *App) ForgotUserDetails(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var email Users.RetrevalDetails
+	var s Users.User3
+	err := json.NewDecoder(r.Body).Decode(&email)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = a.db.Raw("SELECT id,email,acesskey FROM user3 WHERE email = ?", email.Email).Scan(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(s)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+
+}
+
 func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	// w.WriteHeader(statusCode: 200)
+	//w.WriteHeader(statusCode: 200)
 	w.Header().Set("Content-Type", "application/json")
 
 	//params := mux.Vars(r)
@@ -311,14 +680,23 @@ func (a *App) returnOffers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (p Cart_items_db) TableName() string {
+	// double check here, make sure the table does exist!!
+	if p.UserID != "" {
+		return p.UserID
+	}
+	return "cart_items_db" // default table name
+}
+
 func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart Carts.Cart
+	var cart Carts.Cart_items
 	err := json.NewDecoder(r.Body).Decode(&cart)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
+
 	err = a.db.Save(&cart).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
@@ -329,21 +707,21 @@ func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) cartDisplay(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s Users.User3
-	reply := Users.SignInReply{Msg: "sucessfull"}
-	err := json.NewDecoder(r.Body).Decode(&s)
+	var cart Carts.Cart_items
+	var userID Carts.UserIDtab
+	err := json.NewDecoder(r.Body).Decode(&userID)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	s.ID = uuid.New().String()
-	err = a.db.Save(&s).Error
+
+	err = a.db.Raw("SELECT * FROM user3 WHERE userID = ?", userID).Scan(&cart).Error
 	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
-	} else {
-		w.WriteHeader(http.StatusCreated)
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
 	}
-	err = json.NewEncoder(w).Encode(reply)
+
+	err = json.NewEncoder(w).Encode(cart)
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
@@ -370,6 +748,82 @@ func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
 		"key=" + url.QueryEscape(Key)
 	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
 	// fmt.Println(path)
+	resp, err := http.Get(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//data1 := result{}
+	var f interface{}
+	json.Unmarshal(body, &f)
+	fmt.Println(f)
+
+	json.NewEncoder(w).Encode(f)
+	defer resp.Body.Close()
+}
+
+func (a *App) returnStoreInv(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+
+	keyword := "foods"
+	radius := "1500"
+	field := "formatted_address,name,rating,opening_hours,geometry"
+	location := "29.61872,-82.37299"
+	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
+
+	params := "keyword=" + url.QueryEscape(keyword) + "&" +
+		"radius=" + url.QueryEscape(radius) + "&" +
+		"field=" + url.QueryEscape(field) + "&" +
+		"location=" + url.QueryEscape(location) + "&" +
+		"key=" + url.QueryEscape(Key)
+	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
+	fmt.Println(path)
+	resp, err := http.Get(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	//data1 := result{}
+	var f interface{}
+	json.Unmarshal(body, &f)
+	fmt.Println(f)
+
+	json.NewEncoder(w).Encode(f)
+	defer resp.Body.Close()
+}
+
+func (a *App) returnProductPage(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+
+	keyword := "foods"
+	radius := "1500"
+	field := "formatted_address,name,rating,opening_hours,geometry"
+	location := "29.61872,-82.37299"
+	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
+
+	params := "keyword=" + url.QueryEscape(keyword) + "&" +
+		"radius=" + url.QueryEscape(radius) + "&" +
+		"field=" + url.QueryEscape(field) + "&" +
+		"location=" + url.QueryEscape(location) + "&" +
+		"key=" + url.QueryEscape(Key)
+	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
+	fmt.Println(path)
 	resp, err := http.Get(path)
 
 	if err != nil {
