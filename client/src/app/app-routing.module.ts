@@ -11,6 +11,7 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 import { ContactComponent } from './contact/contact.component';
 import { DeliveryComponent } from './delivery/delivery.component';
 import { PaymentComponent } from './payment/payment.component';
+import { ShopingCartComponent } from './shoping-cart/shoping-cart.component';
 
 
 const routes: Routes = [
@@ -26,6 +27,7 @@ const routes: Routes = [
   {path: "contact", component: ContactComponent},
   {path: "payment", component: PaymentComponent},
   {path: "product/id", component: ProductPageComponent},
+  {path: "cart", component: ShopingCartComponent},
 ];
 
 @NgModule({
