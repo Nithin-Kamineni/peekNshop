@@ -25,6 +25,7 @@ const routes: Routes = [
   // {path: "", component: SidenavComponent},
   {path: "contact", component: ContactComponent},
   {path: "payment", component: PaymentComponent},
+  {path: "product/id", component: ProductPageComponent},
 ];
 
 @NgModule({
