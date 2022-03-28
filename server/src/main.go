@@ -99,6 +99,7 @@ func (a *App) start() {
 	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST") //this
 	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")          //this
 	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST") //this
+	a.r.HandleFunc("/contact", a.contact).Methods("POST")           //this
 	a.r.HandleFunc("/user", a.changeUserDetails).Methods("PUT")
 	a.r.HandleFunc("/user/orders", a.sendUserOrders).Methods("POST")
 	a.r.HandleFunc("/students/", a.getAllStudents).Methods("GET")
@@ -256,6 +257,28 @@ func (a *App) sendUserOrders(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var store Stores.Store_inventory
+	reply := Users.SignInReply{Msg: "sucessfull"}
+	err := json.NewDecoder(r.Body).Decode(&store)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	store.StoreID = uuid.New().String()
+	err = a.db.Save(&store).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
+func (a *App) contact(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store Stores.Store_inventory
 	reply := Users.SignInReply{Msg: "sucessfull"}
