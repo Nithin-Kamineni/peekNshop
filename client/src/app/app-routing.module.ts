@@ -12,6 +12,8 @@ import { ContactComponent } from './contact/contact.component';
 import { DeliveryComponent } from './delivery/delivery.component';
 import { PaymentComponent } from './payment/payment.component';
 import { ShopingCartComponent } from './shoping-cart/shoping-cart.component';
+import { ChangeAddresspageComponent } from './change-addresspage/change-addresspage.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
 
 
 const routes: Routes = [
@@ -19,6 +21,8 @@ const routes: Routes = [
   {path: "", component: HomepageComponent},
 
   {path: "user", component: UserComponent},
+  {path: "user/changeaddress", component: ChangeAddresspageComponent},
+  {path: "user/orders", component: OrderDetailsComponent},
   {path: "user-homepage", component: UserHomepageComponent},
   {path: "products", component: ProductsComponent},
   {path: "about", component: AboutComponent},
