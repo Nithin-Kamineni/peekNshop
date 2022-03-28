@@ -92,7 +92,7 @@ func (a *App) start() {
 	a.r.HandleFunc("/stores/delete/", a.deleteInventory).Methods("POST")
 	a.r.HandleFunc("/stores/items", a.returnStoreInv).Methods("POST")
 	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)
-	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
+	a.r.HandleFunc("/user", a.userLogin).Methods("POST")
 	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
 	a.r.HandleFunc("/user/forgotpassword", a.ForgotUserDetails).Methods("POST")
 	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")     //this
@@ -579,7 +579,7 @@ func (a *App) changeUserDetails(w http.ResponseWriter, r *http.Request) {
 func (a *App) changeUserAddress(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s1 Users.User3
-	var s2 Users.User3
+	var s2 Users.ChangeUserAddress
 	err := json.NewDecoder(r.Body).Decode(&s1)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -595,7 +595,7 @@ func (a *App) changeUserAddress(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(s2.Acesskey)
 	fmt.Println()
 	if s2.Acesskey == s1.Acesskey {
-		err = a.db.Exec("UPDATE user3 SET address= ? where ID = ?", s1.Firstname, s2.ID).Error //add s1.address insted of s1.firstname
+		err = a.db.Exec("UPDATE user3 SET Address1= ? where ID = ?", s2.Address, s2.ID).Error //add s1.address insted of s1.firstname
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
@@ -647,10 +647,17 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(username)
 	var s Users.User3
 	var reply Users.LogInReply
+	var cord Users.Coardinates
+
 	username := r.URL.Query().Get("email")
 	passkey := r.URL.Query().Get("passkey")
+	err := json.NewDecoder(r.Body).Decode(&cord)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
 	//credentials := a.db.First(&s, "email = ?", username)
-	err := a.db.Raw("SELECT id FROM user3 WHERE email = ?", username).Scan(&s).Error
+	err = a.db.Raw("SELECT id FROM user3 WHERE email = ?", username).Scan(&s).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
@@ -684,7 +691,7 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			fmt.Println("Login Sucessfull")
-			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s, AllowUsers: true}
+			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s, AllowUsers: true, City: "Gainsvile"}
 			err = json.NewEncoder(w).Encode(reply)
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
@@ -984,7 +991,10 @@ func (a *App) returnLat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//data1 := result{}
-	var f interface{}
+	var f interface {
+		getHtml() string
+	}
+
 	json.Unmarshal(body, &f)
 	fmt.Println(f)
 
