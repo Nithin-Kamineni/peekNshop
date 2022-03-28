@@ -70,6 +70,12 @@ export class SidenavComponent implements OnInit {
   userProfile(){
     this.router.navigate(['/user'])
   }
+  logout(){
+    environment.isLogin=!environment.isLogin
+    console.log(environment.isLogin)
+    console.log("Logout")
+    this.router.navigate(['/'])
+  }
 
   loginFormSubmit(): void {
 
@@ -93,7 +99,7 @@ export class SidenavComponent implements OnInit {
           }else{
             alert(this.loginmsg)
             this.isLogin = true
-            environment.isLogin=true
+            environment.isLogin=!environment.isLogin
             this.router.navigate([''])
           }
         })
@@ -115,9 +121,8 @@ export class SidenavComponent implements OnInit {
       var email = this.signupForm.getRawValue().signup_email;
       var password = this.signupForm.getRawValue().signup_password;
       var confirm_password = this.signupForm.getRawValue().signup_confirm_password;
-      // console.log(first_name, last_name, email, password, confirm_password)
-      
-      this.http.post<SignupModel>('http://localhost:10000/user', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
+      if (password==confirm_password){
+        this.http.post<SignupModel>('http://localhost:10000/user', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
             console.log(data.Msg)
             this.signupmsg = data.Msg
             if (this.signupmsg == "Sucessfull"){
@@ -133,10 +138,15 @@ export class SidenavComponent implements OnInit {
               let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
                 element.click();
                 this.isLogin = true
-            environment.isLogin=true
+            environment.isLogin=!environment.isLogin
               this.router.navigate([''])
             }
         })
+      }else{
+        alert("Your passwords doesn't match")
+      }
+      
+      
 
   } else {
       console.log('There is a problem with the signup form');
