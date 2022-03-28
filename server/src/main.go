@@ -553,6 +553,44 @@ func (a *App) changeUserDetails(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (a *App) changeUserAddress(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s1 Users.User3
+	var s2 Users.User3
+	err := json.NewDecoder(r.Body).Decode(&s1)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = a.db.Raw("SELECT ID,acessKey FROM user3 WHERE id = ?", s1.ID).Scan(&s2).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	fmt.Println(s1.Acesskey)
+	fmt.Println(s2.Acesskey)
+	fmt.Println()
+	if s2.Acesskey == s1.Acesskey {
+		err = a.db.Exec("UPDATE user3 SET address= ? where ID = ?", s1.Firstname, s2.ID).Error //add s1.address insted of s1.firstname
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		reply := Users.SignInReply{Msg: "sucessfully changed your delivary address"}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+
+		//a.db.Raw("SELECT  FROM user3 WHERE acesskey = ?", username)
+		// err = a.db.Save(&s).Error
+		// if err != nil {
+		// 	sendErr(w, http.StatusInternalServerError, err.Error())
+		// }
+	}
+}
+
 func (a *App) ForgotUserDetails(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var email Users.RetrevalDetails
