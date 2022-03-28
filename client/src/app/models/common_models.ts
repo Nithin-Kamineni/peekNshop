@@ -19,3 +19,7 @@ export interface offers {
     description:    string;
     name:           string;
 }
+export interface Location {  
+    city:    string;
+    
+}

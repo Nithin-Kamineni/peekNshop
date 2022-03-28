@@ -18,9 +18,7 @@ export class HomepageComponent implements OnInit{
 
   ngOnInit(): void {
     this.service.getLocation();
-    
-    
-
+    this.service.getCity();
   }
 
   
