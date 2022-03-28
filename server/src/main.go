@@ -81,19 +81,20 @@ func (a *App) start() {
 	a.r.HandleFunc("/address", a.returnLat) //returning lat
 	a.r.HandleFunc("/address/", a.returnNearBy)
 	a.r.HandleFunc("/offers", a.returnOffers)
-	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
-	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
+	a.r.HandleFunc("/user", a.userLogin).Methods("POST")
+	a.r.HandleFunc("/user/a", a.userSignUp).Methods("POST")
 	a.db.AutoMigrate(&Carts.Cart_items{})
 	a.db.AutoMigrate(&Stores.Store_inventory{})
 	a.r.HandleFunc("/address", a.returnLat) //returning lat
 	a.r.HandleFunc("/stores/", a.returnNearBy)
+	a.r.HandleFunc("/city", a.homePageReload)
 	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")
 	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")
 	a.r.HandleFunc("/stores/delete/", a.deleteInventory).Methods("POST")
 	a.r.HandleFunc("/stores/items", a.returnStoreInv).Methods("POST")
 	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)
 	a.r.HandleFunc("/user", a.userLogin).Methods("POST")
-	a.r.HandleFunc("/user", a.userSignUp).Methods("POST")
+	a.r.HandleFunc("/user/a", a.userSignUp).Methods("POST")
 	a.r.HandleFunc("/user/forgotpassword", a.ForgotUserDetails).Methods("POST")
 	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")     //this
 	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST") //this
@@ -699,6 +700,30 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println(string(data))
 		fmt.Println()
+	}
+}
+
+func (a *App) homePageReload(w http.ResponseWriter, r *http.Request) {
+	// w.WriteHeader(statusCode: 200)
+	//w.WriteHeader(statusCode: 200)
+	w.Header().Set("Content-Type", "application/json")
+
+	//params := mux.Vars(r)
+	//username := params["username"]
+	//fmt.Println(username)
+	var reply Users.HomePageCity
+	var cord Users.Coardinates
+
+	err := json.NewDecoder(r.Body).Decode(&cord)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	//credentials := a.db.First(&s, "email = ?", username)
+	reply = Users.HomePageCity{City: "Gainsvile"}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
 }
 

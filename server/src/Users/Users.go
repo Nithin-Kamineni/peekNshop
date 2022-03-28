@@ -31,6 +31,10 @@ type Coardinates struct {
 	Lon string
 }
 
+type HomePageCity struct {
+	City string `json:"city"`
+}
+
 type User3 struct {
 	ID         string `gorm:"primary_key" json:"id"`
 	Firstname  string `json:"firstname"`
