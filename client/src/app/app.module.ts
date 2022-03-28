@@ -34,6 +34,7 @@ import { ContactComponent } from './contact/contact.component';
 import { DeliveryComponent } from './delivery/delivery.component';
 import { PaymentComponent } from './payment/payment.component';
 import { ShopingCartComponent } from './shoping-cart/shoping-cart.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ShopingCartComponent } from './shoping-cart/shoping-cart.component';
     DeliveryComponent,
     PaymentComponent,
     ShopingCartComponent,
+    OrderDetailsComponent,
   ],
   imports: [
     BrowserModule,
