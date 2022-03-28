@@ -720,6 +720,7 @@ func (a *App) homePageReload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//credentials := a.db.First(&s, "email = ?", username)
+	fmt.Println("Gainsville")
 	reply = Users.HomePageCity{City: "Gainsvile"}
 	err = json.NewEncoder(w).Encode(reply)
 	if err != nil {

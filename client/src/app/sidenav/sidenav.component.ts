@@ -15,7 +15,7 @@ import { environment } from '../environments/environments'
 export class SidenavComponent implements OnInit {
   loginForm!: FormGroup;
   signupForm!: FormGroup;
-  city = "Gainesville"
+  city = environment.city
   name = "Nithin Kamineni"
   IsmodelShow!: boolean;
   loginmsg!: string;
