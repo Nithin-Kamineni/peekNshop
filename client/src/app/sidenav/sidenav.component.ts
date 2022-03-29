@@ -71,10 +71,14 @@ export class SidenavComponent implements OnInit {
     this.router.navigate(['/user'])
   }
   logout(){
-    environment.isLogin=!environment.isLogin
+    this.updateisLogin()
     console.log(environment.isLogin)
     console.log("Logout")
     this.router.navigate(['/'])
+  }
+  updateisLogin(){
+    this.isLogin=!this.isLogin
+    environment.isLogin=!environment.isLogin
   }
 
   loginFormSubmit(): void {
@@ -93,13 +97,11 @@ export class SidenavComponent implements OnInit {
             alert(this.loginmsg) 
             let element: HTMLElement = document.getElementsByClassName('btn-close')[0] as HTMLElement;
             element.click();
-            this.isLogin=!this.isLogin
-            environment.isLogin=!environment.isLogin
+            this.updateisLogin()
             this.router.navigate(['/user-homepage'])
           }else{
             alert(this.loginmsg)
-            this.isLogin = true
-            environment.isLogin=!environment.isLogin
+            this.updateisLogin()
             this.router.navigate([''])
           }
         })
@@ -128,17 +130,15 @@ export class SidenavComponent implements OnInit {
             if (this.signupmsg == "Sucessfull"){
               alert("Signup Successful")
               let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
-                element.click();
-                this.isLogin=!this.isLogin
-            environment.isLogin=!environment.isLogin
+              element.click();
+              this.updateisLogin()
               this.router.navigate(['/user-homepage'])
             }else{
               console.log("Wrong User")
               alert("User already registered")
               let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
-                element.click();
-                this.isLogin = true
-            environment.isLogin=!environment.isLogin
+              element.click();
+              this.updateisLogin()
               this.router.navigate([''])
             }
         })
