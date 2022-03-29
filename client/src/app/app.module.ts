@@ -37,6 +37,7 @@ import { ShopingCartComponent } from './shoping-cart/shoping-cart.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { ChangeAddresspageComponent } from './change-addresspage/change-addresspage.component';
 import { ChangeUserProfileSettingsComponent } from './change-user-profile-settings/change-user-profile-settings.component';
+import { FavstoresComponent } from './favstores/favstores.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { ChangeUserProfileSettingsComponent } from './change-user-profile-settin
     OrderDetailsComponent,
     ChangeAddresspageComponent,
     ChangeUserProfileSettingsComponent,
+    FavstoresComponent,
   ],
   imports: [
     BrowserModule,
