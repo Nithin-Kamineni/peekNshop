@@ -1,0 +1,132 @@
+<main class="container">
+ 
+    <!-- Left Column / Headphones Image -->
+    <div class="left-column">
+      <img data-image="black" src="https://designmodo.com/demo/product-page/images/red.png" alt="">
+      <img data-image="blue" src="https://designmodo.com/demo/product-page/images/blue.png" alt="">
+      <img data-image="red" class="active" src="https://designmodo.com/demo/product-page/images/red.png" alt="">
+    </div>
+   
+   
+    <!-- Right Column -->
+    <div class="right-column">
+   
+      <!-- Product Description -->
+      <div class="product-description">
+        <span>Headphones</span>
+        <h1>Beats EP</h1>
+        <p>The preferred choice of a vast range of acclaimed DJs. Punchy, bass-focused sound and high isolation. Sturdy headband and on-ear cushions suitable for live performance</p>
+      </div>
+   
+      <!-- Product Configuration -->
+      <div class="product-configuration">
+   
+        <!-- Product Color -->
+        <div class="product-color">
+          <span>Color</span>
+   
+          <div class="color-choose">
+            <div>
+              <input data-image="red" type="radio" id="red" name="color" value="red" checked>
+              <label for="red"><span></span></label>
+            </div>
+            <div>
+              <input data-image="blue" type="radio" id="blue" name="color" value="blue">
+              <label for="blue"><span></span></label>
+            </div>
+            <div>
+              <input data-image="black" type="radio" id="black" name="color" value="black">
+              <label for="black"><span></span></label>
+            </div>
+          </div>
+   
+        </div>
+   
+        <!-- Cable Configuration -->
+        <div class="cable-config">
+          <span>Cable configuration</span>
+   
+          <div class="cable-choose">
+            <button>Straight</button>
+            <button>Coiled</button>
+            <button>Long-coiled</button>
+          </div>
+   
+          <a href="#">How to configurate your headphones</a>
+        </div>
+      </div>
+   
+      <!-- Product Pricing -->
+      <div class="product-price">
+        <span>148$</span>
+        <a href="#" class="cart-btn">Add to cart</a>
+      </div>
+    </div>
+  </main>  
+    
+    <!-- <mat-card class="product-page-card">
+      <mat-card-title
+        class="product-page-card-title"
+        fxLayout="row"
+        fxAlign="center"
+      >
+        {{ product?.name }}</mat-card-title
+      >
+      <img mat-card-image [src]="imageUrl" />
+      <mat-card-content fxLayout="column" fxLayoutAlign="space-around center">
+        <mat-form-field appearance="fill">
+          <mat-label>Size</mat-label>
+          <mat-select
+            (selectionChange)="
+              updateSelectedProductAttributes(
+                this.selectedAttributes?.flavor,
+                $event.value
+              )
+            "
+            required
+          >
+            <mat-option *ngFor="let size of product?.sizes" [value]="size">
+              {{ size }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <h4>Select your flavor:</h4>
+        <mat-chip-list aria-label="Flavors selection">
+          <mat-chip
+            *ngFor="let flavor of product?.flavors"
+            class="chip mat-elevation-6"
+            [style.background-color]="flavor.color"
+            (click)="
+              updateSelectedProductAttributes(
+                flavor,
+                this.selectedAttributes?.size
+              )
+            "
+          >
+            {{ flavor.name }}
+          </mat-chip>
+        </mat-chip-list>
+      </mat-card-content>
+      <mat-card-actions fxLayoutAlign="center">
+        <button
+          mat-raised-button
+          color="primary"
+          class="snipcart-add-item"
+          [attr.data-item-id]="product?.id"
+          [attr.data-item-price]="product?.price"
+          [attr.data-item-url]="'/api/products/' + product?.id"
+          [attr.data-item-image]="imageUrl"
+          [attr.data-item-name]="product?.name"
+          data-item-custom1-name="Flavor"
+          [attr.data-item-custom1-options]="flavorOptions"
+          [attr.data-item-custom1-value]="this.selectedAttributes?.flavor?.name"
+          data-item-custom2-name="Size"
+          [attr.data-item-custom2-options]="sizeOptions"
+          [attr.data-item-custom2-value]="this.selectedAttributes?.size"
+        >
+          Add to cart
+        </button>
+      </mat-card-actions> 
+    </mat-card> -->
+  
+  

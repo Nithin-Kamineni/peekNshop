@@ -33,6 +33,11 @@ import { AboutComponent } from './about/about.component';
 import { ContactComponent } from './contact/contact.component';
 import { DeliveryComponent } from './delivery/delivery.component';
 import { PaymentComponent } from './payment/payment.component';
+import { ShopingCartComponent } from './shoping-cart/shoping-cart.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
+import { ChangeAddresspageComponent } from './change-addresspage/change-addresspage.component';
+import { ChangeUserProfileSettingsComponent } from './change-user-profile-settings/change-user-profile-settings.component';
+import { FavstoresComponent } from './favstores/favstores.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +59,11 @@ import { PaymentComponent } from './payment/payment.component';
     ContactComponent,
     DeliveryComponent,
     PaymentComponent,
+    ShopingCartComponent,
+    OrderDetailsComponent,
+    ChangeAddresspageComponent,
+    ChangeUserProfileSettingsComponent,
+    FavstoresComponent,
   ],
   imports: [
     BrowserModule,
