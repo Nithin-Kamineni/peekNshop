@@ -107,6 +107,7 @@ func (a *App) start() {
 	a.r.HandleFunc("/students/", a.addStudent).Methods("POST")
 	a.r.HandleFunc("/students/{id}", a.updateStudent).Methods("PUT")
 	a.r.HandleFunc("/students/{id}", a.deleteStudent).Methods("DELETE")
+	a.r.HandleFunc("/user/favorate-stores", a.favorateStores) //this
 
 	http.Handle("/", a.r)
 
@@ -230,6 +231,44 @@ func (a *App) sendUserOrders(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = a.db.Raw("SELECT ID,userOrders FROM user3 WHERE id = ?", s1.ID).Scan(&s2).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	fmt.Println(s1.Acesskey)
+	fmt.Println(s2.Acesskey)
+	fmt.Println()
+	if s2.Acesskey == s1.Acesskey {
+		err = a.db.Exec("UPDATE user3 SET firstname = ?, lastname = ?, email = ?, password = ? where ID = ?", s1.Firstname, s1.Lastname, s1.Email, s1.Password, s2.ID).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+
+		//a.db.Raw("SELECT  FROM user3 WHERE acesskey = ?", username)
+		// err = a.db.Save(&s).Error
+		// if err != nil {
+		// 	sendErr(w, http.StatusInternalServerError, err.Error())
+		// }
+	}
+}
+
+func (a *App) favorateStores(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s1 Users.User3
+	var s2 Users.User3
+	err := json.NewDecoder(r.Body).Decode(&s1)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = a.db.Raw("SELECT ID,favorateSotresID FROM user3 WHERE id = ?", s1.ID).Scan(&s2).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
@@ -719,6 +758,7 @@ func (a *App) homePageReload(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
+
 	//credentials := a.db.First(&s, "email = ?", username)
 	fmt.Println("Gainsville")
 	reply = Users.HomePageCity{City: "Gainsvile"}
