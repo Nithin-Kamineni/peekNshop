@@ -78,29 +78,25 @@ func main() {
 func (a *App) start() {
 	a.db.AutoMigrate(&Users.User3{})
 	a.db.AutoMigrate(Offers.Offer{})
-	a.r.HandleFunc("/address", a.returnLat) //returning lat
-	a.r.HandleFunc("/address/", a.returnNearBy)
-	a.r.HandleFunc("/offers", a.returnOffers)
-	a.r.HandleFunc("/user", a.userLogin).Methods("POST")
-	a.r.HandleFunc("/user/a", a.userSignUp).Methods("POST")
+	a.r.HandleFunc("/offers", a.returnOffers)                                //static
+	a.r.HandleFunc("/user", a.userLogin).Methods("POST")                     //jwt proc
+	a.r.HandleFunc("/user/create-new-account", a.userSignUp).Methods("POST") //jwt proc
 	a.db.AutoMigrate(&Carts.Cart_items{})
 	a.db.AutoMigrate(&Stores.Store_inventory{})
-	a.r.HandleFunc("/address", a.returnLat) //returning lat
-	a.r.HandleFunc("/stores/", a.returnNearBy)
-	a.r.HandleFunc("/city", a.homePageReload)
-	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")
-	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")
-	a.r.HandleFunc("/stores/delete/", a.deleteInventory).Methods("POST")
-	a.r.HandleFunc("/stores/items", a.returnStoreInv).Methods("POST")
-	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)
-	a.r.HandleFunc("/user", a.userLogin).Methods("POST")
-	a.r.HandleFunc("/user/a", a.userSignUp).Methods("POST")
-	a.r.HandleFunc("/user/forgotpassword", a.ForgotUserDetails).Methods("POST")
-	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")     //this
-	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST") //this
-	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")          //this
-	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST") //this
-	a.r.HandleFunc("/contact", a.contact).Methods("POST")           //this
+	a.r.HandleFunc("/address", a.returnLat).Methods("POST")                     //returning lat
+	a.r.HandleFunc("/stores/", a.returnNearBy)                                  //filter data from interface
+	a.r.HandleFunc("/address/city", a.homePageReload).Methods("POST")           //static to google api
+	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")     //add store inventory
+	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")   //edit store inventory
+	a.r.HandleFunc("/stores/delete/", a.deleteInventory).Methods("POST")        //delete store inventory
+	a.r.HandleFunc("/stores/items", a.returnStoreInv).Methods("POST")           //return store inventory
+	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)           //display the product page
+	a.r.HandleFunc("/user/forgotpassword", a.ForgotUserDetails).Methods("POST") //progress
+	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")                 //this
+	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST")             //this
+	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")                      //this
+	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST")             //this
+	a.r.HandleFunc("/contact", a.contact).Methods("POST")                       //this
 	a.r.HandleFunc("/user", a.changeUserDetails).Methods("PUT")
 	a.r.HandleFunc("/user/orders", a.sendUserOrders).Methods("POST")
 	a.r.HandleFunc("/students/", a.getAllStudents).Methods("GET")
@@ -299,22 +295,29 @@ func (a *App) favorateStores(w http.ResponseWriter, r *http.Request) {
 func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store Stores.Store_inventory
-	reply := Users.SignInReply{Msg: "sucessfull"}
+	var accessID string
+	reply := Users.SignInReply{Msg: "sucessfully added the new item/items in the inventory"}
 	err := json.NewDecoder(r.Body).Decode(&store)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	store.StoreID = uuid.New().String()
-	err = a.db.Save(&store).Error
+	err = a.db.Raw("SELECT accessKey FROM user3 WHERE store_id = ?", store.StoreID).Scan(&accessID).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
-	} else {
-		w.WriteHeader(http.StatusCreated)
+		return
 	}
-	err = json.NewEncoder(w).Encode(reply)
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
+	if accessID == store.AccessKey {
+		err = a.db.Save(&store).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		} else {
+			w.WriteHeader(http.StatusCreated)
+		}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
 	}
 }
 
@@ -342,71 +345,60 @@ func (a *App) contact(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) editInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var storeUser Stores.Store_inventory
-	//var storeDB Stores.Store_inventory
-	err := json.NewDecoder(r.Body).Decode(&storeUser)
+	var store Stores.Store_inventory
+	var accessID string
+	err := json.NewDecoder(r.Body).Decode(&store)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	// err = a.db.Raw("SELECT ID,acessKey FROM user3 WHERE StoreID = ? and ProductID = ?", s1.ID).Scan(&s2).Error
-	// if err != nil {
-	// 	sendErr(w, http.StatusInternalServerError, err.Error())
-	// 	return
-	// }
-	// fmt.Println(s1.Acesskey)
-	// fmt.Println(s2.Acesskey)
-	// fmt.Println()
-	//if s2.Acesskey == s1.Acesskey {
-	err = a.db.Exec("UPDATE store_inventory SET ProductPrice = ?, ProductName = ?, Quantity = ?, ModifiedAt = ? WHERE StoreID = ? and ProductID = ?", storeUser.ProductPrice, storeUser.ProductName, storeUser.Quantity, storeUser.ModifiedAt, storeUser.StoreID, storeUser.ProductID).Error
+	err = a.db.Raw("SELECT accessKey FROM user3 WHERE store_id = ?", store.StoreID).Scan(&accessID).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	reply := Users.SignInReply{Msg: "sucessfully changed your details"}
-	err = json.NewEncoder(w).Encode(reply)
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
+	if accessID == store.AccessKey {
+		err = a.db.Exec("UPDATE store_inventory SET ProductPrice = ?, ProductName = ?, Quantity = ?, ModifiedAt = ? WHERE StoreID = ? and ProductID = ?", store.ProductPrice, store.ProductName, store.Quantity, store.ModifiedAt, store.StoreID, store.ProductID).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
 	}
 }
 
 func (a *App) deleteInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var storeUser Stores.Store_inventory
-	//var storeDB Stores.Store_inventory
-	err := json.NewDecoder(r.Body).Decode(&storeUser)
+	var store Stores.Store_inventory
+	var accessID string
+	err := json.NewDecoder(r.Body).Decode(&store)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	// err = a.db.Raw("SELECT ID,acessKey FROM user3 WHERE StoreID = ? and ProductID = ?", s1.ID).Scan(&s2).Error
-	// if err != nil {
-	// 	sendErr(w, http.StatusInternalServerError, err.Error())
-	// 	return
-	// }
-	// fmt.Println(s1.Acesskey)
-	// fmt.Println(s2.Acesskey)
-	// fmt.Println()
-	//if s2.Acesskey == s1.Acesskey {
-	err = a.db.Exec("DELETE from store_inventory WHERE StoreID = ? and ProductID = ?", storeUser.StoreID, storeUser.ProductID).Error
+	err = a.db.Raw("SELECT accessKey FROM user3 WHERE store_id = ?", store.StoreID).Scan(&accessID).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	reply := Users.SignInReply{Msg: "sucessfully changed your details"}
-	err = json.NewEncoder(w).Encode(reply)
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
+	if accessID == store.AccessKey {
+		err = a.db.Exec("DELETE from store_inventory WHERE StoreID = ? and ProductID = ?", store.StoreID, store.ProductID).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
 	}
-
-	//a.db.Raw("SELECT  FROM user3 WHERE acesskey = ?", username)
-	// err = a.db.Save(&s).Error
-	// if err != nil {
-	// 	sendErr(w, http.StatusInternalServerError, err.Error())
-	// }
-	//}
 }
 
 // func PaymentsCapture(w http.ResponseWriter, r *http.Request) {
@@ -1036,11 +1028,16 @@ func (a *App) ConvAddressToCord(w http.ResponseWriter, r *http.Request) {
 func (a *App) returnLat(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
-
-	address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
+	var address Users.Address
+	err := json.NewDecoder(r.Body).Decode(&address)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	//address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
 	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
 
-	params := "address=" + url.QueryEscape(address) + "&" +
+	params := "address=" + url.QueryEscape(address.Address) + "&" +
 		"key=" + url.QueryEscape(Key)
 	path := fmt.Sprint("https://maps.googleapis.com/maps/api/geocode/json?", params)
 	fmt.Println(path)

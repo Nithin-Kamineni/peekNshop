@@ -26,6 +26,10 @@ type LogInReply struct {
 	City        string
 }
 
+type Address struct {
+	Address string
+}
+
 type Coardinates struct {
 	Lat string
 	Lon string

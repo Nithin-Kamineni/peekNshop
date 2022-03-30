@@ -8,6 +8,7 @@ type Store_inventory struct {
 	Quantity     string `json:"quantity"`
 	CreatedAt    string `json:"created"`
 	ModifiedAt   string `json:"modified"`
+	AccessKey    string `json:"accesskey"`
 }
 
 type UserIDtab struct {
