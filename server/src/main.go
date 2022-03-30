@@ -83,20 +83,20 @@ func (a *App) start() {
 	a.r.HandleFunc("/user/create-new-account", a.userSignUp).Methods("POST") //jwt proc
 	a.db.AutoMigrate(&Carts.Cart_items{})
 	a.db.AutoMigrate(&Stores.Store_inventory{})
-	a.r.HandleFunc("/address", a.returnLat).Methods("POST")                     //returning lat
-	a.r.HandleFunc("/stores/", a.returnNearBy)                                  //filter data from interface
-	a.r.HandleFunc("/address/city", a.homePageReload).Methods("POST")           //static to google api
-	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")     //add store inventory
-	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")   //edit store inventory
-	a.r.HandleFunc("/stores/delete/", a.deleteInventory).Methods("POST")        //delete store inventory
-	a.r.HandleFunc("/stores/items", a.returnStoreInv).Methods("POST")           //return store inventory
-	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)           //display the product page
-	a.r.HandleFunc("/user/forgotpassword", a.ForgotUserDetails).Methods("POST") //progress
-	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")                 //this
-	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST")             //this
-	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")                      //this
-	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST")             //this
-	a.r.HandleFunc("/contact", a.contact).Methods("POST")                       //this
+	a.r.HandleFunc("/address", a.returnLat).Methods("POST")                       //returning lat
+	a.r.HandleFunc("/stores/", a.returnNearBy)                                    //filter data from interface
+	a.r.HandleFunc("/address/city", a.homePageReload).Methods("POST")             //static to google api
+	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")       //add store inventory
+	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")     //edit store inventory
+	a.r.HandleFunc("/stores/delete/{storeID}", a.deleteInventory).Methods("POST") //delete store inventory
+	a.r.HandleFunc("/stores/items", a.returnStoreInv).Methods("POST")             //return store inventory
+	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)             //display the product page
+	a.r.HandleFunc("/user/forgotpassword", a.ForgotUserDetails).Methods("POST")   //progress
+	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")                   //this
+	a.r.HandleFunc("/userCheck", a.userStatusCheck).Methods("POST")               //this
+	a.r.HandleFunc("/cart", a.cartDisplay).Methods("POST")                        //this
+	a.r.HandleFunc("/cart/additem", a.cartAddition).Methods("POST")               //this
+	a.r.HandleFunc("/contact", a.contact).Methods("POST")                         //this
 	a.r.HandleFunc("/user", a.changeUserDetails).Methods("PUT")
 	a.r.HandleFunc("/user/orders", a.sendUserOrders).Methods("POST")
 	a.r.HandleFunc("/students/", a.getAllStudents).Methods("GET")
@@ -918,41 +918,23 @@ func (a *App) filterInventory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) returnStoreInv(w http.ResponseWriter, r *http.Request) {
-
 	w.Header().Set("Content-Type", "application/json")
-
-	keyword := "foods"
-	radius := "1500"
-	field := "formatted_address,name,rating,opening_hours,geometry"
-	location := "29.61872,-82.37299"
-	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
-
-	params := "keyword=" + url.QueryEscape(keyword) + "&" +
-		"radius=" + url.QueryEscape(radius) + "&" +
-		"field=" + url.QueryEscape(field) + "&" +
-		"location=" + url.QueryEscape(location) + "&" +
-		"key=" + url.QueryEscape(Key)
-	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
-	fmt.Println(path)
-	resp, err := http.Get(path)
-
+	var store []Stores.Store_inventory
+	storeID := r.URL.Query().Get("store_id")
+	err := json.NewDecoder(r.Body).Decode(&store)
 	if err != nil {
-		log.Fatal(err)
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
 	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-
+	err = a.db.Raw("SELECT * FROM user3 WHERE store_id = ?", storeID).Scan(&store).Error
 	if err != nil {
-		log.Fatal(err)
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
 	}
-
-	//data1 := result{}
-	var f interface{}
-	json.Unmarshal(body, &f)
-	fmt.Println(f)
-
-	json.NewEncoder(w).Encode(f)
-	defer resp.Body.Close()
+	err = json.NewEncoder(w).Encode(store)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
 }
 
 func (a *App) returnProductPage(w http.ResponseWriter, r *http.Request) {
