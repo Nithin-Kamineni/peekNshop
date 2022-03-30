@@ -5,7 +5,6 @@ import { Router } from "@angular/router";
 import {MapsService} from '../services/maps.service';
 import {LoginModel} from '../models/common_models'
 import { SignupModel } from '../models/common_models'
-import { data } from 'cypress/types/jquery';
 import { environment } from '../environments/environments'
 @Component({
   selector: 'app-sidenav',
@@ -16,11 +15,12 @@ export class SidenavComponent implements OnInit {
   loginForm!: FormGroup;
   signupForm!: FormGroup;
   city = environment.city
-  name = "Nithin Kamineni"
+  name = environment.fullname
   IsmodelShow!: boolean;
   loginmsg!: string;
   signupmsg!: string;
   isLogin = environment.isLogin
+  
   
 
   
@@ -29,7 +29,6 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
 
     this.isLogin=true
-
      
 
     this.loginForm = new FormGroup({
@@ -88,6 +87,7 @@ export class SidenavComponent implements OnInit {
     }
     
   }
+  
 
   loginFormSubmit(): void {
 
@@ -100,7 +100,20 @@ export class SidenavComponent implements OnInit {
       this.http.get<LoginModel>('http://localhost:10000/user?'+"email=" + email + "&passkey=" + password, {}).subscribe( (data: LoginModel) => {
           this.loginmsg = data.Msg;
           console.log(data);
-          console.log(this.loginmsg)
+          var details = Object.values(data.UserDetails)
+          environment.id=details[0]
+          environment.firstname=details[1]
+          environment.lastname=details[2]
+          environment.email=details[3]
+          environment.password=details[4]
+          environment.accesskey=details[5]
+          environment.refreshkey=details[6]
+          environment.address1=details[7]
+          environment.address2=details[8]
+          environment.address3=details[9]
+          environment.fullname=environment.firstname.concat(" ", environment.lastname)
+          this.name=environment.firstname.concat(" ", environment.lastname)
+          
           if (this.loginmsg == "Login Sucessfull"){
             alert(this.loginmsg) 
             let element: HTMLElement = document.getElementsByClassName('btn-close')[0] as HTMLElement;
