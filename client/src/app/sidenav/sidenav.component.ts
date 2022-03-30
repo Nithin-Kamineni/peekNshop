@@ -14,12 +14,14 @@ import { environment } from '../environments/environments'
 export class SidenavComponent implements OnInit {
   loginForm!: FormGroup;
   signupForm!: FormGroup;
+  locationForm!: FormGroup
   city = environment.city
   name = environment.fullname
   IsmodelShow!: boolean;
   loginmsg!: string;
   signupmsg!: string;
   isLogin = environment.isLogin
+  isLocation=environment.isLocation
   
   
 
@@ -34,6 +36,12 @@ export class SidenavComponent implements OnInit {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
+    })
+    this.locationForm = new FormGroup({
+      street: new FormControl('', [Validators.required]),
+      city: new FormControl('', [Validators.required]),
+      state: new FormControl('', [Validators.required]),
+      zipcode: new FormControl('', [Validators.required])
     })
 
     this.signupForm = new FormGroup({
@@ -65,6 +73,18 @@ export class SidenavComponent implements OnInit {
   get signupConfirmPasswordField(): any {
     return this.signupForm.get('signup_confirm_password');
   }
+  get streetField(): any {
+    return this.locationForm.get('street');
+  }
+  get cityField(): any {
+    return this.locationForm.get('city');
+  }
+  get stateField(): any {
+    return this.locationForm.get('state');
+  }
+  get zipcodeField(): any {
+    return this.locationForm.get('zipcode');
+  }
 
   userProfile(){
     this.router.navigate(['/user-homepage/user'])
@@ -86,6 +106,10 @@ export class SidenavComponent implements OnInit {
       alert("Please login")
     }
     
+  }
+
+  locationFormSubmit(){
+
   }
   
 
