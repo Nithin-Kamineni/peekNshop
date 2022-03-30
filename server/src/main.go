@@ -79,17 +79,17 @@ func (a *App) start() {
 	a.db.AutoMigrate(&Users.User3{})
 	a.db.AutoMigrate(Offers.Offer{})
 	a.r.HandleFunc("/offers", a.returnOffers)                                //static
-	a.r.HandleFunc("/user", a.userLogin).Methods("POST")                     //jwt proc
+	a.r.HandleFunc("/user", a.userLogin).Methods("GET")                      //jwt proc
 	a.r.HandleFunc("/user/create-new-account", a.userSignUp).Methods("POST") //jwt proc
 	a.db.AutoMigrate(&Carts.Cart_items{})
 	a.db.AutoMigrate(&Stores.Store_inventory{})
-	a.r.HandleFunc("/address", a.returnLat).Methods("POST")                       //returning lat
+	a.r.HandleFunc("/address", a.returnLat).Methods("POST")                       //*returning lat
 	a.r.HandleFunc("/stores/", a.returnNearBy)                                    //filter data from interface
 	a.r.HandleFunc("/address/city", a.homePageReload).Methods("POST")             //static to google api
-	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")       //add store inventory
-	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")     //edit store inventory
-	a.r.HandleFunc("/stores/delete/{storeID}", a.deleteInventory).Methods("POST") //delete store inventory
-	a.r.HandleFunc("/stores/items", a.returnStoreInv).Methods("POST")             //return store inventory
+	a.r.HandleFunc("/stores/add/{storeID}", a.addInventory).Methods("POST")       //*add store inventory
+	a.r.HandleFunc("/stores/edit/{storeID}", a.editInventory).Methods("POST")     //*edit store inventory
+	a.r.HandleFunc("/stores/delete/{storeID}", a.deleteInventory).Methods("POST") //*delete store inventory
+	a.r.HandleFunc("/stores/items", a.returnStoreInv).Methods("POST")             //*return store inventory
 	a.r.HandleFunc("/stores/items/{product_id}", a.returnProductPage)             //display the product page
 	a.r.HandleFunc("/user/forgotpassword", a.ForgotUserDetails).Methods("POST")   //progress
 	a.r.HandleFunc("/userStatus", a.userStatus).Methods("POST")                   //this
@@ -679,17 +679,11 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(username)
 	var s Users.User3
 	var reply Users.LogInReply
-	var cord Users.Coardinates
 
 	username := r.URL.Query().Get("email")
 	passkey := r.URL.Query().Get("passkey")
-	err := json.NewDecoder(r.Body).Decode(&cord)
-	if err != nil {
-		sendErr(w, http.StatusBadRequest, err.Error())
-		return
-	}
 	//credentials := a.db.First(&s, "email = ?", username)
-	err = a.db.Raw("SELECT id FROM user3 WHERE email = ?", username).Scan(&s).Error
+	err := a.db.Raw("SELECT id FROM user3 WHERE email = ?", username).Scan(&s).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
@@ -700,12 +694,11 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 
 	if s.ID == "" {
 		fmt.Println("User does not exist/registered")
-		reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "User does not exist/registered", UserDetails: s, AllowUsers: false}
+		reply = Users.LogInReply{Msg: "User does not exist/registered", UserDetails: s, AllowUsers: false}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 		}
-
 	} else {
 		fmt.Println(s.ID)
 		err = a.db.Raw("SELECT * FROM user3 WHERE id = ? AND password = ?", s.ID, passkey).Scan(&s).Error
@@ -713,17 +706,16 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-
 		if s.Email == "" {
 			fmt.Println("Password is incorrect")
-			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Password is incorrect", UserDetails: s, AllowUsers: false}
+			reply = Users.LogInReply{Msg: "Password is incorrect", UserDetails: s, AllowUsers: false}
 			err = json.NewEncoder(w).Encode(reply)
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
 			}
 		} else {
 			fmt.Println("Login Sucessfull")
-			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s, AllowUsers: true, City: "Gainsvile"}
+			reply = Users.LogInReply{Msg: "Login Sucessfull", UserDetails: s, AllowUsers: true}
 			err = json.NewEncoder(w).Encode(reply)
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
