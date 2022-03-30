@@ -80,6 +80,14 @@ export class SidenavComponent implements OnInit {
     this.isLogin=!this.isLogin
     environment.isLogin=!environment.isLogin
   }
+  delivery(){
+    if (environment.isLogin=false){
+      this.router.navigate(['user-homepage/delivery'])
+    }else{
+      alert("Please login")
+    }
+    
+  }
 
   loginFormSubmit(): void {
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Router } from "@angular/router";
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
@@ -7,9 +7,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+  changeAccountSettings(){
+    this.router.navigate(['/user-homepage/user/changeusersettings'])
+  }
+  orders(){
+    this.router.navigate(['user-homepage/user/orders'])
+  }
+  changeShippingAddress(){
+    this.router.navigate(['user-homepage/userchangeaddress'])
   }
 
 }
