@@ -690,7 +690,7 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	// a.db.where("username = ?",username)
 	//fmt.Println(&s)
-	data, err := json.Marshal(&s)
+	//data, err := json.Marshal(&s)
 
 	if s.ID == "" {
 		fmt.Println("User does not exist/registered")
@@ -721,7 +721,7 @@ func (a *App) userLogin(w http.ResponseWriter, r *http.Request) {
 				sendErr(w, http.StatusInternalServerError, err.Error())
 			}
 		}
-		fmt.Println(string(data))
+		//fmt.Println(string(data))
 		fmt.Println()
 	}
 }
@@ -777,6 +777,16 @@ func (a *App) userSignUp(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusCreated)
 		err = json.NewEncoder(w).Encode(reply_on_succ)
+	}
+	err = a.db.Raw("SELECT id FROM user3 WHERE email = ?", s.Email).Scan(&s).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	reply := Users.LogInReply{Msg: "Login and sign-up Sucessfull", UserDetails: s, AllowUsers: true}
+	err = json.NewEncoder(w).Encode(reply)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
 }
 
