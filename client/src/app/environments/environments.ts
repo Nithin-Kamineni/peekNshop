@@ -1,4 +1,6 @@
 export const environment = {
+    title:'PeekNshop',
+    subtitle:'choose where to shop?',
     lat  : "",
     lon : "",
     searchText : "",

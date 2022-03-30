@@ -67,7 +67,7 @@ export class SidenavComponent implements OnInit {
   }
 
   userProfile(){
-    this.router.navigate(['/user'])
+    this.router.navigate(['/user-homepage/user'])
   }
   logout(){
     this.updateisLogin()
@@ -122,7 +122,6 @@ export class SidenavComponent implements OnInit {
             this.router.navigate(['/user-homepage'])
           }else{
             alert(this.loginmsg)
-            this.updateisLogin()
             this.router.navigate([''])
           }
         })
@@ -159,7 +158,6 @@ export class SidenavComponent implements OnInit {
               alert("User already registered")
               let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
               element.click();
-              this.updateisLogin()
               this.router.navigate([''])
             }
         })
