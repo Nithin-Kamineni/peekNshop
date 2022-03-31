@@ -39,8 +39,8 @@
             <a mat-list-item routerLink=""> Home</a>
             <a mat-list-item routerLink=""> Delivery</a>
             <a mat-list-item routerLink=""> Pickup</a>
-            <a mat-list-item routerLink="about"> About us</a>
-            <a mat-list-item routerLink="contact"> Contact us</a>
+            <a mat-list-item id="aboutUsBtn" routerLink="about"> About us</a>
+            <a mat-list-item id="about_Us_Button"routerLink="contact"> Contact us</a>
         </mat-nav-list>
     </mat-sidenav>
 
@@ -134,6 +134,8 @@
               <label for="id_Password" class="form-label">Confirm password</label>
             <input formControlName="signup_confirm_password" [class.is-invalid]="signupPasswordField.touched && signupPasswordField.invalid"
               type="password" class="form-control" id="id_ConfPassword">
+              type="password" class="form-control" id="id_confirmPassword">
+            <div *ngIf="signupPasswordField.touched && signupPasswordField.hasError('required')" class="d-block invalid-feedback">
             <div *ngIf="signupConfirmPasswordField.touched && signupConfirmPasswordField.hasError('required')" class="d-block invalid-feedback">
               Please confirm a Password.</div>
           </div>
