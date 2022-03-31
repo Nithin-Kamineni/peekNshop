@@ -5,6 +5,7 @@ export const environment = {
     lat  : "",
     lon : "",
     searchText : "",
+    storesSearchText:"",
     isLogin: true,
     city:"New York",
     id:"",

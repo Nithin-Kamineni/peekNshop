@@ -22,8 +22,8 @@ export class SidenavComponent implements OnInit {
   signupmsg!: string;
   isLogin = environment.isLogin
   isLocation=environment.isLocation
-  
-  
+  storesSearchForm!:FormGroup
+  storesSearchText!:string
 
   
 
@@ -50,6 +50,9 @@ export class SidenavComponent implements OnInit {
       signup_email: new FormControl('', [Validators.required, Validators.email]),
       signup_password: new FormControl('', [Validators.required]),
       signup_confirm_password: new FormControl('', [Validators.required])
+    })
+    this.storesSearchForm = new FormGroup({
+      storesSearchText: new FormControl('', [Validators.required])
     })
   }
   get emailField(): any {
@@ -85,7 +88,11 @@ export class SidenavComponent implements OnInit {
   get zipcodeField(): any {
     return this.locationForm.get('zipcode');
   }
-
+  storesSearch(){
+    this.storesSearchText=this.storesSearchForm.getRawValue().storesSearchText
+    console.log(this.storesSearchText)
+    environment.storesSearchText=this.storesSearchText
+  }
   userProfile(){
     this.router.navigate(['/user-homepage/user'])
   }
@@ -140,7 +147,7 @@ export class SidenavComponent implements OnInit {
           
           if (this.loginmsg == "Login Sucessfull"){
             alert(this.loginmsg) 
-            let element: HTMLElement = document.getElementsByClassName('btn-close')[0] as HTMLElement;
+            let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
             element.click();
             this.updateisLogin()
             this.router.navigate(['/user-homepage'])
@@ -173,14 +180,14 @@ export class SidenavComponent implements OnInit {
             this.signupmsg = data.Msg
             if (this.signupmsg == "Sucessfull"){
               alert("Signup Successful")
-              let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
+              let element: HTMLElement = document.getElementsByClassName('btn-close')[2] as HTMLElement;
               element.click();
               this.updateisLogin()
               this.router.navigate(['/user-homepage'])
             }else{
               console.log("Wrong User")
               alert("User already registered")
-              let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
+              let element: HTMLElement = document.getElementsByClassName('btn-close')[2] as HTMLElement;
               element.click();
               this.router.navigate([''])
             }

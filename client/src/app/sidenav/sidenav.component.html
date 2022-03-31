@@ -6,7 +6,18 @@
 
          </button>
          <h1>PeekNshop</h1>
-         <span class="example-spacer"></span>
+
+         <div id="storessearch"class="input-group">
+          <div class="form-outline" [formGroup]="storesSearchForm" >
+            <input type="text" class="form-control" placeholder="Search for stores"formControlName="storesSearchText"/>
+          </div>
+          <button (click)="storesSearch()"type="button" class="btn btn-primary">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+
+         <span class="example-spacer">
+         </span>
          
         <h1 id="city"> {{ city }}</h1>
         <button *ngIf = "!isLocation" type="button" class="btn btn-link" id="locationbutton" data-bs-toggle="modal" data-bs-target="#locationModal">
