@@ -9,12 +9,8 @@
                             <div class="user-avatar">
                                 <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Maxwell Admin">
                             </div>
-                            <h5 class="user-name">Yuki Hayashi</h5>
-                            <h6 class="user-email">yuki@Maxwell.com</h6>
-                        </div>
-                        <div class="about">
-                            <h5 class="mb-2 text-primary">About</h5>
-                            <p>I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p>
+                            <h5 class="user-name">{{name}}</h5>
+                            <h6 class="user-email">{{email}}</h6>
                         </div>
                     </div>
                 </div>
@@ -30,7 +26,7 @@
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="fullName">First Name</label>
-                                <input type="text" class="form-control" id="fullName" placeholder="Enter first name">
+                                <input type="text" class="form-control" formControlName="firstname" id="fullName" placeholder="Enter first name">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
