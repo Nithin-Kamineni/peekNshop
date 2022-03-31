@@ -14,3 +14,8 @@ type Store_inventory struct {
 type UserIDtab struct {
 	UserID string `json:"userID"`
 }
+
+type FavorateStores struct {
+	StoreID string
+	UserID  string
+}

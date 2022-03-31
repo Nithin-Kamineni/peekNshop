@@ -264,7 +264,7 @@ func (a *App) favorateStores(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.db.Raw("SELECT ID,favorateSotresID FROM user3 WHERE id = ?", s1.ID).Scan(&s2).Error
+	err = a.db.Raw("SELECT favorateStores FROM userFavstores WHERE userid = ?", s1.ID).Scan(&s2).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
