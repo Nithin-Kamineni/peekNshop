@@ -11,11 +11,12 @@ import (
 	"src/src/Offers"
 	"src/src/Stores"
 	"src/src/Users"
+	"src/utils"
 
 	"github.com/google/uuid"
 )
 
-func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
+func addInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store Stores.Store_inventory
 	reply := Users.SignInReply{Msg: "sucessfull"}
@@ -25,7 +26,7 @@ func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	store.StoreID = uuid.New().String()
-	err = a.db.Save(&store).Error
+	err = utils.DB.Save(&store).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -37,7 +38,7 @@ func (a *App) addInventory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a *App) editInventory(w http.ResponseWriter, r *http.Request) {
+func editInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var storeUser Stores.Store_inventory
 	//var storeDB Stores.Store_inventory
@@ -56,7 +57,7 @@ func (a *App) editInventory(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println(s2.Acesskey)
 	// fmt.Println()
 	//if s2.Acesskey == s1.Acesskey {
-	err = a.db.Exec("UPDATE store_inventory SET ProductPrice = ?, ProductName = ?, Quantity = ?, ModifiedAt = ? WHERE StoreID = ? and ProductID = ?", storeUser.ProductPrice, storeUser.ProductName, storeUser.Quantity, storeUser.ModifiedAt, storeUser.StoreID, storeUser.ProductID).Error
+	err = utils.DB.Exec("UPDATE store_inventory SET ProductPrice = ?, ProductName = ?, Quantity = ?, ModifiedAt = ? WHERE StoreID = ? and ProductID = ?", storeUser.ProductPrice, storeUser.ProductName, storeUser.Quantity, storeUser.ModifiedAt, storeUser.StoreID, storeUser.ProductID).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
@@ -68,7 +69,7 @@ func (a *App) editInventory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a *App) deleteInventory(w http.ResponseWriter, r *http.Request) {
+func deleteInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var storeUser Stores.Store_inventory
 	//var storeDB Stores.Store_inventory
@@ -87,7 +88,7 @@ func (a *App) deleteInventory(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println(s2.Acesskey)
 	// fmt.Println()
 	//if s2.Acesskey == s1.Acesskey {
-	err = a.db.Exec("DELETE from store_inventory WHERE StoreID = ? and ProductID = ?", storeUser.StoreID, storeUser.ProductID).Error
+	err = utils.DB.Exec("DELETE from store_inventory WHERE StoreID = ? and ProductID = ?", storeUser.StoreID, storeUser.ProductID).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
@@ -106,14 +107,14 @@ func (a *App) deleteInventory(w http.ResponseWriter, r *http.Request) {
 	//}
 }
 
-func (a *App) returnOffers(w http.ResponseWriter, r *http.Request) {
-	a.db.Model(&Offers.Offer{}).Create([]map[string]interface{}{
+func returnOffers(w http.ResponseWriter, r *http.Request) {
+	utils.DB.Model(&Offers.Offer{}).Create([]map[string]interface{}{
 		{"name": "jinzhu_1", "description": "10% off on all items"},
 		{"name": "jinzhu_2", "description": "20% off on all items"},
 	})
 	w.Header().Set("Content-Type", "application/json")
 	var all []Offers.Offer
-	err := a.db.Find(&all).Error
+	err := utils.DB.Find(&all).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
@@ -124,7 +125,7 @@ func (a *App) returnOffers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
+func returnNearBy(w http.ResponseWriter, r *http.Request) {
 
 	search := r.URL.Query().Get("search")
 	lat := r.URL.Query().Get("lat")
@@ -166,7 +167,7 @@ func (a *App) returnNearBy(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 }
 
-func (a *App) filterInventory(w http.ResponseWriter, r *http.Request) {
+func filterInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var inv Carts.Cart_items
 	var userID Carts.UserIDtab
@@ -176,7 +177,7 @@ func (a *App) filterInventory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.db.Raw("SELECT * FROM storesInventory WHERE storeID = ?", userID).Scan(&inv).Error
+	err = utils.DB.Raw("SELECT * FROM storesInventory WHERE storeID = ?", userID).Scan(&inv).Error
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
@@ -188,7 +189,7 @@ func (a *App) filterInventory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a *App) returnStoreInv(w http.ResponseWriter, r *http.Request) {
+func returnStoreInv(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -226,7 +227,7 @@ func (a *App) returnStoreInv(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 }
 
-func (a *App) returnProductPage(w http.ResponseWriter, r *http.Request) {
+func returnProductPage(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -264,7 +265,7 @@ func (a *App) returnProductPage(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 }
 
-func (a *App) ConvAddressToCord(w http.ResponseWriter, r *http.Request) {
+func ConvAddressToCord(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -296,7 +297,7 @@ func (a *App) ConvAddressToCord(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 }
 
-func (a *App) returnLat(w http.ResponseWriter, r *http.Request) {
+func returnLat(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 

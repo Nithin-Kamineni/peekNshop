@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 	"src/src/Carts"
+	"src/utils"
 )
 
-func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
+func cartAddition(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var cart Carts.Cart_items
 	err := json.NewDecoder(r.Body).Decode(&cart)
@@ -15,7 +16,7 @@ func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.db.Save(&cart).Error
+	err = utils.DB.Save(&cart).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -23,7 +24,7 @@ func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a *App) cartDisplay(w http.ResponseWriter, r *http.Request) {
+func cartDisplay(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var cart Carts.Cart_items
 	var userID Carts.UserIDtab
@@ -33,7 +34,7 @@ func (a *App) cartDisplay(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = a.db.Raw("SELECT * FROM user3 WHERE userID = ?", userID).Scan(&cart).Error
+	err = utils.DB.Raw("SELECT * FROM user3 WHERE userID = ?", userID).Scan(&cart).Error
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return

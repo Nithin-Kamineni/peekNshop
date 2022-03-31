@@ -11,14 +11,8 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	"gorm.io/gorm"
 	//"strconv"
 )
-
-type App struct {
-	db *gorm.DB
-	r  *mux.Router
-}
 
 func CORS(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

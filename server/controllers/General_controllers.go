@@ -6,11 +6,12 @@ import (
 	"net/http"
 	"src/src/Stores"
 	"src/src/Users"
+	"src/utils"
 
 	"github.com/google/uuid"
 )
 
-func (a *App) contact(w http.ResponseWriter, r *http.Request) {
+func contact(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store Stores.Store_inventory
 	reply := Users.SignInReply{Msg: "sucessfull"}
@@ -20,7 +21,7 @@ func (a *App) contact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	store.StoreID = uuid.New().String()
-	err = a.db.Save(&store).Error
+	err = utils.DB.Save(&store).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	} else {
@@ -32,7 +33,7 @@ func (a *App) contact(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (a *App) homePageReload(w http.ResponseWriter, r *http.Request) {
+func homePageReload(w http.ResponseWriter, r *http.Request) {
 	// w.WriteHeader(statusCode: 200)
 	//w.WriteHeader(statusCode: 200)
 	w.Header().Set("Content-Type", "application/json")
