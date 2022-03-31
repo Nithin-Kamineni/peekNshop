@@ -7,12 +7,14 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"src/models"
+	"src/src/Carts"
+	"src/src/Offers"
+	"src/src/Stores"
+	"src/src/Users"
+	"src/utils"
 
 	//"os/user"
-	"src/Carts"
-	"src/Offers"
-	"src/Stores"
-	"src/Users"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/handlers"
@@ -22,23 +24,9 @@ import (
 	//"strconv"
 )
 
-type student struct {
-	ID       string `gorm:"primary_key" json:"id"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
 type App struct {
 	db *gorm.DB
 	r  *mux.Router
-}
-
-type Cart_items_db struct {
-	UserID     string `gorm:"-" json:"id"`
-	ProductID  string `json:"productID"`
-	Quantity   string `json:"quantity"`
-	CreatedAt  string `json:"created"`
-	ModifiedAt string `json:"modified"`
 }
 
 func CORS(next http.Handler) http.Handler {
@@ -76,15 +64,14 @@ func main() {
 }
 
 func (a *App) start() {
-	a.db.AutoMigrate(&Users.User3{})
-	a.db.AutoMigrate(Offers.Offer{})
+
+	utils.ConnectDatabase()
+
 	a.r.HandleFunc("/address", a.returnLat) //returning lat
 	a.r.HandleFunc("/address/", a.returnNearBy)
 	a.r.HandleFunc("/offers", a.returnOffers)
-	a.r.HandleFunc("/user", a.userLogin).Methods("POST")
+	a.r.HandleFunc("/user", a.userLogin).Methods("GET")
 	a.r.HandleFunc("/user/a", a.userSignUp).Methods("POST")
-	a.db.AutoMigrate(&Carts.Cart_items{})
-	a.db.AutoMigrate(&Stores.Store_inventory{})
 	a.r.HandleFunc("/address", a.returnLat) //returning lat
 	a.r.HandleFunc("/stores/", a.returnNearBy)
 	a.r.HandleFunc("/city", a.homePageReload)
@@ -774,13 +761,13 @@ func (a *App) returnOffers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (p Cart_items_db) TableName() string {
-	// double check here, make sure the table does exist!!
-	if p.UserID != "" {
-		return p.UserID
-	}
-	return "cart_items_db" // default table name
-}
+// func (p models.Cart_items_db) TableName() string {
+// 	// double check here, make sure the table does exist!!
+// 	if p.UserID != "" {
+// 		return p.UserID
+// 	}
+// 	return "cart_items_db" // default table name
+// }
 
 func (a *App) cartAddition(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -1030,7 +1017,7 @@ func (a *App) returnLat(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) getAllStudents(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var all []student
+	var all []models.Student
 	err := a.db.Find(&all).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
@@ -1044,7 +1031,7 @@ func (a *App) getAllStudents(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) addStudent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s student
+	var s models.Student
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -1061,7 +1048,7 @@ func (a *App) addStudent(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) updateStudent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s student
+	var s models.Student
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -1076,7 +1063,7 @@ func (a *App) updateStudent(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) deleteStudent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	err := a.db.Unscoped().Delete(student{ID: mux.Vars(r)["id"]}).Error
+	err := a.db.Unscoped().Delete(models.Student{ID: mux.Vars(r)["id"]}).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
