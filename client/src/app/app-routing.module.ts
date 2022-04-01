@@ -16,6 +16,7 @@ import { ChangeAddresspageComponent } from './change-addresspage/change-addressp
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { ChangeUserProfileSettingsComponent } from './change-user-profile-settings/change-user-profile-settings.component';
 import { StoresComponent } from './stores/stores.component';
+import { DelivaryPageComponent } from './delivary-page/delivary-page.component';
 
 
 const routes: Routes = [
@@ -35,7 +36,7 @@ const routes: Routes = [
   {path: "cart", component: ShopingCartComponent},
   {path: "user-homepage/user/changeusersettings", component: ChangeUserProfileSettingsComponent},
   {path: "stores", component: StoresComponent},
-  
+  {path: "delivaty-page", component: DelivaryPageComponent},
 ];
 
 @NgModule({
