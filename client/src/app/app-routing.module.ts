@@ -15,6 +15,7 @@ import { ShopingCartComponent } from './shoping-cart/shoping-cart.component';
 import { ChangeAddresspageComponent } from './change-addresspage/change-addresspage.component';
 import { OrderDetailsComponent } from './order-details/order-details.component';
 import { ChangeUserProfileSettingsComponent } from './change-user-profile-settings/change-user-profile-settings.component';
+import { StoresComponent } from './stores/stores.component';
 
 
 const routes: Routes = [
@@ -33,6 +34,7 @@ const routes: Routes = [
   {path: "product/id", component: ProductPageComponent},
   {path: "cart", component: ShopingCartComponent},
   {path: "user-homepage/user/changeusersettings", component: ChangeUserProfileSettingsComponent},
+  {path: "stores", component: StoresComponent},
   
 ];
 
