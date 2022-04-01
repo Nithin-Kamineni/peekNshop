@@ -18,12 +18,13 @@ type SignInReply struct {
 }
 
 type LogInReply struct {
-	AccessKey   string
-	RefreshKey  string
 	Msg         string
 	UserDetails User3
 	AllowUsers  bool
-	City        string
+}
+
+type Address struct {
+	Address string
 }
 
 type Coardinates struct {

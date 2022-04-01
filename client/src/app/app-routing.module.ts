@@ -21,19 +21,19 @@ const routes: Routes = [
   {path: "product/:id", component: ProductPageComponent},
   {path: "", component: HomepageComponent},
 
-  {path: "user", component: UserComponent},
-  {path: "user/changeaddress", component: ChangeAddresspageComponent},
-  {path: "user/orders", component: OrderDetailsComponent},
+  {path: "user-homepage/user", component: UserComponent},
+  {path: "user-homepage/userchangeaddress", component: ChangeAddresspageComponent},
+  {path: "user-homepage/user/orders", component: OrderDetailsComponent},
   {path: "user-homepage", component: UserHomepageComponent},
   {path: "products", component: ProductsComponent}, 
   {path: "about", component: AboutComponent},
-  {path: "delivery", component: DeliveryComponent},
-  // {path: "", component: SidenavComponent},
+  {path: "user-homepage/delivery", component: DeliveryComponent},
   {path: "contact", component: ContactComponent},
   {path: "payment", component: PaymentComponent},
   {path: "product/id", component: ProductPageComponent},
   {path: "cart", component: ShopingCartComponent},
-  {path: "user/changeusersettings", component: ChangeUserProfileSettingsComponent}
+  {path: "user-homepage/user/changeusersettings", component: ChangeUserProfileSettingsComponent},
+  
 ];
 
 @NgModule({

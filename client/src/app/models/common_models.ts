@@ -1,7 +1,10 @@
 import { results } from '../models/results'
+
 export interface LoginModel {
     
     Msg:           string;
+    UserDetails:   string;
+    
 }
 export interface SignupModel {
     
