@@ -4,17 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"src/src/Stores"
-	"src/src/Users"
+	"src/models"
 	"src/utils"
 
 	"github.com/google/uuid"
 )
 
-func contact(w http.ResponseWriter, r *http.Request) {
+func Contact(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var store Stores.Store_inventory
-	reply := Users.SignInReply{Msg: "sucessfull"}
+	var store models.Store_inventory
+	reply := models.SignInReply{Msg: "sucessfull"}
 	err := json.NewDecoder(r.Body).Decode(&store)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -33,7 +32,7 @@ func contact(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func homePageReload(w http.ResponseWriter, r *http.Request) {
+func HomePageReload(w http.ResponseWriter, r *http.Request) {
 	// w.WriteHeader(statusCode: 200)
 	//w.WriteHeader(statusCode: 200)
 	w.Header().Set("Content-Type", "application/json")
@@ -41,8 +40,8 @@ func homePageReload(w http.ResponseWriter, r *http.Request) {
 	//params := mux.Vars(r)
 	//username := params["username"]
 	//fmt.Println(username)
-	var reply Users.HomePageCity
-	var cord Users.Coardinates
+	var reply models.HomePageCity
+	var cord models.Coardinates
 
 	err := json.NewDecoder(r.Body).Decode(&cord)
 	if err != nil {
@@ -51,7 +50,7 @@ func homePageReload(w http.ResponseWriter, r *http.Request) {
 	}
 	//credentials := a.db.First(&s, "email = ?", username)
 	fmt.Println("Gainsville")
-	reply = Users.HomePageCity{City: "Gainsvile"}
+	reply = models.HomePageCity{City: "Gainsvile"}
 	err = json.NewEncoder(w).Encode(reply)
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())

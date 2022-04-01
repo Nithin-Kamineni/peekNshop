@@ -1,10 +1,7 @@
 package utils
 
 import (
-	"src/src/Carts"
-	"src/src/Offers"
-	"src/src/Stores"
-	"src/src/Users"
+	"src/models"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -18,9 +15,9 @@ func ConnectDatabase() {
 		panic(err.Error())
 	}
 
-	db.AutoMigrate(&Users.User3{})
-	db.AutoMigrate(Offers.Offer{})
-	db.AutoMigrate(&Carts.Cart_items{})
-	db.AutoMigrate(&Stores.Store_inventory{})
+	db.AutoMigrate(&models.User3{})
+	db.AutoMigrate(&models.Offer{})
+	db.AutoMigrate(&models.Cart_items{})
+	db.AutoMigrate(&models.Store_inventory{})
 	DB = db
 }

@@ -4,16 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"src/src/Users"
+	"src/models"
 	"src/utils"
 
 	"github.com/google/uuid"
 )
 
-func sendUserOrders(w http.ResponseWriter, r *http.Request) {
+func SendUserOrders(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s1 Users.User3
-	var s2 Users.User3
+	var s1 models.User3
+	var s2 models.User3
 	err := json.NewDecoder(r.Body).Decode(&s1)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -34,7 +34,7 @@ func sendUserOrders(w http.ResponseWriter, r *http.Request) {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-		reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+		reply := models.SignInReply{Msg: "sucessfully changed your details"}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -48,10 +48,10 @@ func sendUserOrders(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func userStatusCheck(w http.ResponseWriter, r *http.Request) {
+func UserStatusCheck(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s1 Users.User3
-	var s2 Users.User3
+	var s1 models.User3
+	var s2 models.User3
 	err := json.NewDecoder(r.Body).Decode(&s1)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -72,7 +72,7 @@ func userStatusCheck(w http.ResponseWriter, r *http.Request) {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-		reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+		reply := models.SignInReply{Msg: "sucessfully changed your details"}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -86,10 +86,10 @@ func userStatusCheck(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func userStatus(w http.ResponseWriter, r *http.Request) {
+func UserStatus(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s1 Users.User3
-	var s2 Users.User3
+	var s1 models.User3
+	var s2 models.User3
 	err := json.NewDecoder(r.Body).Decode(&s1)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -110,7 +110,7 @@ func userStatus(w http.ResponseWriter, r *http.Request) {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-		reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+		reply := models.SignInReply{Msg: "sucessfully changed your details"}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -124,10 +124,10 @@ func userStatus(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func changeUserDetails(w http.ResponseWriter, r *http.Request) {
+func ChangeUserDetails(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s1 Users.User3
-	var s2 Users.User3
+	var s1 models.User3
+	var s2 models.User3
 	err := json.NewDecoder(r.Body).Decode(&s1)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -148,7 +148,7 @@ func changeUserDetails(w http.ResponseWriter, r *http.Request) {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-		reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+		reply := models.SignInReply{Msg: "sucessfully changed your details"}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -162,10 +162,10 @@ func changeUserDetails(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func changeUserAddress(w http.ResponseWriter, r *http.Request) {
+func ChangeUserAddress(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s1 Users.User3
-	var s2 Users.ChangeUserAddress
+	var s1 models.User3
+	var s2 models.ChangeUserAddress
 	err := json.NewDecoder(r.Body).Decode(&s1)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -186,7 +186,7 @@ func changeUserAddress(w http.ResponseWriter, r *http.Request) {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-		reply := Users.SignInReply{Msg: "sucessfully changed your delivary address"}
+		reply := models.SignInReply{Msg: "sucessfully changed your delivary address"}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -202,8 +202,8 @@ func changeUserAddress(w http.ResponseWriter, r *http.Request) {
 
 func ForgotUserDetails(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var email Users.RetrevalDetails
-	var s Users.User3
+	var email models.RetrevalDetails
+	var s models.User3
 	err := json.NewDecoder(r.Body).Decode(&email)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -223,7 +223,7 @@ func ForgotUserDetails(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func userLogin(w http.ResponseWriter, r *http.Request) {
+func UserLogin(w http.ResponseWriter, r *http.Request) {
 	// w.WriteHeader(statusCode: 200)
 	//w.WriteHeader(statusCode: 200)
 	w.Header().Set("Content-Type", "application/json")
@@ -231,9 +231,9 @@ func userLogin(w http.ResponseWriter, r *http.Request) {
 	//params := mux.Vars(r)
 	//username := params["username"]
 	//fmt.Println(username)
-	var s Users.User3
-	var reply Users.LogInReply
-	var cord Users.Coardinates
+	var s models.User3
+	var reply models.LogInReply
+	var cord models.Coardinates
 
 	username := r.URL.Query().Get("email")
 	passkey := r.URL.Query().Get("passkey")
@@ -254,7 +254,7 @@ func userLogin(w http.ResponseWriter, r *http.Request) {
 
 	if s.ID == "" {
 		fmt.Println("User does not exist/registered")
-		reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "User does not exist/registered", UserDetails: s, AllowUsers: false}
+		reply = models.LogInReply{AccessKey: "", RefreshKey: "", Msg: "User does not exist/registered", UserDetails: s, AllowUsers: false}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -270,14 +270,14 @@ func userLogin(w http.ResponseWriter, r *http.Request) {
 
 		if s.Email == "" {
 			fmt.Println("Password is incorrect")
-			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Password is incorrect", UserDetails: s, AllowUsers: false}
+			reply = models.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Password is incorrect", UserDetails: s, AllowUsers: false}
 			err = json.NewEncoder(w).Encode(reply)
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
 			}
 		} else {
 			fmt.Println("Login Sucessfull")
-			reply = Users.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s, AllowUsers: true, City: "Gainsvile"}
+			reply = models.LogInReply{AccessKey: "", RefreshKey: "", Msg: "Login Sucessfull", UserDetails: s, AllowUsers: true, City: "Gainsvile"}
 			err = json.NewEncoder(w).Encode(reply)
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
@@ -288,11 +288,11 @@ func userLogin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func userSignUp(w http.ResponseWriter, r *http.Request) {
+func UserSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s Users.User3
-	reply_on_succ := Users.SignInReply{Msg: "Sucessfull"}
-	reply_on_fail := Users.SignInReply{Msg: "Email already exists, try using another email."}
+	var s models.User3
+	reply_on_succ := models.SignInReply{Msg: "Sucessfull"}
+	reply_on_fail := models.SignInReply{Msg: "Email already exists, try using another email."}
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
 		// sendErr(w, http.StatusBadRequest, err.Error())

@@ -7,19 +7,16 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"src/src/Carts"
-	"src/src/Offers"
-	"src/src/Stores"
-	"src/src/Users"
+	"src/models"
 	"src/utils"
 
 	"github.com/google/uuid"
 )
 
-func addInventory(w http.ResponseWriter, r *http.Request) {
+func AddInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var store Stores.Store_inventory
-	reply := Users.SignInReply{Msg: "sucessfull"}
+	var store models.Store_inventory
+	reply := models.SignInReply{Msg: "sucessfull"}
 	err := json.NewDecoder(r.Body).Decode(&store)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -38,9 +35,9 @@ func addInventory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func editInventory(w http.ResponseWriter, r *http.Request) {
+func EditInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var storeUser Stores.Store_inventory
+	var storeUser models.Store_inventory
 	//var storeDB Stores.Store_inventory
 	err := json.NewDecoder(r.Body).Decode(&storeUser)
 	if err != nil {
@@ -62,16 +59,16 @@ func editInventory(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+	reply := models.SignInReply{Msg: "sucessfully changed your details"}
 	err = json.NewEncoder(w).Encode(reply)
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
 }
 
-func deleteInventory(w http.ResponseWriter, r *http.Request) {
+func DeleteInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var storeUser Stores.Store_inventory
+	var storeUser models.Store_inventory
 	//var storeDB Stores.Store_inventory
 	err := json.NewDecoder(r.Body).Decode(&storeUser)
 	if err != nil {
@@ -93,7 +90,7 @@ func deleteInventory(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	reply := Users.SignInReply{Msg: "sucessfully changed your details"}
+	reply := models.SignInReply{Msg: "sucessfully changed your details"}
 	err = json.NewEncoder(w).Encode(reply)
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
@@ -107,13 +104,13 @@ func deleteInventory(w http.ResponseWriter, r *http.Request) {
 	//}
 }
 
-func returnOffers(w http.ResponseWriter, r *http.Request) {
-	utils.DB.Model(&Offers.Offer{}).Create([]map[string]interface{}{
+func ReturnOffers(w http.ResponseWriter, r *http.Request) {
+	utils.DB.Model(&models.Offer{}).Create([]map[string]interface{}{
 		{"name": "jinzhu_1", "description": "10% off on all items"},
 		{"name": "jinzhu_2", "description": "20% off on all items"},
 	})
 	w.Header().Set("Content-Type", "application/json")
-	var all []Offers.Offer
+	var all []models.Offer
 	err := utils.DB.Find(&all).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
@@ -125,7 +122,7 @@ func returnOffers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func returnNearBy(w http.ResponseWriter, r *http.Request) {
+func ReturnNearBy(w http.ResponseWriter, r *http.Request) {
 
 	search := r.URL.Query().Get("search")
 	lat := r.URL.Query().Get("lat")
@@ -167,10 +164,10 @@ func returnNearBy(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 }
 
-func filterInventory(w http.ResponseWriter, r *http.Request) {
+func FilterInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var inv Carts.Cart_items
-	var userID Carts.UserIDtab
+	var inv models.Cart_items
+	var userID models.UserIDtab
 	err := json.NewDecoder(r.Body).Decode(&userID)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -189,7 +186,7 @@ func filterInventory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func returnStoreInv(w http.ResponseWriter, r *http.Request) {
+func ReturnStoreInv(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -227,7 +224,7 @@ func returnStoreInv(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 }
 
-func returnProductPage(w http.ResponseWriter, r *http.Request) {
+func ReturnProductPage(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -297,7 +294,7 @@ func ConvAddressToCord(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 }
 
-func returnLat(w http.ResponseWriter, r *http.Request) {
+func ReturnLat(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 

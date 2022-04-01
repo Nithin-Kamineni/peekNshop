@@ -7,11 +7,8 @@ import (
 	"src/controllers"
 	"src/utils"
 
-	//"os/user"
-
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	//"strconv"
 )
 
 func CORS(next http.Handler) http.Handler {
@@ -41,33 +38,33 @@ func main() {
 
 	utils.ConnectDatabase()
 
-	router.HandleFunc("/address", controllers.returnLat) //returning lat
-	router.HandleFunc("/address/", controllers.returnNearBy)
-	router.HandleFunc("/offers", controllers.returnOffers)
-	router.HandleFunc("/user", controllers.userLogin).Methods("GET")
-	router.HandleFunc("/user/a", controllers.userSignUp).Methods("POST")
-	router.HandleFunc("/address", controllers.returnLat) //returning lat
-	router.HandleFunc("/stores/", controllers.returnNearBy)
-	router.HandleFunc("/city", controllers.homePageReload)
-	router.HandleFunc("/stores/add/{storeID}", controllers.addInventory).Methods("POST")
-	router.HandleFunc("/stores/edit/{storeID}", controllers.editInventory).Methods("POST")
-	router.HandleFunc("/stores/delete/", controllers.deleteInventory).Methods("POST")
-	router.HandleFunc("/stores/items", controllers.returnStoreInv).Methods("POST")
-	router.HandleFunc("/stores/items/{product_id}", controllers.returnProductPage)
-	router.HandleFunc("/user", controllers.userLogin).Methods("POST")
-	router.HandleFunc("/user/a", controllers.userSignUp).Methods("POST")
+	router.HandleFunc("/address", controllers.ReturnLat) //returning lat
+	router.HandleFunc("/address/", controllers.ReturnNearBy)
+	router.HandleFunc("/offers", controllers.ReturnOffers)
+	router.HandleFunc("/user", controllers.UserLogin).Methods("GET")
+	router.HandleFunc("/user/a", controllers.UserSignUp).Methods("POST")
+	router.HandleFunc("/address", controllers.ReturnLat) //returning lat
+	router.HandleFunc("/stores/", controllers.ReturnNearBy)
+	router.HandleFunc("/city", controllers.HomePageReload)
+	router.HandleFunc("/stores/add/{storeID}", controllers.AddInventory).Methods("POST")
+	router.HandleFunc("/stores/edit/{storeID}", controllers.EditInventory).Methods("POST")
+	router.HandleFunc("/stores/delete/", controllers.DeleteInventory).Methods("POST")
+	router.HandleFunc("/stores/items", controllers.ReturnStoreInv).Methods("POST")
+	router.HandleFunc("/stores/items/{product_id}", controllers.ReturnProductPage)
+	router.HandleFunc("/user", controllers.UserLogin).Methods("POST")
+	router.HandleFunc("/user/a", controllers.UserSignUp).Methods("POST")
 	router.HandleFunc("/user/forgotpassword", controllers.ForgotUserDetails).Methods("POST")
-	router.HandleFunc("/userStatus", controllers.userStatus).Methods("POST")     //this
-	router.HandleFunc("/userCheck", controllers.userStatusCheck).Methods("POST") //this
-	router.HandleFunc("/cart", controllers.cartDisplay).Methods("POST")          //this
-	router.HandleFunc("/cart/additem", controllers.cartAddition).Methods("POST") //this
-	router.HandleFunc("/contact", controllers.contact).Methods("POST")           //this
-	router.HandleFunc("/user", controllers.changeUserDetails).Methods("PUT")
-	router.HandleFunc("/user/orders", controllers.sendUserOrders).Methods("POST")
-	router.HandleFunc("/students/", controllers.getAllStudents).Methods("GET")
-	router.HandleFunc("/students/", controllers.addStudent).Methods("POST")
-	router.HandleFunc("/students/{id}", controllers.updateStudent).Methods("PUT")
-	router.HandleFunc("/students/{id}", controllers.deleteStudent).Methods("DELETE")
+	router.HandleFunc("/userStatus", controllers.UserStatus).Methods("POST")     //this
+	router.HandleFunc("/userCheck", controllers.UserStatusCheck).Methods("POST") //this
+	router.HandleFunc("/cart", controllers.CartDisplay).Methods("POST")          //this
+	router.HandleFunc("/cart/additem", controllers.CartAddition).Methods("POST") //this
+	router.HandleFunc("/contact", controllers.Contact).Methods("POST")           //this
+	router.HandleFunc("/user", controllers.ChangeUserDetails).Methods("PUT")
+	router.HandleFunc("/user/orders", controllers.SendUserOrders).Methods("POST")
+	router.HandleFunc("/students/", controllers.GetAllStudents).Methods("GET")
+	router.HandleFunc("/students/", controllers.AddStudent).Methods("POST")
+	router.HandleFunc("/students/{id}", controllers.UpdateStudent).Methods("PUT")
+	router.HandleFunc("/students/{id}", controllers.DeleteStudent).Methods("DELETE")
 
 	http.Handle("/", router)
 

@@ -3,13 +3,13 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"src/src/Carts"
+	"src/models"
 	"src/utils"
 )
 
-func cartAddition(w http.ResponseWriter, r *http.Request) {
+func CartAddition(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart Carts.Cart_items
+	var cart models.Cart_items
 	err := json.NewDecoder(r.Body).Decode(&cart)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -24,10 +24,10 @@ func cartAddition(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func cartDisplay(w http.ResponseWriter, r *http.Request) {
+func CartDisplay(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart Carts.Cart_items
-	var userID Carts.UserIDtab
+	var cart models.Cart_items
+	var userID models.UserIDtab
 	err := json.NewDecoder(r.Body).Decode(&userID)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())

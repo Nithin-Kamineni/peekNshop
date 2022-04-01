@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func getAllStudents(w http.ResponseWriter, r *http.Request) {
+func GetAllStudents(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var all []models.Student
 	err := utils.DB.Find(&all).Error
@@ -24,7 +24,7 @@ func getAllStudents(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func addStudent(w http.ResponseWriter, r *http.Request) {
+func AddStudent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s models.Student
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -41,7 +41,7 @@ func addStudent(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func updateStudent(w http.ResponseWriter, r *http.Request) {
+func UpdateStudent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s models.Student
 	err := json.NewDecoder(r.Body).Decode(&s)
@@ -56,7 +56,7 @@ func updateStudent(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func deleteStudent(w http.ResponseWriter, r *http.Request) {
+func DeleteStudent(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	err := utils.DB.Unscoped().Delete(models.Student{ID: mux.Vars(r)["id"]}).Error
 	if err != nil {
