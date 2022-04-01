@@ -39,6 +39,7 @@ import { ChangeAddresspageComponent } from './change-addresspage/change-addressp
 import { ChangeUserProfileSettingsComponent } from './change-user-profile-settings/change-user-profile-settings.component';
 import { FavstoresComponent } from './favstores/favstores.component';
 import { TrackingorderComponent } from './trackingorder/trackingorder.component';
+import { StoresComponent } from './stores/stores.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { TrackingorderComponent } from './trackingorder/trackingorder.component'
     ChangeUserProfileSettingsComponent,
     FavstoresComponent,
     TrackingorderComponent,
+    StoresComponent,
   ],
   imports: [
     BrowserModule,
