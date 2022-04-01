@@ -13,6 +13,7 @@ export const environment = {
     firstname:"",
     lastname:"",
     email:"",
+    phone:"",
     password:"",
     accesskey:"",
     refreshkey:"",
