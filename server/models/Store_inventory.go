@@ -1,4 +1,4 @@
-package Stores
+package models
 
 type Store_inventory struct {
 	StoreID      string `gorm:"primary_key" json:"id"`
@@ -9,10 +9,6 @@ type Store_inventory struct {
 	CreatedAt    string `json:"created"`
 	ModifiedAt   string `json:"modified"`
 	AccessKey    string `json:"accesskey"`
-}
-
-type UserIDtab struct {
-	UserID string `json:"userID"`
 }
 
 type FavorateStores struct {
