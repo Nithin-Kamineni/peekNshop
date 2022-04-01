@@ -60,7 +60,7 @@ func main() {
 	router.HandleFunc("/user/orders", controllers.SendUserOrders).Methods("POST")                     //*sending user orders *list
 	router.HandleFunc("/user/favorate-stores", controllers.ShowFavorateStores).Methods("POST")        //* favorateStores
 	router.HandleFunc("/user/favorate-stores", controllers.ShowFavorateStores).Methods("PUT")         //* add favorateStores
-	router.HandleFunc("/user/delte-favorate-stores", controllers.ShowFavorateStores).Methods("PATCH") //  del favorateStores
+	router.HandleFunc("/user/delte-favorate-stores", controllers.ShowFavorateStores).Methods("PATCH") //*  del favorateStores
 
 	http.Handle("/", router)
 

@@ -60,6 +60,12 @@ type ChangeUserAddress struct {
 	Address    string
 }
 
+type ContactMsgObj struct {
+	Name  string `gorm:"primary_key" json:"id"`
+	Email string
+	Msg   string
+}
+
 type RetrevalDetails struct {
 	Email string `json:"email"`
 }
