@@ -14,6 +14,7 @@ export class CatogoriesComponent implements OnInit {
   city = "Gainesville"
   offers: any;
   stores:any; 
+  isFavorite = false
 
   constructor(public service: CatogoriesService, private http: HttpClient) { }
 
@@ -40,6 +41,16 @@ export class CatogoriesComponent implements OnInit {
   //     console.log(this.stores.results[0].rating)
   //     console.log(this.stores.results.icon)
   //   }); }, 5000);
+  }
+  favorite(){
+    if(this.isFavorite==false){
+      this.isFavorite=true
+      document.getElementsByTagName("a")[6].style.backgroundColor = "pink";
+    }else{
+      this.isFavorite=false
+      document.getElementsByTagName("a")[6].style.backgroundColor = "gray";
+    }
+    
   }
 
 
