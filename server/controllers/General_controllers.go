@@ -9,29 +9,28 @@ import (
 	"net/url"
 	"src/models"
 	"src/utils"
-
-	"github.com/google/uuid"
 )
 
 func Contact(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var store models.Store_inventory
-	reply := models.SignInReply{Msg: "sucessfull"}
-	err := json.NewDecoder(r.Body).Decode(&store)
+	var contactMsg models.ContactMsgObj
+	reply_on_succ := models.SignInReply{Msg: "Message Recived"}
+	reply_on_fail := models.SignInReply{Msg: "Message Failed."}
+	err := json.NewDecoder(r.Body).Decode(&contactMsg)
 	if err != nil {
-		sendErr(w, http.StatusBadRequest, err.Error())
+		// sendErr(w, http.StatusBadRequest, err.Error())
+		w.WriteHeader(http.StatusCreated)
+		err = json.NewEncoder(w).Encode(reply_on_fail)
 		return
 	}
-	store.StoreID = uuid.New().String()
-	err = utils.DB.Save(&store).Error
+	err = utils.DB.Save(&contactMsg).Error
 	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
+		// sendErr(w, http.StatusInternalServerError, err.Error())
+		w.WriteHeader(http.StatusCreated)
+		err = json.NewEncoder(w).Encode(reply_on_fail)
 	} else {
 		w.WriteHeader(http.StatusCreated)
-	}
-	err = json.NewEncoder(w).Encode(reply)
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
+		err = json.NewEncoder(w).Encode(reply_on_succ)
 	}
 }
 
