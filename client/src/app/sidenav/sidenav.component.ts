@@ -6,6 +6,8 @@ import {MapsService} from '../services/maps.service';
 import {LoginModel} from '../models/common_models'
 import { SignupModel } from '../models/common_models'
 import { environment } from '../environments/environments'
+import * as shajs from 'sha.js';
+
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -126,6 +128,7 @@ export class SidenavComponent implements OnInit {
       var email = this.loginForm.getRawValue().email;
       var password = this.loginForm.getRawValue().password;
       console.log(email,password)
+      password = shajs('sha256').update(password).digest('hex')
       // this.http.post<any>('http://localhost:10000/students/', { Email: email, Password: password }).subscribe(data => { })
       var user = "email=" + email + "&passkey=" + password
       this.http.get<LoginModel>('http://localhost:10000/user?'+"email=" + email + "&passkey=" + password, {}).subscribe( (data: LoginModel) => {
@@ -173,7 +176,11 @@ export class SidenavComponent implements OnInit {
       var last_name = this.signupForm.getRawValue().last_name;
       var email = this.signupForm.getRawValue().signup_email;
       var password = this.signupForm.getRawValue().signup_password;
+      password = shajs('sha256').update(password).digest('hex')
+      console.log(password)
       var confirm_password = this.signupForm.getRawValue().signup_confirm_password;
+      confirm_password = shajs('sha256').update(confirm_password).digest('hex')
+      console.log(confirm_password)
       if (password==confirm_password){
         this.http.post<SignupModel>('http://localhost:10000/user', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
             console.log(data.Msg)
