@@ -1,4 +1,4 @@
-package latNlon
+package models
 
 type result struct {
 	results []struct{ results_info } `json:"results"`

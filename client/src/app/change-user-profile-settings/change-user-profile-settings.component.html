@@ -1,3 +1,4 @@
+<br><br><br><br><br><br>
 <div class="container">
     <div class="row gutters">
         <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
@@ -8,12 +9,8 @@
                             <div class="user-avatar">
                                 <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="Maxwell Admin">
                             </div>
-                            <h5 class="user-name">Yuki Hayashi</h5>
-                            <h6 class="user-email">yuki@Maxwell.com</h6>
-                        </div>
-                        <div class="about">
-                            <h5 class="mb-2 text-primary">About</h5>
-                            <p>I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p>
+                            <h5 class="user-name">{{name}}</h5>
+                            <h6 class="user-email">{{email}}</h6>
                         </div>
                     </div>
                 </div>
@@ -28,14 +25,14 @@
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="fullName">Full Name</label>
-                                <input type="text" class="form-control" id="fullName" placeholder="Enter full name">
+                                <label for="fullName">First Name</label>
+                                <input type="text" class="form-control" formControlName="firstname" id="fullName" placeholder="Enter first name">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="eMail">Email</label>
-                                <input type="email" class="form-control" id="eMail" placeholder="Enter email ID">
+                                <label for="eMail">Last Name</label>
+                                <input type="text" class="form-control" id="eMail" placeholder="Enter last name">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -46,8 +43,8 @@
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
-                                <label for="website">Website URL</label>
-                                <input type="url" class="form-control" id="website" placeholder="Website url">
+                                <label for="website">Email</label>
+                                <input type="email" class="form-control" id="website" placeholder="Enter your email">
                             </div>
                         </div>
                     </div>

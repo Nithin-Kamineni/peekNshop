@@ -37,7 +37,7 @@
     <mat-sidenav #sidenav opened="true" mode="side" >
         <mat-nav-list>
             <a mat-list-item routerLink=""> Home</a>
-            <a mat-list-item routerLink=""> Delivery</a>
+            <a mat-list-item (click)=delivery()> Delivery</a>
             <a mat-list-item routerLink=""> Pickup</a>
             <a mat-list-item id="aboutUsBtn" routerLink="about"> About us</a>
             <a mat-list-item id="about_Us_Button"routerLink="contact"> Contact us</a>
