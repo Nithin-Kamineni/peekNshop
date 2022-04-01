@@ -120,6 +120,21 @@ func ReturnOffers(w http.ResponseWriter, r *http.Request) {
 
 func ReturnNearBy(w http.ResponseWriter, r *http.Request) {
 
+	utils.DB.Model(&models.Store_inventory{}).Create([]map[string]interface{}{
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+	})
+
 	search := r.URL.Query().Get("search")
 	lat := r.URL.Query().Get("lat")
 	long := r.URL.Query().Get("long")
@@ -162,7 +177,7 @@ func ReturnNearBy(w http.ResponseWriter, r *http.Request) {
 
 func FilterInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var inv models.Cart_items
+	var inv models.Cart_items_db
 	var userID models.UserIDtab
 	err := json.NewDecoder(r.Body).Decode(&userID)
 	if err != nil {

@@ -10,8 +10,7 @@ import (
 
 func CartAddition(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart models.Cart_items
-
+	var cart models.Cart_items_db
 	err := json.NewDecoder(r.Body).Decode(&cart)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -28,7 +27,7 @@ func CartAddition(w http.ResponseWriter, r *http.Request) {
 
 func CartManipulation(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart models.Cart_items
+	var cart models.Cart_items_db
 	var quantity int64
 
 	err := json.NewDecoder(r.Body).Decode(&cart)
@@ -54,7 +53,7 @@ func CartManipulation(w http.ResponseWriter, r *http.Request) {
 
 func CartDisplay(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart []models.Cart_items
+	var cart []models.Cart_items_db
 	var userID models.UserIDtab
 	err := json.NewDecoder(r.Body).Decode(&userID)
 	if err != nil {
