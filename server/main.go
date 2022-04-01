@@ -40,7 +40,7 @@ func main() {
 
 	router.HandleFunc("/user", controllers.UserLogin).Methods("GET")                           //jwt proc
 	router.HandleFunc("/offers", controllers.ReturnOffers)                                     //static
-	router.HandleFunc("/user/create-new-account", controllers.UserSignUp).Methods("POST")      //jwt proc
+	router.HandleFunc("/user", controllers.UserSignUp).Methods("POST")                         //jwt proc
 	router.HandleFunc("/address", controllers.ReturnLat).Methods("POST")                       //*returning lat
 	router.HandleFunc("/stores/", controllers.ReturnNearBy)                                    //filter data from interface
 	router.HandleFunc("/address/city", controllers.HomePageReload).Methods("POST")             //static to google api

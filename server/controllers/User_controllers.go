@@ -321,7 +321,6 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 func UserSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s models.User3
-	reply_on_succ := models.SignInReply{Msg: "Sucessfull"}
 	reply_on_fail := models.SignInReply{Msg: "Email already exists, try using another email."}
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
@@ -338,16 +337,14 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 		err = json.NewEncoder(w).Encode(reply_on_fail)
 	} else {
 		w.WriteHeader(http.StatusCreated)
-		err = json.NewEncoder(w).Encode(reply_on_succ)
-	}
-	err = utils.DB.Raw("SELECT id FROM user3 WHERE email = ?", s.Email).Scan(&s).Error
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	reply := models.LogInReply{Msg: "Login and sign-up Sucessfull", UserDetails: s, AllowUsers: true}
-	err = json.NewEncoder(w).Encode(reply)
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
+		err = utils.DB.Raw("SELECT * FROM user3 WHERE email = ?", s.Email).Scan(&s).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+		reply := models.LogInReply{Msg: "Login and sign-up Sucessfull", UserDetails: s, AllowUsers: true}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
 	}
 }
