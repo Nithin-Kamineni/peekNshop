@@ -121,18 +121,27 @@ func ReturnOffers(w http.ResponseWriter, r *http.Request) {
 func ReturnNearBy(w http.ResponseWriter, r *http.Request) {
 
 	utils.DB.Model(&models.Store_inventory{}).Create([]map[string]interface{}{
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
-		{"id": "", "productID": "", "productName": "", "price": "", "photo": "", "description": "", "quantity": "", "created": "", "modified": "", "accesskey": ""},
+		{"store_id": "ChIJpZbmeDuj6IgRuYWJ6GnlnWw", "product_ID": "a", "product_Name": "", "product_price": "", "product_photo": "", "description": "", "quantity": "1", "created_at": "", "modified_at": "", "access_key": ""},
+		// {"id": "ChIJ2YkoIDij6IgRPMhMLSRdN18", "productID": "b", "productName": "", "price": "", "photo": "", "description": "", "quantity": "2", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJYzeoRt-i6IgR1UrCbyUZF3w", "productID": "c", "productName": "", "price": "", "photo": "", "description": "", "quantity": "3", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJvxCmQCWj6IgRZirhK0PvgG0", "productID": "d", "productName": "", "price": "", "photo": "", "description": "", "quantity": "1", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJq1H_pRS96IgRPctxXbUCNZQ", "productID": "e", "productName": "", "price": "", "photo": "", "description": "", "quantity": "2", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJHQFuiSmj6IgRhI2ECnJNGEQ", "productID": "f", "productName": "", "price": "", "photo": "", "description": "", "quantity": "3", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJnXebwiuj6IgRsiEVACnHaQ8", "productID": "g", "productName": "", "price": "", "photo": "", "description": "", "quantity": "1", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJLcsUVC-j6IgR18XiLQTx4Sg", "productID": "h", "productName": "", "price": "", "photo": "", "description": "", "quantity": "2", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJD6tuEC6j6IgR-6FeONaNUiw", "productID": "i", "productName": "", "price": "", "photo": "", "description": "", "quantity": "3", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJqauasuaj6IgRtYsMm8OBhX0", "productID": "j", "productName": "", "price": "", "photo": "", "description": "", "quantity": "1", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJKdNY_DGj6IgRSbLLSnIs-Jk", "productID": "l", "productName": "", "price": "", "photo": "", "description": "", "quantity": "2", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJe1eNAy6j6IgRESMhgf1SdOk", "productID": "m", "productName": "", "price": "", "photo": "", "description": "", "quantity": "3", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJt6MuUC2j6IgRqMLDi6UTo_Y", "productID": "n", "productName": "", "price": "", "photo": "", "description": "", "quantity": "1", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJrfv0-CSj6IgRouULgSyagwY", "productID": "o", "productName": "", "price": "", "photo": "", "description": "", "quantity": "2", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJw4LY1KOj6IgR1L4C7_M652w", "productID": "p", "productName": "", "price": "", "photo": "", "description": "", "quantity": "3", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJBYLr0Laj6IgRAP3mWjifFGE", "productID": "q", "productName": "", "price": "", "photo": "", "description": "", "quantity": "1", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJjwYylFGj6IgRf11ox1ozMDg", "productID": "r", "productName": "", "price": "", "photo": "", "description": "", "quantity": "2", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJZe8b_TGj6IgRd_J34tpD7p4", "productID": "s", "productName": "", "price": "", "photo": "", "description": "", "quantity": "3", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJZ9eLmCOj6IgRdCj3PeAgxQk", "productID": "t", "productName": "", "price": "", "photo": "", "description": "", "quantity": "1", "created": "", "modified": "", "accesskey": ""},
+		// {"id": "ChIJPxz8ai6j6IgRY15L7s7Ec4I", "productID": "u", "productName": "", "price": "", "photo": "", "description": "", "quantity": "2", "created": "", "modified": "", "accesskey": ""},
+		// Tillys
 	})
 
 	search := r.URL.Query().Get("search")
