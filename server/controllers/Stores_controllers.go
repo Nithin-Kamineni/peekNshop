@@ -14,19 +14,19 @@ import (
 func AddInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store models.Store_inventory
-	var accessID string
+	var storeInfo models.Stores_Information
 	reply := models.SignInReply{Msg: "sucessfully added the new item/items in the inventory"}
 	err := json.NewDecoder(r.Body).Decode(&store)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
-	}
-	err = utils.DB.Raw("SELECT accessKey FROM user3 WHERE store_id = ?", store.StoreID).Scan(&accessID).Error
+	} //store_inventory
+	err = utils.DB.Raw("SELECT * FROM store_information WHERE store_id = ?", store.StoreID).Scan(&storeInfo).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	if accessID == store.AccessKey {
+	if storeInfo.AccessKey == store.AccessKey {
 		err = utils.DB.Save(&store).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -43,19 +43,19 @@ func AddInventory(w http.ResponseWriter, r *http.Request) {
 func EditInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store models.Store_inventory
-	var accessID string
+	var storeInf models.Stores_Information
 	err := json.NewDecoder(r.Body).Decode(&store)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	err = utils.DB.Raw("SELECT accessKey FROM user3 WHERE store_id = ?", store.StoreID).Scan(&accessID).Error
+	err = utils.DB.Raw("SELECT * FROM store_inventory WHERE store_id = ?", store.StoreID).Scan(&storeInf).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	if accessID == store.AccessKey {
+	if storeInf.AccessKey == store.AccessKey {
 		err = utils.DB.Exec("UPDATE store_inventory SET ProductPrice = ?, ProductName = ?, Quantity = ?, ModifiedAt = ? WHERE StoreID = ? and ProductID = ?", store.ProductPrice, store.ProductName, store.Quantity, store.ModifiedAt, store.StoreID, store.ProductID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -72,25 +72,25 @@ func EditInventory(w http.ResponseWriter, r *http.Request) {
 func DeleteInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store models.Store_inventory
-	var accessID string
+	var storeInf models.Stores_Information
 	err := json.NewDecoder(r.Body).Decode(&store)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	err = utils.DB.Raw("SELECT accessKey FROM user3 WHERE store_id = ?", store.StoreID).Scan(&accessID).Error
+	err = utils.DB.Raw("SELECT accessKey FROM user3 WHERE store_id = ?", store.StoreID).Scan(&storeInf).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	if accessID == store.AccessKey {
+	if storeInf.AccessKey == store.AccessKey {
 		err = utils.DB.Exec("DELETE from store_inventory WHERE StoreID = ? and ProductID = ?", store.StoreID, store.ProductID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-		reply := models.SignInReply{Msg: "sucessfully changed your details"}
+		reply := models.SignInReply{Msg: "sucessfully deleter your items details"}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())

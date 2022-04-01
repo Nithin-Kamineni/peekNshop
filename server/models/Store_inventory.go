@@ -14,6 +14,7 @@ type Store_inventory struct {
 
 type Stores_Information struct {
 	storeID   string
+	AccessKey string
 	StoreName string
 	Photo_ref string
 	Address   string
