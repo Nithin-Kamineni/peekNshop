@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/theming';
 @import '~bootstrap/dist/css/bootstrap.css';
+@import "~bootstrap-icons/font/bootstrap-icons.css";
 
 $custom-typography: mat-typography-config($font-family: '"Raleway", sans-serif;');
 @include mat-core($custom-typography);

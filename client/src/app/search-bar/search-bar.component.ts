@@ -20,8 +20,9 @@ export class SearchBarComponent implements OnInit{
 
   ngOnInit(): void {
     this.searchForm = new FormGroup({
-      searchText: new FormControl('', [Validators.required])
+      searchText: new FormControl('Vamsi', [Validators.required])
     })
+    
   }
 
   constructor(private http: HttpClient, private router: Router) { }

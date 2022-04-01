@@ -27,6 +27,7 @@ export class MapsService{
           },
             (error: GeolocationPositionError) => console.log(error));
         } else {
+          environment.isLocation=false
           alert("Geolocation is not supported by this browser.");
         }
       }
