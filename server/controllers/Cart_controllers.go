@@ -24,6 +24,21 @@ func CartAddition(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func CartManipulation(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var cart models.Cart_items
+	err := json.NewDecoder(r.Body).Decode(&cart)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = utils.DB.Exec("UPDATE user3 SET quantity = ?, ModifiedAt = ? where userID = ? and productID = ?", cart.Quantity, cart.ModifiedAt, cart.UserID, cart.ProductID).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+}
+
 func CartDisplay(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var cart models.Cart_items

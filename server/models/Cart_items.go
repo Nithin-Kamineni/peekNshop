@@ -1,10 +1,10 @@
 package models
 
 type Cart_items struct {
-	userID     string `json:"id"`
-	productID  string `json:"productID"`
-	quantity   string `json:"quantity"`
-	createdAt  string `json:"created"`
+	UserID     string `json:"id"`
+	ProductID  string `json:"productID"`
+	Quantity   string `json:"quantity"`
+	CreatedAt  string `json:"created"`
 	ModifiedAt string `json:"modified"`
 }
 

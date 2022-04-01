@@ -52,10 +52,11 @@ func main() {
 	router.HandleFunc("/user/forgotpassword", controllers.ForgotUserDetails).Methods("POST")   //progress
 	router.HandleFunc("/userStatus", controllers.UserStatus).Methods("POST")                   //this
 	router.HandleFunc("/userCheck", controllers.UserStatusCheck).Methods("POST")               //this
-	router.HandleFunc("/cart", controllers.CartDisplay).Methods("POST")                        //this
+	router.HandleFunc("/cart", controllers.CartDisplay).Methods("POST")                        //*this
+	router.HandleFunc("/cart", controllers.CartManipulation).Methods("PATCH")                  //this
 	router.HandleFunc("/cart/additem", controllers.CartAddition).Methods("POST")               //this
 	router.HandleFunc("/contact", controllers.Contact).Methods("POST")                         //this
-	router.HandleFunc("/user", controllers.ChangeUserDetails).Methods("PUT")
+	router.HandleFunc("/user", controllers.ChangeUserDetails).Methods("PUT")                   //*changing user details
 	router.HandleFunc("/user/orders", controllers.SendUserOrders).Methods("POST")
 	router.HandleFunc("/students/", controllers.GetAllStudents).Methods("GET")
 	router.HandleFunc("/students/", controllers.AddStudent).Methods("POST")
