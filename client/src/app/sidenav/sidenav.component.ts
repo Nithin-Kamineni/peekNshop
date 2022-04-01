@@ -143,7 +143,7 @@ export class SidenavComponent implements OnInit {
           environment.address2=details[8]
           environment.address3=details[9]
           environment.fullname=environment.firstname.concat(" ", environment.lastname)
-          this.name=environment.firstname.concat(" ", environment.lastname)
+          this.name=environment.fullname
           
           if (this.loginmsg == "Login Sucessfull"){
             alert(this.loginmsg) 
@@ -175,10 +175,25 @@ export class SidenavComponent implements OnInit {
       var password = this.signupForm.getRawValue().signup_password;
       var confirm_password = this.signupForm.getRawValue().signup_confirm_password;
       if (password==confirm_password){
-        this.http.post<SignupModel>('http://localhost:10000/user', { First_name: first_name, Last_name: last_name, Email: email, Password: password }).subscribe(data => {
+        this.http.post<LoginModel>('http://localhost:10000/user', { firstname: first_name, lastname: last_name, email: email, password: password }).subscribe(data => {
             console.log(data.Msg)
             this.signupmsg = data.Msg
-            if (this.signupmsg == "Sucessfull"){
+            if (this.signupmsg == "Login and sign-up Sucessfull"){
+              var details = Object.values(data.UserDetails)
+              console.log(data)
+              console.log(details)
+              environment.id=details[0]
+              environment.firstname=details[1]
+              environment.lastname=details[2]
+              environment.email=details[3]
+              environment.password=details[4]
+              environment.accesskey=details[5]
+              environment.refreshkey=details[6]
+              environment.address1=details[7]
+              environment.address2=details[8]
+              environment.address3=details[9]
+              environment.fullname=environment.firstname.concat(" ", environment.lastname)
+              this.name=environment.firstname.concat(" ", environment.lastname)
               alert("Signup Successful")
               let element: HTMLElement = document.getElementsByClassName('btn-close')[2] as HTMLElement;
               element.click();
@@ -187,8 +202,6 @@ export class SidenavComponent implements OnInit {
             }else{
               console.log("Wrong User")
               alert("User already registered")
-              let element: HTMLElement = document.getElementsByClassName('btn-close')[2] as HTMLElement;
-              element.click();
               this.router.navigate([''])
             }
         })
