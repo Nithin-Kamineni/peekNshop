@@ -203,39 +203,18 @@ func ReturnStoreInv(w http.ResponseWriter, r *http.Request) {
 func ReturnProductPage(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
+	var store models.Store_inventory
+	product_id := r.URL.Query().Get("product_id")
 
-	keyword := "foods"
-	radius := "1500"
-	field := "formatted_address,name,rating,opening_hours,geometry"
-	location := "29.61872,-82.37299"
-	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
-
-	params := "keyword=" + url.QueryEscape(keyword) + "&" +
-		"radius=" + url.QueryEscape(radius) + "&" +
-		"field=" + url.QueryEscape(field) + "&" +
-		"location=" + url.QueryEscape(location) + "&" +
-		"key=" + url.QueryEscape(Key)
-	path := fmt.Sprint("https://maps.googleapis.com/maps/api/place/nearbysearch/json?", params)
-	fmt.Println(path)
-	resp, err := http.Get(path)
-
+	err := utils.DB.Raw("SELECT * FROM store_inventories WHERE product_id = ?", product_id).Scan(&store).Error
 	if err != nil {
-		log.Fatal(err)
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
 	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-
+	err = json.NewEncoder(w).Encode(store)
 	if err != nil {
-		log.Fatal(err)
+		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
-
-	//data1 := result{}
-	var f interface{}
-	json.Unmarshal(body, &f)
-	fmt.Println(f)
-
-	json.NewEncoder(w).Encode(f)
-	defer resp.Body.Close()
 }
 
 func ReturnLat(w http.ResponseWriter, r *http.Request) {

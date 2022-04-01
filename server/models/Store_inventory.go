@@ -5,6 +5,7 @@ type Store_inventory struct {
 	ProductID    string `json:"productID"`
 	ProductName  string `json:"productName"`
 	ProductPrice string `json:"price"`
+	ProductDesc  string `json:"description"`
 	Quantity     string `json:"quantity"`
 	CreatedAt    string `json:"created"`
 	ModifiedAt   string `json:"modified"`
