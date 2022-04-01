@@ -405,8 +405,18 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	} else {
+<<<<<<< HEAD
 		fmt.Println("else")
 		err = json.NewEncoder(w).Encode(reply_on_fail)
+=======
+		w.WriteHeader(http.StatusCreated)
+		err = utils.DB.Raw("SELECT * FROM user3 WHERE email = ?", s.Email).Scan(&s).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+		reply := models.LogInReply{Msg: "Login and sign-up Sucessfull", UserDetails: s, AllowUsers: true}
+		err = json.NewEncoder(w).Encode(reply)
+>>>>>>> bugs
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 		}
