@@ -37,10 +37,15 @@ type User3 struct {
 	Address3 string
 }
 
+type FavorateStore struct {
+	UserID  string
+	StoreID string
+}
+
 type FavorateStoresObj struct {
-	ID            string
-	Acesskey      string
-	FavorateStore string
+	UserID          string
+	Acesskey        string
+	FavorateStoreID string
 }
 
 type Orders struct {
@@ -54,7 +59,7 @@ type Orders struct {
 }
 
 type ChangeUserAddress struct {
-	ID         string `gorm:"primary_key" json:"id"`
+	UserID     string `gorm:"primary_key" json:"id"`
 	Acesskey   string
 	RefreshKey string
 	Address    string

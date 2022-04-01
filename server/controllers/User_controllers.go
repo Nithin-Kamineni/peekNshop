@@ -52,13 +52,13 @@ func AddingFavorateStores(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = utils.DB.Raw("SELECT * FROM user3 WHERE ID = ?", s1.ID).Scan(&s2).Error
+	err = utils.DB.Raw("SELECT * FROM user3 WHERE ID = ?", s1.UserID).Scan(&s2).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	if s2.Acesskey == s1.Acesskey {
-		err = utils.DB.Exec("UPDATE user3 SET FavorateStores = array_append(FavorateStores, ? ) WHERE where ID = ?", s1.FavorateStore, s1.ID).Error
+		err = utils.DB.Save(&s1).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
@@ -83,19 +83,19 @@ func DeleFavorateStores(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = utils.DB.Raw("SELECT * FROM user3 WHERE ID = ?", s1.ID).Scan(&s2).Error
+	err = utils.DB.Raw("SELECT * FROM user3 WHERE ID = ?", s1.UserID).Scan(&s2).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	if s2.Acesskey == s1.Acesskey {
-		err = utils.DB.Exec("UPDATE user3 SET FavorateStores = array_remove(FavorateStores, 0) WHERE where ID = ?", s1.FavorateStore, s1.ID).Error
+		err = utils.DB.Exec("DELETE from FavorateStoresObj where FavorateStoreID = ? and UserID = ?", s1.FavorateStoreID, s1.UserID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 
-		reply := models.SignInReply{Msg: "sucessfully added the store to your favorate stores"}
+		reply := models.SignInReply{Msg: "sucessfully deleted the store to your favorate stores"}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -117,13 +117,13 @@ func ShowFavorateStores(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = utils.DB.Raw("SELECT * FROM user3 WHERE ID = ?", s1.ID).Scan(&s2).Error
+	err = utils.DB.Raw("SELECT * FROM user3 WHERE ID = ?", s1.UserID).Scan(&s2).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 	if s2.Acesskey == s1.Acesskey {
-		err = utils.DB.Raw("SELECT FavorateStores FROM user3 WHERE ID = ?", s1.ID).Scan(&FavStores).Error
+		err = utils.DB.Raw("SELECT FavorateStores FROM user3 WHERE ID = ?", s1.UserID).Scan(&FavStores).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
@@ -258,22 +258,22 @@ func ChangeUserAddress(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s1 models.User3
 	var s2 models.ChangeUserAddress
-	err := json.NewDecoder(r.Body).Decode(&s1)
+	err := json.NewDecoder(r.Body).Decode(&s2)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	err = utils.DB.Raw("SELECT ID,acessKey FROM user3 WHERE id = ?", s1.ID).Scan(&s2).Error
+	err = utils.DB.Raw("SELECT ID,acessKey FROM user3 WHERE id = ?", s2.UserID).Scan(&s1).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	fmt.Println(s1.Acesskey)
-	fmt.Println(s2.Acesskey)
-	fmt.Println()
+	// fmt.Println(s1.Acesskey)
+	// fmt.Println(s2.Acesskey)
+	// fmt.Println()
 	if s2.Acesskey == s1.Acesskey {
-		err = utils.DB.Exec("UPDATE user3 SET Address1= ? where ID = ?", s2.Address, s2.ID).Error //add s1.address insted of s1.firstname
+		err = utils.DB.Exec("UPDATE user3 SET Address1= ? where ID = ?", s2.Address, s2.UserID).Error //add s1.address insted of s1.firstname
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
