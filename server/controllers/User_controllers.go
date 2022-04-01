@@ -14,6 +14,8 @@ func SendUserOrders(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s1 models.User3
 	var s2 models.User3
+	var orders []models.Orders
+
 	err := json.NewDecoder(r.Body).Decode(&s1)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -25,64 +27,116 @@ func SendUserOrders(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	fmt.Println(s1.Acesskey)
-	fmt.Println(s2.Acesskey)
-	fmt.Println()
 	if s2.Acesskey == s1.Acesskey {
-		err = utils.DB.Exec("UPDATE user3 SET firstname = ?, lastname = ?, email = ?, password = ? where ID = ?", s1.Firstname, s1.Lastname, s1.Email, s1.Password, s2.ID).Error
+		err = utils.DB.Raw("SELECT * FROM orders WHERE userid = ?", s1.ID).Scan(&orders).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-		reply := models.SignInReply{Msg: "sucessfully changed your details"}
-		err = json.NewEncoder(w).Encode(reply)
+
+		err = json.NewEncoder(w).Encode(orders)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 		}
-
-		//a.db.Raw("SELECT  FROM user3 WHERE acesskey = ?", username)
-		// err = a.db.Save(&s).Error
-		// if err != nil {
-		// 	sendErr(w, http.StatusInternalServerError, err.Error())
-		// }
 	}
 }
 
-func FavorateStores(w http.ResponseWriter, r *http.Request) {
+func AddingFavorateStores(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var s1 models.User3
+	var s1 models.FavorateStoresObj
 	var s2 models.User3
-	err := json.NewDecoder(r.Body).Decode(&s1)
+
+	err := json.NewDecoder(r.Body).Decode(&s1) //ID, accesskey, storeID
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	err = utils.DB.Raw("SELECT favorateStores FROM userFavstores WHERE userid = ?", s1.ID).Scan(&s2).Error
+	err = utils.DB.Raw("SELECT * FROM user3 WHERE ID = ?", s1.ID).Scan(&s2).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	fmt.Println(s1.Acesskey)
-	fmt.Println(s2.Acesskey)
-	fmt.Println()
 	if s2.Acesskey == s1.Acesskey {
-		err = utils.DB.Exec("UPDATE user3 SET firstname = ?, lastname = ?, email = ?, password = ? where ID = ?", s1.Firstname, s1.Lastname, s1.Email, s1.Password, s2.ID).Error
+		err = utils.DB.Exec("UPDATE user3 SET FavorateStores = array_append(FavorateStores, ? ) WHERE where ID = ?", s1.FavorateStore, s1.ID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
-		reply := models.SignInReply{Msg: "sucessfully changed your details"}
+
+		reply := models.SignInReply{Msg: "sucessfully added the store to your favorate stores"}
 		err = json.NewEncoder(w).Encode(reply)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 		}
+	}
+}
 
-		//a.db.Raw("SELECT  FROM user3 WHERE acesskey = ?", username)
-		// err = a.db.Save(&s).Error
-		// if err != nil {
-		// 	sendErr(w, http.StatusInternalServerError, err.Error())
-		// }
+func DeleFavorateStores(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s1 models.FavorateStoresObj
+	var s2 models.User3
+
+	err := json.NewDecoder(r.Body).Decode(&s1) //ID, accesskey, storeID
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = utils.DB.Raw("SELECT * FROM user3 WHERE ID = ?", s1.ID).Scan(&s2).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if s2.Acesskey == s1.Acesskey {
+		err = utils.DB.Exec("UPDATE user3 SET FavorateStores = array_remove(FavorateStores, 0) WHERE where ID = ?", s1.FavorateStore, s1.ID).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		reply := models.SignInReply{Msg: "sucessfully added the store to your favorate stores"}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+	}
+}
+
+func ShowFavorateStores(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var s1 models.FavorateStoresObj
+	var s2 models.User3
+	var FavStores []string
+	var storeInf models.Stores_Information
+	var storeInfs []models.Stores_Information
+
+	err := json.NewDecoder(r.Body).Decode(&s1) //ID, accesskey, storeID
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = utils.DB.Raw("SELECT * FROM user3 WHERE ID = ?", s1.ID).Scan(&s2).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	if s2.Acesskey == s1.Acesskey {
+		err = utils.DB.Raw("SELECT FavorateStores FROM user3 WHERE ID = ?", s1.ID).Scan(&FavStores).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+		//storeID, photo ref, name, address
+		for i := 0; i < len(FavStores); i++ {
+			err = utils.DB.Raw("SELECT Stores_Information FROM user3 WHERE StoreID = ?", &FavStores[i]).Scan(&storeInf).Error
+			storeInfs = append(storeInfs, storeInf)
+		}
+		err = json.NewEncoder(w).Encode(storeInfs)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
 	}
 }
 

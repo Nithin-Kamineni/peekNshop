@@ -12,6 +12,13 @@ type Store_inventory struct {
 	AccessKey    string `json:"accesskey"`
 }
 
+type Stores_Information struct {
+	storeID   string
+	StoreName string
+	Photo_ref string
+	Address   string
+}
+
 type FavorateStores struct {
 	StoreID string
 	UserID  string
