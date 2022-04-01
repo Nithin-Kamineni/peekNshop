@@ -24,17 +24,17 @@ type HomePageCity struct {
 }
 
 type User3 struct {
-	ID             string `gorm:"primary_key" json:"id"`
-	Firstname      string `json:"firstname"`
-	Lastname       string `json:"lastname"`
-	Email          string `gorm:"uniqueIndex:idx_first_second" json:"email"`
-	Password       string `json:"password"`
-	Acesskey       string
-	RefreshKey     string
-	FavorateStores []string
-	Address1       string
-	Address2       string
-	Address3       string
+	ID         string `gorm:"primary_key" json:"id"`
+	Firstname  string `json:"firstname"`
+	Lastname   string `json:"lastname"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Acesskey   string
+	RefreshKey string
+	//FavorateStores [4]string `gorm:"type:text[4]"`
+	Address1 string
+	Address2 string
+	Address3 string
 }
 
 type FavorateStoresObj struct {

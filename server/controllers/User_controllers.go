@@ -375,33 +375,40 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 func UserSignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s models.User3
-	reply_on_succ := models.SignInReply{Msg: "Sucessfull"}
+	var s1 models.User3
+	//var id string
+
 	reply_on_fail := models.SignInReply{Msg: "Email already exists, try using another email."}
 	err := json.NewDecoder(r.Body).Decode(&s)
 	if err != nil {
-		// sendErr(w, http.StatusBadRequest, err.Error())
+		sendErr(w, http.StatusBadRequest, err.Error())
 		w.WriteHeader(http.StatusCreated)
-		err = json.NewEncoder(w).Encode(reply_on_fail)
-		return
 	}
-	s.ID = uuid.New().String()
-	err = utils.DB.Save(&s).Error
-	if err != nil {
-		// sendErr(w, http.StatusInternalServerError, err.Error())
-		w.WriteHeader(http.StatusCreated)
-		err = json.NewEncoder(w).Encode(reply_on_fail)
+	fmt.Println(s.Email)
+	err = utils.DB.Raw("SELECT * FROM user3 WHERE email = ?", s.Email).Scan(&s1).Error
+	fmt.Println(s1.ID)
+	if s1.ID == "" {
+		s.ID = uuid.New().String()
+		fmt.Println("if")
+		fmt.Println(s.Firstname)
+		err = utils.DB.Table("user3").Save(&s).Error
+		fmt.Println("if2")
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			w.WriteHeader(http.StatusCreated)
+		} else {
+			w.WriteHeader(http.StatusCreated)
+			reply := models.LogInReply{Msg: "Login and sign-up Sucessfull", UserDetails: s, AllowUsers: true}
+			err = json.NewEncoder(w).Encode(reply)
+			if err != nil {
+				sendErr(w, http.StatusInternalServerError, err.Error())
+			}
+		}
 	} else {
-		w.WriteHeader(http.StatusCreated)
-		err = json.NewEncoder(w).Encode(reply_on_succ)
-	}
-	err = utils.DB.Raw("SELECT id FROM user3 WHERE email = ?", s.Email).Scan(&s).Error
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
-		return
-	}
-	reply := models.LogInReply{Msg: "Login and sign-up Sucessfull", UserDetails: s, AllowUsers: true}
-	err = json.NewEncoder(w).Encode(reply)
-	if err != nil {
-		sendErr(w, http.StatusInternalServerError, err.Error())
+		fmt.Println("else")
+		err = json.NewEncoder(w).Encode(reply_on_fail)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
 	}
 }
