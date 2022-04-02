@@ -19,7 +19,7 @@
       </span>
       
      <h1 id="city"> {{ city }}</h1>
-     <button *ngIf = "!isLocation" type="button" class="btn btn-link" id="locationbutton" data-bs-toggle="modal" data-bs-target="#locationModal">
+     <button *ngIf = "isLocation" type="button" class="btn btn-link" id="locationbutton" data-bs-toggle="modal" data-bs-target="#locationModal">
          Location
      </button>
      <button *ngIf = "isLogin" type="button" class="btn btn-outline-light" id="loginbutton" data-bs-toggle="modal" data-bs-target="#loginModal">

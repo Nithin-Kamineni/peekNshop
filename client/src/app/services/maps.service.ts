@@ -22,6 +22,7 @@ export class MapsService{
               this.lon = position.coords.longitude;
               environment.lat = this.lat.toString()
               environment.lon = this.lon.toString()
+              environment.isLocation=true
               
             }
           },
@@ -32,8 +33,12 @@ export class MapsService{
         }
       }
       getCity(){
-        this.http.post<Location>('http://localhost:10000/city', { lat: environment.lat, lon: environment.lon }).subscribe(data => {
+        this.http.post<Location>('http://localhost:10000/address/city', { Lat: environment.lat, Lng: environment.lon }).subscribe(data => {
           console.log(data.city)
+          if(environment.lat == ""){
+            environment.isLocation=false
+          }
+          console.log(environment.isLocation)
           environment.city=data.city
         })
       }
