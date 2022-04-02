@@ -57,7 +57,11 @@ func AddingFavorateStores(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	if s2.Acesskey == s1.Acesskey {
+	fmt.Println(s2.ID)
+	if "" == s1.Acesskey {
+		s1.ID = uuid.New().String()
+		// fmt.Println(s1.UserID)
+		// fmt.Println(s1.FavorateStoreID)
 		err = utils.DB.Save(&s1).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
@@ -88,8 +92,8 @@ func DeleFavorateStores(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	if s2.Acesskey == s1.Acesskey {
-		err = utils.DB.Exec("DELETE from FavorateStoresObj where FavorateStoreID = ? and UserID = ?", s1.FavorateStoreID, s1.UserID).Error
+	if "" == s1.Acesskey {
+		err = utils.DB.Exec("DELETE from favorate_stores_objs where favorate_store_id = ? and user_id = ?", s1.FavorateStoreID, s1.UserID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
@@ -122,15 +126,19 @@ func ShowFavorateStores(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	if s2.Acesskey == s1.Acesskey {
-		err = utils.DB.Raw("SELECT FavorateStores FROM user3 WHERE ID = ?", s1.UserID).Scan(&FavStores).Error
+	fmt.Println(s1.Acesskey)
+	// if s2.Acesskey == s1.Acesskey {
+	if "" == s1.Acesskey {
+		err = utils.DB.Raw("SELECT favorate_store_id FROM favorate_stores_objs WHERE user_id = ?", s1.UserID).Scan(&FavStores).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 		//storeID, photo ref, name, address
+
 		for i := 0; i < len(FavStores); i++ {
-			err = utils.DB.Raw("SELECT Stores_Information FROM user3 WHERE StoreID = ?", &FavStores[i]).Scan(&storeInf).Error
+			fmt.Println(i)
+			err = utils.DB.Raw("SELECT Stores_Information FROM user3 WHERE StoreID = ?", FavStores[i]).Scan(&storeInf).Error
 			storeInfs = append(storeInfs, storeInf)
 		}
 		err = json.NewEncoder(w).Encode(storeInfs)
