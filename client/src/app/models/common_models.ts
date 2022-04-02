@@ -26,3 +26,8 @@ export interface Location {
     city:    string;
     
 }
+export interface productsDisplay {  
+    photo:    string;
+    price:           string;
+    product_name:           string;
+}

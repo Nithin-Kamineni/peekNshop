@@ -13,6 +13,7 @@ export class MapsService{
     constructor(private http: HttpClient){}
 
     getLocation() {
+      if(environment.lat == ""){
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
             if (position) {
@@ -31,6 +32,8 @@ export class MapsService{
           environment.isLocation=false
           alert("Geolocation is not supported by this browser.");
         }
+      }
+        
       }
       getCity(){
         this.http.post<Location>('http://localhost:10000/address/city', { Lat: environment.lat, Lng: environment.lon }).subscribe(data => {

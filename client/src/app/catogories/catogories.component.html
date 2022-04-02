@@ -268,7 +268,7 @@
       <div class="card-body">
         <h3 class="card-title" style="color: black;"><strong>{{x.name}}</strong></h3>
         <p style="color: black;">{{x.vicinity}}</p>        
-        <a href="#" class="btn btn-primary" style="background-color:gray;">Visit</a>
+        <a class="btn btn-primary" (click)="visitStore(i)" style="background-color:gray;">Visit</a>
         <a class="btn btn-primary" style="margin-left: 10px;background-color:gray;"
         (click)="favorite(i)"><i class="bi bi-heart-fill"></i></a>
       </div>

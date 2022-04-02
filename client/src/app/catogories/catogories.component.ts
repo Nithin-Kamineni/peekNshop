@@ -4,7 +4,7 @@ import { environment } from '../environments/environments'
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http"; 
 import { Stores } from '../models/common_models'
 import { results } from '../models/results'
-
+import { Router } from "@angular/router";
 @Component({
   selector: 'app-catogories',
   templateUrl: './catogories.component.html',
@@ -18,8 +18,9 @@ export class CatogoriesComponent implements OnInit {
   toggle = true;
   status = 'Enable';
   arr = new Array(19).fill(false);
+  storesarr = new Array(19)
 
-  constructor(public service: CatogoriesService, private http: HttpClient) { }
+  constructor(public service: CatogoriesService, private http: HttpClient, private router: Router) { }
 
   
 
@@ -35,12 +36,14 @@ export class CatogoriesComponent implements OnInit {
   this.service.getStores().subscribe(data => {
     this.stores = data;
     console.log(this.stores.results[0].rating)
-    // for (var x of this.stores.results){
-    //   console.log(x.photos[0].photo_reference)
-    // }
-    console.log()
+    var i = 0 
+    for (var x of this.stores.results){
+      this.storesarr[i] = this.stores.results[i].place_id
+      i = i+1
+    }
+    console.log(this.storesarr)
     console.log(this.stores.results.icon)
-  }); }, 5000);
+  }); }, 4000);
 
 
   // setTimeout(() => {  this.http.get<Stores>('http://localhost:10000/address/?'+'search=store'+'&lat='+ environment.lat+'&long='+environment.lon, {}).subscribe( (data: Stores) => {
@@ -53,6 +56,13 @@ export class CatogoriesComponent implements OnInit {
     this.toggle = !this.toggle;
     this.status = this.toggle ? 'Enable' : 'Disable';
 }
+  visitStore(i:number){
+    
+    environment.storeId = this.storesarr[i]
+    console.log(environment.storeId)
+    this.router.navigate(['/products'])
+  }
+
   favorite(i:number){
     if (environment.isLogin=true){
       var k = 8+(2*i)
