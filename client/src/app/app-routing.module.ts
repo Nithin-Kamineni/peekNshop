@@ -38,7 +38,7 @@ const routes: Routes = [
   {path: "user-homepage/user/changeusersettings", component: ChangeUserProfileSettingsComponent},
   {path: "stores", component: StoresComponent},
   {path: "delivaty-page", component: DelivaryPageComponent},
-  {path: "favorate-stores", component: FavorateStoresComponent},
+  {path: "user/favorate-stores", component: FavorateStoresComponent},
 ];
 
 @NgModule({
