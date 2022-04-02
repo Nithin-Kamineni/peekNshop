@@ -19,7 +19,7 @@ func ConnectDatabase() {
 	db.AutoMigrate(&models.Offer{})
 	db.AutoMigrate(&models.Orders{})
 	db.AutoMigrate(&models.FavorateStoresObj{})
-	db.AutoMigrate(&models.Cart_items{})
+	db.AutoMigrate(&models.Cart_items_db{})
 	db.AutoMigrate(&models.Store_inventory{})
 	db.AutoMigrate(&models.Stores_Information{})
 	DB = db

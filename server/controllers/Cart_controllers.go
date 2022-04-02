@@ -10,8 +10,7 @@ import (
 
 func CartAddition(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart models.Cart_items
-
+	var cart models.Cart_items_db
 	err := json.NewDecoder(r.Body).Decode(&cart)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
@@ -28,7 +27,7 @@ func CartAddition(w http.ResponseWriter, r *http.Request) {
 
 func CartManipulation(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart models.Cart_items
+	var cart models.Cart_items_db
 	var quantity int64
 
 	err := json.NewDecoder(r.Body).Decode(&cart)
@@ -44,7 +43,7 @@ func CartManipulation(w http.ResponseWriter, r *http.Request) {
 	}
 	quantityInt, _ := strconv.ParseInt(cart.Quantity, 10, 0)
 	if quantity >= quantityInt {
-		err = utils.DB.Exec("UPDATE store_inventories SET quantity = ?, ModifiedAt = ? where userID = ? and productID = ?", cart.Quantity, cart.ModifiedAt, cart.UserID, cart.ProductID).Error
+		err = utils.DB.Exec("UPDATE cart_items_db SET quantity = ?, ModifiedAt = ? where userID = ? and productID = ?", cart.Quantity, cart.ModifiedAt, cart.UserID, cart.ProductID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
@@ -54,7 +53,7 @@ func CartManipulation(w http.ResponseWriter, r *http.Request) {
 
 func CartDisplay(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart []models.Cart_items
+	var cart []models.Cart_items_db
 	var userID models.UserIDtab
 	err := json.NewDecoder(r.Body).Decode(&userID)
 	if err != nil {
@@ -62,7 +61,7 @@ func CartDisplay(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = utils.DB.Raw("SELECT * FROM user3 WHERE userID = ?", userID).Scan(&cart).Error
+	err = utils.DB.Raw("SELECT * FROM cart_items_db WHERE userID = ?", userID).Scan(&cart).Error
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return

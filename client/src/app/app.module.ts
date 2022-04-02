@@ -40,6 +40,8 @@ import { ChangeUserProfileSettingsComponent } from './change-user-profile-settin
 import { FavstoresComponent } from './favstores/favstores.component';
 import { TrackingorderComponent } from './trackingorder/trackingorder.component';
 import { StoresComponent } from './stores/stores.component';
+import { DelivaryPageComponent } from './delivary-page/delivary-page.component';
+import { FavorateStoresComponent } from './favorate-stores/favorate-stores.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +70,8 @@ import { StoresComponent } from './stores/stores.component';
     FavstoresComponent,
     TrackingorderComponent,
     StoresComponent,
+    DelivaryPageComponent,
+    FavorateStoresComponent,
   ],
   imports: [
     BrowserModule,
