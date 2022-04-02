@@ -210,12 +210,8 @@ func ReturnStoreInv(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store []models.Store_inventory
 	storeID := r.URL.Query().Get("store_id")
-	err := json.NewDecoder(r.Body).Decode(&store)
-	if err != nil {
-		sendErr(w, http.StatusBadRequest, err.Error())
-		return
-	}
-	err = utils.DB.Raw("SELECT * FROM user3 WHERE store_id = ?", storeID).Scan(&store).Error
+
+	err := utils.DB.Raw("SELECT * FROM store_inventories WHERE store_id = ?", storeID).Scan(&store).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
