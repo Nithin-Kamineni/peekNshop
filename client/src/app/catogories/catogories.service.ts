@@ -22,7 +22,7 @@ export class CatogoriesService{
     }
     getStores(){
         
-        return  this.http.get<Stores>('http://localhost:10000/address/?'+'search=store'+'&lat='+ environment.lat+'&long='+environment.lon, {});
+        return  this.http.get<Stores>('http://localhost:10000/stores/?'+'search=store'+'&lat='+ environment.lat+'&long='+environment.lon, {});
 
     }
 

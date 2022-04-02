@@ -14,7 +14,10 @@ export class CatogoriesComponent implements OnInit {
   city = "Gainesville"
   offers: any;
   stores:any; 
-  isFavorite = false
+  isFavorite = false;
+  toggle = true;
+  status = 'Enable';
+  arr = new Array(19).fill(false);
 
   constructor(public service: CatogoriesService, private http: HttpClient) { }
 
@@ -23,7 +26,10 @@ export class CatogoriesComponent implements OnInit {
   ngOnInit(): void {
     this.service.getOffers().subscribe(data => {
       this.offers = data;
+
   })
+
+  
 
   setTimeout(() => {
   this.service.getStores().subscribe(data => {
@@ -32,8 +38,9 @@ export class CatogoriesComponent implements OnInit {
     // for (var x of this.stores.results){
     //   console.log(x.photos[0].photo_reference)
     // }
+    console.log()
     console.log(this.stores.results.icon)
-  }); }, 3000);
+  }); }, 5000);
 
 
   // setTimeout(() => {  this.http.get<Stores>('http://localhost:10000/address/?'+'search=store'+'&lat='+ environment.lat+'&long='+environment.lon, {}).subscribe( (data: Stores) => {
@@ -42,14 +49,32 @@ export class CatogoriesComponent implements OnInit {
   //     console.log(this.stores.results.icon)
   //   }); }, 5000);
   }
-  favorite(){
-    if(this.isFavorite==false){
-      this.isFavorite=true
-      document.getElementsByTagName("a")[6].style.backgroundColor = "pink";
+  enableDisableRule(job: any) {
+    this.toggle = !this.toggle;
+    this.status = this.toggle ? 'Enable' : 'Disable';
+}
+  favorite(i:number){
+    if (environment.isLogin=true){
+      var k = 8+(2*i)
+      var favoriteStoreId = this.stores.results[i].place_id
+      var user_id=environment.id
+      console.log(favoriteStoreId)
+      console.log(user_id)
+      var accesskey = environment.accesskey
+      this.http.post<any>('http://localhost:10000/user/favorate-stores', { UserId: user_id, Acesskey: accesskey, FavorateStoreId: favoriteStoreId}).subscribe(data => {
+      console.log(data)
+      })
+      if(this.arr[i]==false){
+        this.arr[i]=true
+        document.getElementsByTagName("a")[k].style.backgroundColor = "pink";
+      }else{
+        this.arr[i]=false
+        document.getElementsByTagName("a")[k].style.backgroundColor = "gray";
+      }
     }else{
-      this.isFavorite=false
-      document.getElementsByTagName("a")[6].style.backgroundColor = "gray";
+      alert('please login')
     }
+    
     
   }
 

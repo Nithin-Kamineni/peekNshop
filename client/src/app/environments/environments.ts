@@ -6,7 +6,7 @@ export const environment = {
     lon : "",
     searchText : "",
     storesSearchText:"",
-    isLogin: true,
+    isLogin: false,
     city:"New York",
     id:"",
     fullname:"",
