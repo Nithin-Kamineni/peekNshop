@@ -45,8 +45,8 @@ func main() {
 	router.HandleFunc("/user/address", controllers.ChangeUserAddress).Methods("POST")           //address change user proc
 	router.HandleFunc("/user/orders", controllers.SendUserOrders).Methods("POST")               //*sending user orders *list
 	router.HandleFunc("/user/favorate-stores", controllers.ShowFavorateStores).Methods("POST")  //* favorateStores
-	router.HandleFunc("/user/favorate-stores", controllers.ShowFavorateStores).Methods("PUT")   //* add favorateStores
-	router.HandleFunc("/user/favorate-stores", controllers.ShowFavorateStores).Methods("PATCH") //*  del favorateStores
+	router.HandleFunc("/user/favorate-stores", controllers.AddingFavorateStores).Methods("PUT") //* add favorateStores
+	router.HandleFunc("/user/favorate-stores", controllers.DeleFavorateStores).Methods("PATCH") //*  del favorateStores
 
 	router.HandleFunc("/userStatus", controllers.UserStatus).Methods("POST")     //this
 	router.HandleFunc("/userCheck", controllers.UserStatusCheck).Methods("POST") //this
