@@ -9,16 +9,53 @@ By using peekNShop users can look at the store's inventory and know whether the 
 # Project description:
 The application displays the inventories of the stores that the user wants to see on the website. The application has all kinds of filters from which the user can look at his choices of where he wants to buy and make an informed decision.
 
+# Features
+- finding the items avilable in the stores near the user
+- freelance delivary option for getting delivary for grosseries at low cost
+- order at your favorate local stores with best deals
+- holding items that user want in the store through our application
+- finding the latest offers that currently are avilable in the stores near user
+
 ## Stack Used
 
 ```bash
-Angular, Golang, SQLserver
+Frontend: Angular, Typescript
+Database: SQLite #using gorm
+Backend: Golang #using Mux
 ```
 
+# Running the project
+Step 1: [Introduction and Environment Setup for GoLang (Windows & Mac)](https://www.youtube.com/watch?v=dgIh-VYcWYw "Introduction and Environment Setup for GoLang (Windows & Mac)")
+
+Step 2: [Angular Project Setup in Visual Studio Code](https://www.youtube.com/watch?v=ZJejjL1Iev0 "Angular Project Setup in Visual Studio Code")
+
+Step 3: Arrange the files according to the file paths given below 
+- peekNshop
+  - client
+    > go to client and run "npm i" t install all npm libraries
+    - api
+    > run the cleint using command "ng serve" to launch cleint side webite
+    - src
+    > visit http://localhost:4200/ to view the project
+  - server
+    > install go
+    - bin
+    - controllers
+    - models
+    - pkg
+    - src
+    - utils
+    - main.go
+    > run main.go file using "go run main.go" in termianal in the directory of server
+    - Users.db
+  
+  
 ## Team Members
 ### BackEnd
-Venkata Nithin Kamineni: github - Nithin-Kamineni, 
-Saieswar Reddy Vaka: github - sai6221,
+Venkata Nithin Kamineni: vkamineni@ufl.edu github - Nithin-Kamineni
+
+Saieswar Reddy Vaka: vaka.s@ufl.edu github - sai6221
 ### FrontEnd
-Vamsi Pachamatla: github - vamsi3379
-Mattaparthi Nitish Veera: github - VeeraNitish7.
+Vamsi Pachamatla: vamsi.pachamatla@ufl.edu github - vamsi3379
+
+Mattaparthi Nitish Veera: nitish.veera@ufl.edu github - VeeraNitish7

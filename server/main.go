@@ -60,7 +60,7 @@ func main() {
 	router.HandleFunc("/stores/add/{storeID}", controllers.AddInventory).Methods("POST")       //*add store inventory
 	router.HandleFunc("/stores/edit/{storeID}", controllers.EditInventory).Methods("POST")     //*edit store inventory
 	router.HandleFunc("/stores/delete/{storeID}", controllers.DeleteInventory).Methods("POST") //*delete store inventory
-	router.HandleFunc("/stores/items", controllers.ReturnStoreInv).Methods("POST")             //*return store inventory
+	router.HandleFunc("/stores/items", controllers.ReturnStoreInv).Methods("GET")              //*return store inventory
 	router.HandleFunc("/stores/items/{product_id}", controllers.ReturnProductPage)             //*display the product page
 
 	router.HandleFunc("/cart", controllers.CartDisplay).Methods("POST")          //*this
