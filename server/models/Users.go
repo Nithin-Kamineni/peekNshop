@@ -43,6 +43,7 @@ type FavorateStore struct {
 }
 
 type FavorateStoresObj struct {
+	ID              string `gorm:"primary_key"`
 	UserID          string
 	Acesskey        string
 	FavorateStoreID string

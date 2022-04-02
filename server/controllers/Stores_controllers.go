@@ -100,10 +100,12 @@ func DeleteInventory(w http.ResponseWriter, r *http.Request) {
 
 func ReturnOffers(w http.ResponseWriter, r *http.Request) {
 	utils.DB.Model(&models.Offer{}).Create([]map[string]interface{}{
-		{"name": "jinzhu_1", "description": "10% off on all items"},
-		{"name": "jinzhu_2", "description": "20% off on all items"},
+		{"name": "Best Buy", "description": "30% off on iphones 12"},
+		{"name": "Publix", "description": "20% off on all Meats"},
 		{"name": "ROSS", "description": "BOGO offer 50% off on all items"},
-		{"name": "Whole Foods", "description": "Friday foods 50% of on all ready to eat meals"},
+		{"name": "Whole Foods", "description": "Friday foods: 50% of on all ready to eat meals"},
+		{"name": "India Mart", "description": "BOGO offer on all ready to eat food"},
+		{"name": "Taco Bell", "description": "Taco tuesday all tacos free of cost with a proce of 9.99$"},
 	})
 	w.Header().Set("Content-Type", "application/json")
 	var all []models.Offer
