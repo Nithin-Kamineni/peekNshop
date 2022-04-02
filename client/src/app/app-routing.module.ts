@@ -17,6 +17,7 @@ import { OrderDetailsComponent } from './order-details/order-details.component';
 import { ChangeUserProfileSettingsComponent } from './change-user-profile-settings/change-user-profile-settings.component';
 import { StoresComponent } from './stores/stores.component';
 import { DelivaryPageComponent } from './delivary-page/delivary-page.component';
+import { FavorateStoresComponent } from './favorate-stores/favorate-stores.component';
 
 
 const routes: Routes = [
@@ -37,6 +38,7 @@ const routes: Routes = [
   {path: "user-homepage/user/changeusersettings", component: ChangeUserProfileSettingsComponent},
   {path: "stores", component: StoresComponent},
   {path: "delivaty-page", component: DelivaryPageComponent},
+  {path: "favorate-stores", component: FavorateStoresComponent},
 ];
 
 @NgModule({
