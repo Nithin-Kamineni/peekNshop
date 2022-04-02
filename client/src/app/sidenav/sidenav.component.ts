@@ -94,6 +94,7 @@ export class SidenavComponent implements OnInit {
     this.storesSearchText=this.storesSearchForm.getRawValue().storesSearchText
     console.log(this.storesSearchText)
     environment.storesSearchText=this.storesSearchText
+    this.router.navigate(['/stores'])
   }
   userProfile(){
     this.router.navigate(['/user-homepage/user'])
