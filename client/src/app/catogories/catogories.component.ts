@@ -36,10 +36,10 @@ export class CatogoriesComponent implements OnInit {
   this.service.getStores().subscribe(data => {
     this.stores = data;
     console.log(this.stores.results[0].rating)
-    var i = 0 
+    var m = 0 
     for (var x of this.stores.results){
-      this.storesarr[i] = this.stores.results[i].place_id
-      i = i+1
+      this.storesarr[m] = this.stores.results[m].place_id
+      m = m+1
     }
     console.log(this.storesarr)
     console.log(this.stores.results.icon)
@@ -65,7 +65,7 @@ export class CatogoriesComponent implements OnInit {
 
   favorite(i:number){
     if (environment.isLogin=true){
-      var k = 8+(2*i)
+      var k = 14+(2*i)
       var favoriteStoreId = this.stores.results[i].place_id
       var user_id=environment.id
       console.log(favoriteStoreId)
