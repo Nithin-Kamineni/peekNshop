@@ -2,7 +2,7 @@
 <div class="container1" id="maps">
 <!-- <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13872.68399912525!2d-82.3777229!3d29.627776349999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88e8a3251043176f%3A0x32660092c2431335!2sWhole%20Foods%20Market!5e0!3m2!1sen!2sus!4v1644009694259!5m2!1sen!2sus" width="100%" height="500" style="border:0;" allowfullscreen="" loading="lazy"></iframe> -->
 </div>
-<section class="">
+<section *ngIf="!isLogin" class="">
     <!-- Footer -->
     <footer class="text-center text-white" style="background-color: #0a4275;">
       <!-- Grid container -->
@@ -23,9 +23,9 @@
     <!-- Footer -->
   </section>
 <!-- Footer -->
-<footer class="text-center text-lg-start bg-light text-muted">
+<footer style="background-color: rgb(29, 29, 196);"  class="text-center text-lg-start bg-light text-muted">
     <!-- Section: Social media -->
-    <section
+    <section 
       class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"
     >
       <!-- Left -->
