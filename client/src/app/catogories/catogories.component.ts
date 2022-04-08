@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Stores } from '../models/common_models'
 import { results } from '../models/results'
 import { Router } from "@angular/router";
+import { userdetails } from '../environments/User_Details'
 @Component({
   selector: 'app-catogories',
   templateUrl: './catogories.component.html',
@@ -43,7 +44,7 @@ export class CatogoriesComponent implements OnInit {
     }
     console.log(this.storesarr)
     console.log(this.stores.results.icon)
-  }); }, 4000);
+  }); }, 5000);
 
 
   // setTimeout(() => {  this.http.get<Stores>('http://localhost:10000/address/?'+'search=store'+'&lat='+ environment.lat+'&long='+environment.lon, {}).subscribe( (data: Stores) => {
@@ -64,13 +65,13 @@ export class CatogoriesComponent implements OnInit {
   }
 
   favorite(i:number){
-    if (environment.isLogin=true){
+    if (userdetails.isLogin=true){
       var k = 14+(2*i)
       var favoriteStoreId = this.stores.results[i].place_id
-      var user_id=environment.id
+      var user_id=userdetails.id
       console.log(favoriteStoreId)
       console.log(user_id)
-      var accesskey = environment.accesskey
+      var accesskey = userdetails.accesskey
       this.http.post<any>('http://localhost:10000/user/favorate-stores', { UserId: user_id, Acesskey: accesskey, FavorateStoreId: favoriteStoreId}).subscribe(data => {
       console.log(data)
       })

@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { environment } from '../environments/environments'
+import { userdetails } from '../environments/User_Details'
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss']
 })
 export class UserComponent implements OnInit {
-  name = environment.fullname
+  name = userdetails.fullname
   
   constructor(private router: Router) { }
 

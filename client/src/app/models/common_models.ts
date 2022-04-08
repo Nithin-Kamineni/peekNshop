@@ -9,6 +9,7 @@ export interface LoginModel {
 export interface SignupModel {
     
     Msg:           string;
+    UserDetails:   string;
 }
 export interface Products {  
     Msg:           string;
