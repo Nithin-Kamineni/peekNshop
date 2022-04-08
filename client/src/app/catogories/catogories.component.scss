@@ -68,3 +68,18 @@
   flex-direction: row;
   
 }
+.card{
+  height: 400px;
+  padding: 20px;
+  margin: 40px;
+}
+.card img{
+  width: 250px;
+  height: 250px;
+  margin-bottom: 15px;
+  transition: 0.3 ease-in-out;
+}
+.card img.hover{
+  transition: 0.3 ease-in-out;
+  transform: scale(1.1);
+}

@@ -64,7 +64,7 @@
   <h1 id="categories_text"><b>Top offers in {{ city }}</b></h1>
 
 
-<div class="card-columns">
+<!-- <div class="card-columns">
   <div class="card" *ngFor="let offer of offers">
     <img class="card-img-top" src="../../assets/Vegetablespng.png" height="250px" width="250px" alt="Card image cap">
     <div class="card-body">
@@ -72,6 +72,20 @@
       <p class="card-text" style="color: black;">{{offer.description}}</p>
       <a href="#" class="btn btn-primary">Buy</a>
     </div> 
+  </div>
+</div> -->
+
+<div class="container">
+  <div class="row">
+    <ng-container *ngFor="let offer of offers">
+      <div class="card col-md-3" >
+        <img  src="../../assets/Vegetablespng.png"  alt="Card image cap">
+        <h5  style="color: black; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100ch;">{{offer.name}}</h5>
+        <p  style="color: black; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100ch;">{{offer.description}}</p>
+        <button class="btn btn-primary">Visit now</button>
+      </div>
+    </ng-container>
+    
   </div>
 </div>
 
@@ -81,7 +95,7 @@
 
   <h1 id="categories_text"><b>Popular stores in {{ city }}</b></h1>
 
-  <div class="card-columns"> 
+  <!-- <div class="card-columns"> 
     <div *ngFor="let x of stores.results; let i = index" class="card">
       <img class="card-img-top" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference={{x.photos[0].photo_reference}}&key=AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk" height="250px" width="200px" alt="Card image cap">
       <div class="card-body">
@@ -92,7 +106,7 @@
         (click)="favorite(i)"><i class="bi bi-heart-fill"></i></a>
       </div>
     </div> 
-  </div>
+  </div> -->
   
   
   <br>
