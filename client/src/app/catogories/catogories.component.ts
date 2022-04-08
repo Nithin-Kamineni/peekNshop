@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CatogoriesService} from './catogories.service';
+
 import { environment } from '../environments/environments'
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http"; 
 import { Stores } from '../models/common_models'
 import { results } from '../models/results'
 import { Router } from "@angular/router";
 import { userdetails } from '../environments/User_Details'
+import { ApiService } from '../services/api.service'
 @Component({
   selector: 'app-catogories',
   templateUrl: './catogories.component.html',
@@ -21,30 +22,31 @@ export class CatogoriesComponent implements OnInit {
   arr = new Array(19).fill(false);
   storesarr = new Array(19)
 
-  constructor(public service: CatogoriesService, private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private api: ApiService) { }
 
   
 
   ngOnInit(): void {
-    this.service.getOffers().subscribe(data => {
-      this.offers = data;
-
-  })
+    setTimeout(() => {
+      this.api.getstores(environment.lat, environment.lon).subscribe(data => {
+        this.stores = data;
+        console.log(this.stores.results[0].rating)
+        var m = 0 
+        for (var x of this.stores.results){
+          this.storesarr[m] = this.stores.results[m].place_id
+          m = m+1
+        }
+        console.log(this.storesarr)
+        console.log(this.stores.results.icon)
+      
+  });}, 5000);
 
   
 
-  setTimeout(() => {
-  this.service.getStores().subscribe(data => {
-    this.stores = data;
-    console.log(this.stores.results[0].rating)
-    var m = 0 
-    for (var x of this.stores.results){
-      this.storesarr[m] = this.stores.results[m].place_id
-      m = m+1
-    }
-    console.log(this.storesarr)
-    console.log(this.stores.results.icon)
-  }); }, 5000);
+
+    this.api.getoffers().subscribe(data => {
+      this.offers = data;})
+
 
 
   // setTimeout(() => {  this.http.get<Stores>('http://localhost:10000/address/?'+'search=store'+'&lat='+ environment.lat+'&long='+environment.lon, {}).subscribe( (data: Stores) => {
@@ -72,9 +74,11 @@ export class CatogoriesComponent implements OnInit {
       console.log(favoriteStoreId)
       console.log(user_id)
       var accesskey = userdetails.accesskey
-      this.http.post<any>('http://localhost:10000/user/favorate-stores', { UserId: user_id, Acesskey: accesskey, FavorateStoreId: favoriteStoreId}).subscribe(data => {
+
+      this.api.favstores(user_id, accesskey, favoriteStoreId).subscribe((data: any) => {
       console.log(data)
       })
+
       if(this.arr[i]==false){
         this.arr[i]=true
         document.getElementsByTagName("a")[k].style.backgroundColor = "pink";
