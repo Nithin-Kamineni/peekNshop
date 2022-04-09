@@ -1,7 +1,19 @@
-Products page works
+<!-- Products page works
 <ul fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center">
     <app-product *ngFor="let p of products" [product]="p"></app-product>
 </ul>
+ -->
+
+<div class="card-columns"> 
+  <div class="card">
+    <img class="card-img-top" src="{{photo}}" height="250px" width="200px" alt="Card image cap">
+    <div class="card-body">
+      <h3 class="card-title" style="color: black;"><strong>{{productName}}</strong></h3>
+      <p style="color: black;">{{price}}</p>        
+      <a href="#" class="btn btn-primary" style="background-color:gray;">Add to cart</a>    
+    </div>
+  </div> 
+</div>
 
 <!-- <section id="myProducts">
     <div class="container p-5">

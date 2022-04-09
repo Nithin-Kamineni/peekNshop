@@ -6,18 +6,8 @@ export const environment = {
     lon : "",
     searchText : "",
     storesSearchText:"",
-    isLogin: true,
-    city:"New York",
-    id:"",
-    fullname:"",
-    firstname:"",
-    lastname:"",
-    email:"",
-    phone:"",
-    password:"",
-    accesskey:"",
-    refreshkey:"",
-    address1:"",
-    address2:"",
-    address3:""
+    selectedStore:"",
+    storeId:"",
+    city:"Gainesville",
+    
 }

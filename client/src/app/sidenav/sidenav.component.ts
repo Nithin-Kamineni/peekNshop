@@ -7,7 +7,8 @@ import {LoginModel} from '../models/common_models'
 import { SignupModel } from '../models/common_models'
 import { environment } from '../environments/environments'
 import * as shajs from 'sha.js';
-
+import { ApiService } from '../services/api.service'
+import { userdetails } from '../environments/User_Details'
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -18,18 +19,18 @@ export class SidenavComponent implements OnInit {
   signupForm!: FormGroup;
   locationForm!: FormGroup
   city = environment.city
-  name = environment.fullname
+  name = userdetails.fullname
   IsmodelShow!: boolean;
   loginmsg!: string;
   signupmsg!: string;
-  isLogin = environment.isLogin
+  isLogin = userdetails.isLogin
   isLocation=environment.isLocation
   storesSearchForm!:FormGroup
   storesSearchText!:string
 
   
 
-  constructor(private http: HttpClient, private router: Router,public service: MapsService) { }
+  constructor(private http: HttpClient, private router: Router,public service: MapsService, private api: ApiService) { }
   ngOnInit(): void {
 
     this.isLogin=true
@@ -94,22 +95,38 @@ export class SidenavComponent implements OnInit {
     this.storesSearchText=this.storesSearchForm.getRawValue().storesSearchText
     console.log(this.storesSearchText)
     environment.storesSearchText=this.storesSearchText
+    this.router.navigate(['/stores'])
   }
   userProfile(){
     this.router.navigate(['/user-homepage/user'])
   }
   logout(){
     this.updateisLogin()
-    console.log(environment.isLogin)
+    console.log(userdetails.isLogin)
     console.log("Logout")
     this.router.navigate(['/'])
   }
   updateisLogin(){
     this.isLogin=!this.isLogin
-    environment.isLogin=!environment.isLogin
+    userdetails.isLogin=!userdetails.isLogin
+  }
+  updateUserDetails(id:string, firstname:string, lastname:string, email:string, password:string, 
+    accesskey:string, refreshkey:string, address1:string, address2:string, address3:string){
+      userdetails.id=id
+      userdetails.firstname=firstname
+      userdetails.lastname=lastname
+      userdetails.email=email
+      userdetails.password=password
+      userdetails.accesskey=accesskey
+      userdetails.refreshkey=refreshkey
+      userdetails.address1=address1
+      userdetails.address2=address2
+      userdetails.address3=address3
+      userdetails.fullname=userdetails.firstname.concat(" ", userdetails.lastname)
+      this.name=userdetails.fullname
   }
   delivery(){
-    if (environment.isLogin=false){
+    if (userdetails.isLogin=false){
       this.router.navigate(['user-homepage/delivery'])
     }else{
       alert("Please login")
@@ -129,27 +146,14 @@ export class SidenavComponent implements OnInit {
       var password = this.loginForm.getRawValue().password;
       console.log(email,password)
       password = shajs('sha256').update(password).digest('hex')
-      // this.http.post<any>('http://localhost:10000/students/', { Email: email, Password: password }).subscribe(data => { })
-      var user = "email=" + email + "&passkey=" + password
-      this.http.get<LoginModel>('http://localhost:10000/user?'+"email=" + email + "&passkey=" + password, {}).subscribe( (data: LoginModel) => {
-          this.loginmsg = data.Msg;
-          console.log(data);
-          var details = Object.values(data.UserDetails)
-          environment.id=details[0]
-          environment.firstname=details[1]
-          environment.lastname=details[2]
-          environment.email=details[3]
-          environment.password=details[4]
-          environment.accesskey=details[5]
-          environment.refreshkey=details[6]
-          environment.address1=details[7]
-          environment.address2=details[8]
-          environment.address3=details[9]
-          environment.fullname=environment.firstname.concat(" ", environment.lastname)
-          this.name=environment.fullname
-          
-          if (this.loginmsg == "Login Sucessfull"){
-            alert(this.loginmsg) 
+
+      this.api.login(email, password).subscribe((data: LoginModel) => {
+        console.log(data)
+        var details = Object.values(data.UserDetails)
+        this.updateUserDetails(details[0],details[1],details[2],details[3],
+          details[4], details[5], details[6], details[7], details[8], details[9]);
+          if (data.Msg == "Login Sucessfull"){
+            alert(data.Msg) 
             let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
             element.click();
             this.updateisLogin()
@@ -158,18 +162,14 @@ export class SidenavComponent implements OnInit {
             alert(this.loginmsg)
             this.router.navigate([''])
           }
-        })
-        
-      
-      
-  } else {
-      console.log('There is a problem with the login form');
-  }
+
+      });
+
+    } else {
+        console.log('There is a problem with the login form');
+    }
 }
   signupFormSubmit(): void {
-
-    console.log(this.signupForm.getRawValue())
-    console.log(this.signupForm.getRawValue().signup_email)
 
     if (this.signupForm.valid) {
       var first_name = this.signupForm.getRawValue().first_name;
@@ -181,33 +181,20 @@ export class SidenavComponent implements OnInit {
       var confirm_password = this.signupForm.getRawValue().signup_confirm_password;
       confirm_password = shajs('sha256').update(confirm_password).digest('hex')
       console.log(confirm_password)
+
       if (password==confirm_password){
-        this.http.post<LoginModel>('http://localhost:10000/user', { firstname: first_name, lastname: last_name, email: email, password: password }).subscribe(data => {
-            console.log(data.Msg)
-            this.signupmsg = data.Msg
-            if (this.signupmsg == "Login and sign-up Sucessfull"){
+        this.api.signup(first_name, last_name, email, password).subscribe((data: SignupModel) => {
+            if (data.Msg == "Login and sign-up Sucessfull"){
               var details = Object.values(data.UserDetails)
-              console.log(data)
-              console.log(details)
-              environment.id=details[0]
-              environment.firstname=details[1]
-              environment.lastname=details[2]
-              environment.email=details[3]
-              environment.password=details[4]
-              environment.accesskey=details[5]
-              environment.refreshkey=details[6]
-              environment.address1=details[7]
-              environment.address2=details[8]
-              environment.address3=details[9]
-              environment.fullname=environment.firstname.concat(" ", environment.lastname)
-              this.name=environment.firstname.concat(" ", environment.lastname)
-              alert("Signup Successful")
+              this.updateUserDetails(details[0],details[1],details[2],details[3],
+                details[4], details[5], details[6], details[7], details[8], details[9])
+              alert(data.Msg)
               let element: HTMLElement = document.getElementsByClassName('btn-close')[2] as HTMLElement;
               element.click();
               this.updateisLogin()
               this.router.navigate(['/user-homepage'])
             }else{
-              console.log("Wrong User")
+              console.log(data.Msg)
               alert("User already registered")
               this.router.navigate([''])
             }
@@ -218,11 +205,11 @@ export class SidenavComponent implements OnInit {
       
       
 
-  } else {
-      console.log('There is a problem with the signup form');
-  }  
+    } else {
+        console.log('There is a problem with the signup form');
+    }  
   
-}
+  }
 
 }
 
