@@ -2,10 +2,13 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"src/models"
 	"src/utils"
 	"strconv"
+
+	"github.com/google/uuid"
 )
 
 func CartAddition(w http.ResponseWriter, r *http.Request) {
@@ -15,10 +18,26 @@ func CartAddition(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
+	} else {
+		w.WriteHeader(http.StatusCreated)
 	}
+
+	err = utils.DB.Raw("SELECT product_name, product_photo, description FROM store_inventories WHERE product_id = ?", cart.ProductID).Scan(&cart).Error
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
+
+	// cart.Product_name =
+	// cart.Product_photo =
+	// cart.Description =
+	cart.SessionID = uuid.New().String()
 
 	err = utils.DB.Save(&cart).Error
 	if err != nil {
+		fmt.Print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	} else {
 		w.WriteHeader(http.StatusCreated)
@@ -43,10 +62,16 @@ func CartManipulation(w http.ResponseWriter, r *http.Request) {
 	}
 	quantityInt, _ := strconv.ParseInt(cart.Quantity, 10, 0)
 	if quantity >= quantityInt {
-		err = utils.DB.Exec("UPDATE cart_items_db SET quantity = ?, ModifiedAt = ? where userID = ? and productID = ?", cart.Quantity, cart.ModifiedAt, cart.UserID, cart.ProductID).Error
+		err = utils.DB.Exec("UPDATE cart_items_dbs SET quantity = ?, ModifiedAt = ? where userID = ? and productID = ?", cart.Quantity, cart.ModifiedAt, cart.UserID, cart.ProductID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
+		}
+	} else {
+		reply := models.SignInReply{Msg: "Not enough inv to add items in cart"}
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
 		}
 	}
 }
@@ -61,7 +86,7 @@ func CartDisplay(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = utils.DB.Raw("SELECT * FROM cart_items_db WHERE userID = ?", userID).Scan(&cart).Error
+	err = utils.DB.Raw("SELECT * FROM cart_items_dbs WHERE user_id = ?", userID.UserID).Scan(&cart).Error
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
