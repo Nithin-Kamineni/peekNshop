@@ -6,14 +6,14 @@
 
 <div class="container">
   <div class="row">
-      <ng-container *ngFor="let products of productsdetails">
+      <ng-container *ngFor="let products of productsdetails let i = index">
           <div class="card col-md-3">
               <img src="{{products.photo}}" alt="">
               <h5 style="color:black;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 100ch;">{{products.productName}}</h5>
               <p style="color:black;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 100ch;">{{products.description}}</p>
               <p style="color: black;"><strong>Price:</strong> ${{products.price}}</p>
-              <button class="btn btn-primary" (click)=addtocart(products)>Add to cart</button>
-          </div>
+              <button class="btn btn-primary" (click)=addtocart(i)>Add to cart</button>
+          </div> 
       </ng-container>
 
   </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import { ApiService } from '../services/api.service';
+import { userdetails } from '../environments/User_Details'
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CartComponent implements OnInit {
 
-  constructor() { }
+  cartdetails:any
+  constructor(private api: ApiService) { }
 
   ngOnInit(): void {
+    this.api.cartdisplay(userdetails.id).subscribe((data: any) => {
+      this.cartdetails= data
+      console.log(data)
+    })
   }
 
 }

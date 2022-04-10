@@ -133,6 +133,9 @@ export class SidenavComponent implements OnInit {
     }
     
   }
+  cart(){
+    this.router.navigate(['/user-homepage/user/cart'])
+  }
 
   locationFormSubmit(){
 

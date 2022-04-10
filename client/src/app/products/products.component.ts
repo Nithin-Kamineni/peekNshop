@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../core/product';
 import { ProductService } from '../services/product.service';
-import { SearchBarComponent } from '../search-bar/search-bar.component'
 import { environment} from '../environments/environments'
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http"
 import { ApiService } from '../services/api.service';
+import { userdetails } from '../environments/User_Details'
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -27,7 +27,14 @@ export class ProductsComponent implements OnInit {
     })
     
   }
-  addtocart(item:string){
-    
+  addtocart(i:number){
+    let k=0
+    for(let products of this.productsdetails){
+      if (k==i){
+        this.api.addtocart(userdetails.id,products.id,products.quantity, products.created, products.modified).subscribe((data: any) => {
+        })
+        
+      }
+    }
   }
 }

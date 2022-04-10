@@ -33,4 +33,10 @@ export class ApiService {
   getProducts(){
     return this.http.get<any>('http://localhost:10000/stores/items?store_id='+environment.storeId, {})
   }
+  addtocart(user_id:string, productID:string, quantity:string, created:string, modified:string){
+    return this.http.post<any>('http://localhost:10000/cart/additem', {"user_id":user_id,"productID":productID, "quantity":quantity,"created":created, "modified":modified})
+  }
+  cartdisplay(user_id:string){
+    return this.http.post<any>('http://localhost:10000/cart', {"user_id":user_id})
+  }
 } 

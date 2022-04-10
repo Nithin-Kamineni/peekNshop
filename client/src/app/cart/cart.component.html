@@ -17,14 +17,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr >
-                            <td>1</td>
-                            <td>Apple</td>
-                            <td><img style="width: 120px;" src="../../assets/Vegetablespng.png" alt=""></td>
-                            <td style="width: 25%;">Fresh apples imported from Kansas</td>
-                            <th style="width: 12%;">2$</th>
-                            <td style="width: 12%;">3</td>
-                            <td style="width: 12%;">6$</td>
+                        <tr *ngFor="let product of cartdetails let i = index">
+                            <td>{{i+1}}</td> 
+                            <td>{{product.Product_name}}</td>
+                            <td><img style="width: 120px;" src="{{product.Product_photo}}" alt="{{product.Product_name}}"></td>
+                            <td style="width: 25%;">{{product.Description}}</td>
+                            <th style="width: 12%;">{{product.price}}</th>
+                            <td style="width: 12%;">{{product.quantity}}</td>
+                            <td style="width: 12%;">Total</td>
                             <td>
                                 <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                             </td>

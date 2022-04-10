@@ -32,11 +32,9 @@
        <p  id="city"> {{ name }}</p>
      </button>
      
-     <button type="button" style="margin-right: 10px;size: 20px;" class="btn btn-link" *ngIf = "!isLogin" >
-       <img *ngIf = "!isLogin" src="../../assets/cart.svg" alt="Cart">
-     </button>
-     <button class="byn btn-primary" style="background-color: Transparent;background-repeat:no-repeat; border: none;">
-      <i style="font-size:30px;" class="fas fa-cart-plus"></i>
+
+     <button *ngIf="!isLogin" class="byn btn-primary" style="background-color: Transparent;background-repeat:no-repeat; border: none;">
+      <i style="font-size:30px;" (click)="cart()" class="fas fa-cart-plus"></i>
       <div style="font-size: 10px;" class="badge bg-danger">5</div>
     </button>
      <button *ngIf = "!isLogin" type="button" class="btn btn-outline-danger" style="margin-left: 10px;" id="logoutbutton" data-bs-toggle="modal" (click)='logout()'data-bs-target="#logoutModal">
