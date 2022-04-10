@@ -30,6 +30,7 @@ export class CatogoriesComponent implements OnInit {
     setTimeout(() => {
       this.api.getstores(environment.lat, environment.lon).subscribe(data => {
         this.stores = data;
+        console.log(data)
         console.log(this.stores.results[0].rating)
         var m = 0 
         for (var x of this.stores.results){

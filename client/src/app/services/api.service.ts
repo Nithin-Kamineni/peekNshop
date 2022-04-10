@@ -5,7 +5,7 @@ import {LoginModel,
        offers,
        Stores} from '../models/common_models'
 import { Observable } from 'rxjs';
-
+import { environment } from '../environments/environments';
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +29,8 @@ export class ApiService {
   }
   getstores(lat:string, lon:string): Observable<Stores>{
     return  this.http.get<Stores>('http://localhost:10000/stores/?'+'search=store'+'&lat='+ lat+'&long='+lon, {})
+  }
+  getProducts(){
+    return this.http.get<any>('http://localhost:10000/stores/items?store_id='+environment.storeId, {})
   }
 } 
