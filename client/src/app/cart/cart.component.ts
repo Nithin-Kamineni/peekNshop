@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
 import { ApiService } from '../services/api.service';
 import { userdetails } from '../environments/User_Details'
 @Component({
@@ -9,7 +10,7 @@ import { userdetails } from '../environments/User_Details'
 export class CartComponent implements OnInit {
 
   cartdetails:any
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService, private router: Router) { }
 
   ngOnInit(): void {
     this.api.cartdisplay(userdetails.id).subscribe((data: any) => {
@@ -17,5 +18,7 @@ export class CartComponent implements OnInit {
       console.log(data)
     })
   }
-
+  checkout(){
+    this.router.navigate(['/user-homepage/user/cart/payment'])
+  }
 }

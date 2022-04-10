@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css?family=IM+Fell+French+Canon+SC|Josefin+Sans');
+
+body {
+  background-color: #0066cc;
+}
+
+#checkOut {
+  background-color: #b3daff;
+  margin: 3% 15% 3% 15%;
+  border: 1px solid #000;
+  padding: 2%;
+  box-shadow: 5px 10px 20px;
+  overflow: hidden;
+}
+
+h1, h4 {
+  font-family: 'IM Fell French Canon SC', serif;
+  text-align: center;
+  padding-bottom: 1%;
+}
+
+button {
+  float: right;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+form {
+  font-family: 'Josefin Sans', sans-serif;
+}
