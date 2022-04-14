@@ -64,6 +64,7 @@ func main() {
 	router.HandleFunc("/stores/items/{product_id}", controllers.ReturnProductPage)             //*display the product page
 
 	router.HandleFunc("/cart", controllers.CartDisplay).Methods("POST")          //*this
+	router.HandleFunc("/cart/clear-cart", controllers.ClearCart).Methods("POST") //*this
 	router.HandleFunc("/cart", controllers.CartManipulation).Methods("PATCH")    //*this
 	router.HandleFunc("/cart/additem", controllers.CartAddition).Methods("POST") //*this
 
