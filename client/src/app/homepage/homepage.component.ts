@@ -1,6 +1,6 @@
 import { Component, Input, OnInit} from '@angular/core';
 import {MapsService} from '../services/maps.service';
-
+import { environment } from '../environments/environments'
 
 @Component({
   selector: 'app-homepage',
@@ -17,8 +17,10 @@ export class HomepageComponent implements OnInit{
   constructor(public service: MapsService) { }
 
   ngOnInit(): void {
-    this.service.getLocation();
-    this.service.getCity();
+    if (environment.isLocation){
+      this.service.getLocation();
+    }
+    
   }
 
   

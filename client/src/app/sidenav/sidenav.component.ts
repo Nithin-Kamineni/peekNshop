@@ -34,7 +34,7 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
 
     this.isLogin=true
-     
+    this.isLocation=environment.isLocation
 
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),

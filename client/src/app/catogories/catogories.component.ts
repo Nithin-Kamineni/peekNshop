@@ -27,24 +27,26 @@ export class CatogoriesComponent implements OnInit {
   
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.api.getstores(environment.lat, environment.lon).subscribe(data => {
-        this.stores = data;
-        console.log(data)
-        console.log(this.stores.results[0].rating)
-        var m = 0 
-        for (var x of this.stores.results){
-          this.storesarr[m] = this.stores.results[m].place_id
-          m = m+1
-        }
-        console.log(this.storesarr)
-        console.log(this.stores.results.icon)
-      
-  });}, 5000);
 
-  
+    if (!environment.isLocation){
+      this.getStores()
+    }else{
+      setTimeout(() => {
 
-
+        this.api.getstores(environment.lat, environment.lon).subscribe(data => {
+          this.stores = data;
+          console.log(data)
+          console.log(this.stores.results[0].rating)
+          var m = 0 
+          for (var x of this.stores.results){
+            this.storesarr[m] = this.stores.results[m].place_id
+            m = m+1
+          }
+          environment.isLocation=false
+        
+    });}, 5000);
+    }
+    
     this.api.getoffers().subscribe(data => {
       this.offers = data;})
 
@@ -55,6 +57,22 @@ export class CatogoriesComponent implements OnInit {
   //     console.log(this.stores.results[0].rating)
   //     console.log(this.stores.results.icon)
   //   }); }, 5000);
+  }
+  getStores(){
+    this.api.getstores(environment.lat, environment.lon).subscribe(data => {
+          this.stores = data;
+          console.log(data)
+          console.log(this.stores.results[0].rating)
+          var m = 0 
+          for (var x of this.stores.results){
+            this.storesarr[m] = this.stores.results[m].place_id
+            m = m+1
+          }
+          console.log(this.storesarr)
+          console.log(this.stores.results.icon)
+        
+    });
+      
   }
   enableDisableRule(job: any) {
     this.toggle = !this.toggle;

@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core"
 import { environment } from '../environments/environments'
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Location} from '../models/common_models'
-
+import { NavigationEnd, Router } from "@angular/router";
 @Injectable({
     providedIn: 'root'
 })
@@ -10,7 +10,7 @@ export class MapsService{
   public lat!: number;
   public lon!: number;
 
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient, private router: Router){}
 
     getLocation() {
       if(environment.lat == ""){
