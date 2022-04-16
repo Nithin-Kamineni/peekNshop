@@ -34,7 +34,7 @@
 
     <div class="col align-self-center">
       <div class="row justify-content-center">
-        <button class="btn btn-warning btn-circle btn-circle-xl m-1"><i class="fa fa-tags" routerLink="meals"></i></button>
+        <button class="btn btn-warning btn-circle btn-circle-xl m-1" (click)=food()><i class="fa fa-tags"></i></button>
       </div>
       <div style="color: teal;" class="row justify-content-center">
         Food
@@ -64,7 +64,7 @@
   <h1 style="color: black;" id="categories_text"><b>Top offers in {{ city }}</b></h1>
 
 
-<!-- <div class="card-columns">
+<div class="card-columns">
   <div class="card" *ngFor="let offer of offers">
     <img class="card-img-top" src="../../assets/Vegetablespng.png" height="250px" width="250px" alt="Card image cap">
     <div class="card-body">
@@ -73,9 +73,9 @@
       <a href="#" class="btn btn-primary">Buy</a>
     </div> 
   </div>
-</div> -->
+</div>
 
-<div class="container">
+<!-- <div class="container">
   <div class="row">
     <ng-container *ngFor="let offer of offers">
       <div class="card col-md-3" >
@@ -87,7 +87,7 @@
     </ng-container>
     
   </div>
-</div>
+</div> -->
 
 
   <br>
@@ -99,12 +99,12 @@
     <div *ngFor="let x of stores.results; let i = index" class="card">
       <img class="card-img-top" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference={{x.photos[0].photo_reference}}&key=AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk" height="250px" width="200px" alt="Card image cap">
       <div class="card-body">
-        <h3 class="card-title" style="color: black;"><strong>{{x.name}}</strong></h3>
+        <h3 class="card-title" style="color: black;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"><strong>{{x.name}}</strong></h3>
         <p style="color: black;">{{x.vicinity}}</p>        
         <a class="btn btn-primary" (click)="visitStore(i)" style="background-color:gray;">Visit</a>
         <a class="btn btn-primary" style="margin-left: 10px;background-color:gray;"
         (click)="favorite(i)"><i class="bi bi-heart-fill"></i></a>
-      </div>
+      </div> 
     </div> 
   </div>
   

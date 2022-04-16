@@ -93,6 +93,10 @@ export class CatogoriesComponent implements OnInit {
     
     
   }
+  food(){
+    environment.storesSearchText='food'
+    this.router.navigate(['/stores'])
+  }
 
 
 
