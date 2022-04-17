@@ -18,6 +18,7 @@ import { ChangeUserProfileSettingsComponent } from './change-user-profile-settin
 import { StoresComponent } from './stores/stores.component';
 import { DelivaryPageComponent } from './delivary-page/delivary-page.component';
 import { FavorateStoresComponent } from './favorate-stores/favorate-stores.component';
+import { CartComponent } from './cart/cart.component';
 
 
 const routes: Routes = [
@@ -32,13 +33,14 @@ const routes: Routes = [
   {path: "about", component: AboutComponent},
   {path: "user-homepage/delivery", component: DeliveryComponent},
   {path: "contact", component: ContactComponent},
-  {path: "payment", component: PaymentComponent},
+  {path: "user-homepage/user/cart/payment", component: PaymentComponent},
   {path: "product/id", component: ProductPageComponent},
   {path: "cart", component: ShopingCartComponent},
   {path: "user-homepage/user/changeusersettings", component: ChangeUserProfileSettingsComponent},
   {path: "stores", component: StoresComponent},
   {path: "delivaty-page", component: DelivaryPageComponent},
   {path: "user/favorate-stores", component: FavorateStoresComponent},
+  {path: "user-homepage/user/cart", component: CartComponent},
 ];
 
 @NgModule({

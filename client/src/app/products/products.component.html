@@ -4,27 +4,30 @@
 </ul>
  -->
 
-<div class="card-columns"> 
-  <div class="card">
-    <img class="card-img-top" src="{{photo}}" height="250px" width="200px" alt="Card image cap">
-    <div class="card-body">
-      <h3 class="card-title" style="color: black;"><strong>{{productName}}</strong></h3>
-      <p style="color: black;">{{price}}</p>        
-      <a href="#" class="btn btn-primary" style="background-color:gray;">Add to cart</a>    
-    </div>
-  </div> 
+<div class="container">
+  <div class="row">
+      <ng-container *ngFor="let products of productsdetails let i = index">
+          <div class="card col-md-3">
+              <img src="{{products.photo}}" alt="">
+              <h5 style="color:black;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 100ch;">{{products.productName}}</h5>
+              <p style="color:black;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 100ch;">{{products.description}}</p>
+              <p style="color: black;"><strong>Price:</strong> ${{products.price}}</p>
+              <button class="btn btn-primary" (click)=addtocart(i)>Add to cart</button>
+          </div> 
+      </ng-container>
+
+  </div>
 </div>
 
 <!-- <section id="myProducts">
     <div class="container p-5">
-      <app-message></app-message>
-      <div *ngIf="!products" class="m-auto">
+      <div *ngIf="!productsdetails" class="m-auto">
         <h1 class="text-center display-3 mt-5">
           <i class="fa fa-spinner fa-spin"></i>
         </h1>
       </div>
-      <h3 *ngIf="products && !products.length"  class="display-2 text-center mt-5">My Products is Empty</h3>
-      <div *ngIf="products && products.length" class="row">
+      <h3 *ngIf="productsdetails && !productsdetails.length"  class="display-2 text-center mt-5">My Products is Empty</h3>
+      <div *ngIf="productsdetails && productsdetails.length" class="row">
         <div class="col">
           <h4 class="display-4">My Products</h4>
           <div class="row">
@@ -35,23 +38,24 @@
             </div>
           </div>
           <hr class="mt-0">
-          <div *ngFor="let product of products" class="product">
+          <div *ngFor="let product of productsdetails" class="product">
             <div class="row">
               <div class="col-4 col-md-2">
                 <a routerLink="/product/{{ product.id }}">
-                  <img src="{{ product.image }}" alt="image" class="img-fluid img-thumbnail">
+                  <img src="{{ product.photo }}" alt="image" class="img-fluid img-thumbnail">
                 </a>
               </div>
               <div class="col-5 col-md-8">
                 <h5>
-                  <a routerLink="/product/{{ product.id }}">{{ product.title }}</a>
+                  <a routerLink="/product/{{ product.id }}">{{ product.productName }}</a>
                   <p class="m-0">
-                    <small class="text-muted">{{ product.category.name }}</small>
+                    <small class="text-muted">{{product.description}}</small>
                   </p>
                 </h5>
               </div>
               <div class="col-2">
-                <h6 class="font-weight-bold text-danger"> &#8377; {{ product.price | currency }}</h6>
+                <h6 class="font-weight-bold text-danger"> &#8377; {{ product.price }}</h6>
+                <a href="#" class="btn btn-primary" style="background-color:gray;">Add to cart</a> 
               </div>
             </div>
             <hr>

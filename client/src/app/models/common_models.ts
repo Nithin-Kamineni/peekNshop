@@ -1,4 +1,5 @@
 import { results } from '../models/results'
+import { Products1 } from './Products';
 
 export interface LoginModel {
     
@@ -19,6 +20,11 @@ export interface Stores {
     icon:           string;
     name:           string;
 }
+export interface Products {  
+    products1:        Products1;
+    
+}
+
 export interface offers {  
     description:    string;
     name:           string;

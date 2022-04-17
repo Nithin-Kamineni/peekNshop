@@ -42,6 +42,7 @@ import { TrackingorderComponent } from './trackingorder/trackingorder.component'
 import { StoresComponent } from './stores/stores.component';
 import { DelivaryPageComponent } from './delivary-page/delivary-page.component';
 import { FavorateStoresComponent } from './favorate-stores/favorate-stores.component';
+import { CartComponent } from './cart/cart.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { FavorateStoresComponent } from './favorate-stores/favorate-stores.compo
     StoresComponent,
     DelivaryPageComponent,
     FavorateStoresComponent,
+    CartComponent,
   ],
   imports: [
     BrowserModule,

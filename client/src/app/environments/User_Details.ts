@@ -11,5 +11,5 @@ export const userdetails = {
     address1:"",
     address2:"",
     address3:"",
-    isLogin: false
+    loggedIn:false
 }
