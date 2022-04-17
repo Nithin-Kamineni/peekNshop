@@ -68,8 +68,8 @@
   <div class="card" *ngFor="let offer of offers">
     <img class="card-img-top" src="../../assets/Vegetablespng.png" height="250px" width="250px" alt="Card image cap">
     <div class="card-body">
-      <h3 class="card-title" style="color: black;">{{offer.name}}</h3>
-      <p class="card-text" style="color: black;">{{offer.description}}</p>
+      <h3 class="card-title" style="color: black;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{offer.name}}</h3>
+      <p class="card-text" style="color: black;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{offer.description}}</p>
       <a href="#" class="btn btn-primary">Buy</a>
     </div> 
   </div>
@@ -100,7 +100,7 @@
       <img class="card-img-top" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference={{x.photos[0].photo_reference}}&key=AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk" height="250px" width="200px" alt="Card image cap">
       <div class="card-body">
         <h3 class="card-title" style="color: black;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"><strong>{{x.name}}</strong></h3>
-        <p style="color: black;">{{x.vicinity}}</p>        
+        <p style="color: black;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{x.vicinity}}</p>        
         <a class="btn btn-primary" (click)="visitStore(i)" style="background-color:gray;">Visit</a>
         <a class="btn btn-primary" style="margin-left: 10px;background-color:gray;"
         (click)="favorite(i)"><i class="bi bi-heart-fill"></i></a>

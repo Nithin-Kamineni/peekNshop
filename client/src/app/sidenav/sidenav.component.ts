@@ -9,6 +9,7 @@ import { environment } from '../environments/environments'
 import * as shajs from 'sha.js';
 import { ApiService } from '../services/api.service'
 import { userdetails } from '../environments/User_Details'
+import { observable } from 'rxjs/internal/symbol/observable';
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -26,14 +27,16 @@ export class SidenavComponent implements OnInit {
   isLogin = userdetails.loggedIn
   isLocation=environment.isLocation
   storesSearchForm!:FormGroup
-  storesSearchText!:string
-
+  storesSearchText!:string;
+  cartItems = environment.numberOfItemsInCart;
   
 
   constructor(private http: HttpClient, private router: Router,public service: MapsService, private api: ApiService) { }
   ngOnInit(): void {
     this.isLogin=userdetails.loggedIn
     this.isLocation=environment.isLocation
+    this.cartItems=environment.numberOfItemsInCart
+    console.log(this.cartItems)
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
@@ -141,6 +144,18 @@ export class SidenavComponent implements OnInit {
   cart(){
     this.router.navigate(['/user-homepage/user/cart'])
   }
+  getNumberOfitemsInCart(){
+    this.api.cartdisplay(userdetails.id).subscribe((data: any) => {
+      var cartdetails= data
+      var i=0
+      for (let products of cartdetails){
+        i = i+1
+        environment.numberOfItemsInCart=i
+        this.cartItems=i
+      }
+      console.log(this.cartItems)
+    })
+  }
 
   locationFormSubmit(){
 
@@ -162,6 +177,7 @@ export class SidenavComponent implements OnInit {
         this.updateUserDetails(details[0],details[1],details[2],details[3],
           details[4], details[5], details[6], details[7], details[8], details[9]);
           if (data.Msg == "Login Sucessfull"){
+            this.getNumberOfitemsInCart()
             userdetails.loggedIn = true
             this.isLogin=true
             alert(data.Msg) 
@@ -170,7 +186,7 @@ export class SidenavComponent implements OnInit {
             
             this.router.navigate(['/user-homepage'])
           }else{
-            alert(this.loginmsg)
+            alert(data.Msg)
             this.router.navigate([''])
           }
 
