@@ -6,7 +6,7 @@ import { userdetails } from '../environments/User_Details'
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent implements OnInit {
-isLogin=userdetails.isLogin
+isLogin=userdetails.loggedIn
   constructor() { }
 
   ngOnInit(): void {

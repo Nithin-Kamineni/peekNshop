@@ -86,8 +86,7 @@ export class CatogoriesComponent implements OnInit {
   }
 
   favorite(i:number){
-    if (userdetails.isLogin2=true){
-      console.log(userdetails.isLogin)
+    
       var k = 14+(2*i)
       var favoriteStoreId = this.stores.results[i].place_id
       var user_id=userdetails.id
@@ -106,9 +105,6 @@ export class CatogoriesComponent implements OnInit {
         this.arr[i]=false
         document.getElementsByTagName("a")[k].style.backgroundColor = "gray";
       }
-    }else{
-      alert('please login')
-    }
     
     
   }

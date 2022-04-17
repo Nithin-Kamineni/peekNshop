@@ -29,10 +29,6 @@ export class ProductsComponent implements OnInit {
   }
   addtocart(i:number){
     console.log(this.productsdetails)
-    console.log(userdetails.isLogin)
-    if(userdetails.isLogin2=false){
-      alert('Please login')
-    }else{
       let k=0
     for(let products of this.productsdetails){ 
       if (k==i){
@@ -41,7 +37,7 @@ export class ProductsComponent implements OnInit {
         
       }
     }
-    }
+    
     
   }
 }
