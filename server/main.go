@@ -57,11 +57,12 @@ func main() {
 	router.HandleFunc("/address", controllers.ReturnLat).Methods("POST")           //*returning lat
 	router.HandleFunc("/stores/", controllers.ReturnNearBy)                        //filter data from interface
 
-	router.HandleFunc("/stores/add/{storeID}", controllers.AddInventory).Methods("POST")       //*add store inventory
-	router.HandleFunc("/stores/edit/{storeID}", controllers.EditInventory).Methods("POST")     //*edit store inventory
-	router.HandleFunc("/stores/delete/{storeID}", controllers.DeleteInventory).Methods("POST") //*delete store inventory
-	router.HandleFunc("/stores/items", controllers.ReturnStoreInv).Methods("GET")              //*return store inventory
-	router.HandleFunc("/stores/items/{product_id}", controllers.ReturnProductPage)             //*display the product page
+	router.HandleFunc("/stores/add/{storeID}", controllers.AddInventory).Methods("POST")           //*add store inventory
+	router.HandleFunc("/stores/edit/{storeID}", controllers.EditInventory).Methods("POST")         //*edit store inventory
+	router.HandleFunc("/stores/delete/{storeID}", controllers.DeleteInventory).Methods("POST")     //*delete store inventory
+	router.HandleFunc("/stores/items", controllers.ReturnStoreInv).Methods("GET")                  //*return store inventory
+	router.HandleFunc("/stores/items/{product_id}", controllers.ReturnProductPage)                 //*display the product page
+	router.HandleFunc("/stores/items/{product_id}", controllers.SendProductReview).Methods("POST") //*display the product page
 
 	router.HandleFunc("/cart", controllers.CartDisplay).Methods("POST")          //*this
 	router.HandleFunc("/cart/clear-cart", controllers.ClearCart).Methods("POST") //*this
