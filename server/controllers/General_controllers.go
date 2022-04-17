@@ -53,7 +53,7 @@ func HomePageReload(w http.ResponseWriter, r *http.Request) {
 
 	//credentials := a.db.First(&s, "email = ?", username)
 	fmt.Println("Gainsville")
-	reply = models.HomePageCity{City: "Gainsvile"}
+	reply = models.HomePageCity{City: "Gainesville"}
 	err = json.NewEncoder(w).Encode(reply)
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())

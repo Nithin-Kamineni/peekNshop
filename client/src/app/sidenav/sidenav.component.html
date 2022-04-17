@@ -19,7 +19,7 @@
       </span>
       
      <h1 id="city"> {{ city }}</h1>
-     <button *ngIf = "!isLocation" type="button" class="btn btn-link" id="locationbutton" data-bs-toggle="modal" data-bs-target="#locationModal">
+     <button *ngIf = "isLocation" type="button" class="btn btn-link" id="locationbutton" data-bs-toggle="modal" data-bs-target="#locationModal">
          Location
      </button>
      <button *ngIf = "isLogin" type="button" class="btn btn-outline-light" id="loginbutton" data-bs-toggle="modal" data-bs-target="#loginModal">
@@ -29,10 +29,10 @@
          Signup
      </button>
      <button type="button" class="btn btn-link" *ngIf = "!isLogin" (click)=userProfile() >
-       <h6  id="city"> {{ name }}</h6>
+       <p  id="city"> {{ name }}</p>
      </button>
      
-     <button type="button" class="btn btn-link" *ngIf = "!isLogin" >
+     <button type="button" style="margin-right: 10px;size: 20px;" class="btn btn-link" *ngIf = "!isLogin" >
        <img *ngIf = "!isLogin" src="../../assets/cart.svg" alt="Cart">
      </button>
      <button *ngIf = "!isLogin" type="button" class="btn btn-outline-danger" style="margin-left: 10px;" id="logoutbutton" data-bs-toggle="modal" (click)='logout()'data-bs-target="#logoutModal">
@@ -73,7 +73,7 @@
    </div>
    <div class="modal-body">
      <form id="locationform" [formGroup]="locationForm" (ngSubmit)="locationFormSubmit()" >
-       <div class="mb-3">
+       <div class="mb-3"> 
          <label for="id_Street" class="form-label">Street</label>
          <input formControlName="street" [class.is-invalid]="streetField.touched && streetField.invalid" type="text"
            class="form-control" id="id_email">

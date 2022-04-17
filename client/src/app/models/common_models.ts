@@ -9,6 +9,7 @@ export interface LoginModel {
 export interface SignupModel {
     
     Msg:           string;
+    UserDetails:   string;
 }
 export interface Products {  
     Msg:           string;
@@ -25,4 +26,9 @@ export interface offers {
 export interface Location {  
     city:    string;
     
+}
+export interface productsDisplay {  
+    photo:    string;
+    price:           string;
+    product_name:           string;
 }

@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import {environment} from '../environments/environments'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { userdetails } from '../environments/User_Details'
 @Component({
   selector: 'app-change-user-profile-settings',
   templateUrl: './change-user-profile-settings.component.html',
   styleUrls: ['./change-user-profile-settings.component.scss']
 })
 export class ChangeUserProfileSettingsComponent implements OnInit {
-  name=environment.fullname
-  firstname = environment.firstname
-  lastname = environment.lastname
-  email = environment.email
+  name=userdetails.fullname
+  firstname = userdetails.firstname
+  lastname = userdetails.lastname
+  email = userdetails.email
   city=environment.city
-  phone=environment.phone
+  phone=userdetails.phone
   userDetailsForm!: FormGroup;
 
   constructor() { }
