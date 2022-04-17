@@ -63,6 +63,7 @@ func main() {
 	router.HandleFunc("/stores/items", controllers.ReturnStoreInv).Methods("GET")                  //*return store inventory
 	router.HandleFunc("/stores/items/{product_id}", controllers.ReturnProductPage)                 //*display the product page
 	router.HandleFunc("/stores/items/{product_id}", controllers.SendProductReview).Methods("POST") //*display the product page
+	router.HandleFunc("/stores/items/{product_id}", controllers.SendProductRating).Methods("POST") //*display the product page
 
 	router.HandleFunc("/cart", controllers.CartDisplay).Methods("POST")          //*this
 	router.HandleFunc("/cart/clear-cart", controllers.ClearCart).Methods("POST") //*this
