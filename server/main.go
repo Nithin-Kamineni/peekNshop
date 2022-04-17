@@ -57,6 +57,7 @@ func main() {
 	router.HandleFunc("/address", controllers.ReturnLat).Methods("POST")           //*returning lat
 	router.HandleFunc("/stores/", controllers.ReturnNearBy)                        //filter data from interface
 
+	router.HandleFunc("/stores/add", controllers.AddStore).Methods("POST")                         //*add store information
 	router.HandleFunc("/stores/add/{storeID}", controllers.AddInventory).Methods("POST")           //*add store inventory
 	router.HandleFunc("/stores/edit/{storeID}", controllers.EditInventory).Methods("POST")         //*edit store inventory
 	router.HandleFunc("/stores/delete/{storeID}", controllers.DeleteInventory).Methods("POST")     //*delete store inventory

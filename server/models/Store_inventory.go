@@ -14,7 +14,7 @@ type Store_inventory struct {
 }
 
 type Stores_Information struct {
-	storeID   string
+	StoreID   string `gorm:"primary_key"`
 	AccessKey string
 	StoreName string
 	Photo_ref string
