@@ -1,4 +1,4 @@
-# Problem Statement 
+# Problem Statement
 
 People go to the store to buy things, but sometimes those things may not be available in that store. This waste lot of time for people who want to buy things and not find them in the store they went to.
 
