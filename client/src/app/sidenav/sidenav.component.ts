@@ -9,6 +9,7 @@ import { environment } from '../environments/environments'
 import * as shajs from 'sha.js';
 import { ApiService } from '../services/api.service'
 import { userdetails } from '../environments/User_Details'
+import { JwtHelperService } from '@auth0/angular-jwt';
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -232,6 +233,13 @@ export class SidenavComponent implements OnInit {
     }  
   
   }
+  // get CurrentUser(){
+  //   let token = localStorage.getItem('token');
+  //   if(!token) return null;
+
+  //   return new JwtHelperService().decodeToken(token);
+
+  // }
 
 }
 
