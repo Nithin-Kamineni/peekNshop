@@ -22,22 +22,22 @@
      <button *ngIf = "isLocation" type="button" class="btn btn-link" id="locationbutton" data-bs-toggle="modal" data-bs-target="#locationModal">
          Location
      </button>
-     <button *ngIf = "isLogin" type="button" class="btn btn-outline-light" id="loginbutton" data-bs-toggle="modal" data-bs-target="#loginModal">
+     <button *ngIf = "!isLogin" type="button" class="btn btn-outline-light" id="loginbutton" data-bs-toggle="modal" data-bs-target="#loginModal">
          Login
      </button>
-     <button *ngIf = "isLogin" type="button" class="btn btn-outline-light" id="signupbutton" data-bs-toggle="modal" data-bs-target="#signupModal">
+     <button *ngIf = "!isLogin" type="button" class="btn btn-outline-light" id="signupbutton" data-bs-toggle="modal" data-bs-target="#signupModal">
          Signup
      </button>
-     <button type="button" class="btn btn-link" *ngIf = "!isLogin" (click)=userProfile() >
+     <button type="button" class="btn btn-link" *ngIf = "isLogin" (click)=userProfile() >
        <p  id="city"> {{ name }}</p>
      </button>
      
 
-     <button *ngIf="!isLogin" class="byn btn-primary" style="background-color: Transparent;background-repeat:no-repeat; border: none;">
+     <button *ngIf="isLogin" class="byn btn-primary" style="background-color: Transparent;background-repeat:no-repeat; border: none;">
       <i style="font-size:30px;" (click)="cart()" class="fas fa-cart-plus"></i>
       <div style="font-size: 10px;" class="badge bg-danger">5</div>
     </button>
-     <button *ngIf = "!isLogin" type="button" class="btn btn-outline-danger" style="margin-left: 10px;" id="logoutbutton" data-bs-toggle="modal" (click)='logout()'data-bs-target="#logoutModal">
+     <button *ngIf = "isLogin" type="button" class="btn btn-outline-danger" style="margin-left: 10px;" id="logoutbutton" data-bs-toggle="modal" (click)='logout()'data-bs-target="#logoutModal">
        Logout
    </button>
      

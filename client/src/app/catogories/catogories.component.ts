@@ -86,7 +86,8 @@ export class CatogoriesComponent implements OnInit {
   }
 
   favorite(i:number){
-    if (userdetails.isLogin=true){
+    if (userdetails.isLogin2=true){
+      console.log(userdetails.isLogin)
       var k = 14+(2*i)
       var favoriteStoreId = this.stores.results[i].place_id
       var user_id=userdetails.id

@@ -33,9 +33,8 @@ export class SidenavComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router,public service: MapsService, private api: ApiService) { }
   ngOnInit(): void {
 
-    this.isLogin=true
     this.isLocation=environment.isLocation
-
+    console.log(userdetails.isLogin)
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required])
@@ -101,14 +100,14 @@ export class SidenavComponent implements OnInit {
     this.router.navigate(['/user-homepage/user'])
   }
   logout(){
-    this.updateisLogin()
     console.log(userdetails.isLogin)
     console.log("Logout")
     this.router.navigate(['/'])
   }
   updateisLogin(){
-    this.isLogin=!this.isLogin
-    userdetails.isLogin=!userdetails.isLogin
+    userdetails.isLogin=true
+    this.isLogin=userdetails.isLogin
+    userdetails.isLogin2=true
   }
   updateUserDetails(id:string, firstname:string, lastname:string, email:string, password:string, 
     accesskey:string, refreshkey:string, address1:string, address2:string, address3:string){
@@ -126,7 +125,7 @@ export class SidenavComponent implements OnInit {
       this.name=userdetails.fullname
   }
   delivery(){
-    if (userdetails.isLogin=false){
+    if (userdetails.isLogin2=false){
       this.router.navigate(['user-homepage/delivery'])
     }else{
       alert("Please login")
@@ -153,6 +152,7 @@ export class SidenavComponent implements OnInit {
       this.api.login(email, password).subscribe((data: LoginModel) => {
         console.log(data)
         var details = Object.values(data.UserDetails)
+        console.log(details[0])
         this.updateUserDetails(details[0],details[1],details[2],details[3],
           details[4], details[5], details[6], details[7], details[8], details[9]);
           if (data.Msg == "Login Sucessfull"){
