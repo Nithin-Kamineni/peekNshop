@@ -62,7 +62,7 @@ func CartManipulation(w http.ResponseWriter, r *http.Request) {
 	}
 	quantityInt, _ := strconv.ParseInt(cart.Quantity, 10, 0)
 	if quantity >= quantityInt {
-		err = utils.DB.Exec("UPDATE cart_items_dbs SET quantity = ?, ModifiedAt = ? where userID = ? and productID = ?", cart.Quantity, cart.ModifiedAt, cart.UserID, cart.ProductID).Error
+		err = utils.DB.Exec("UPDATE cart_items_dbs SET quantity = ?, modified_at = ? where user_ID = ? and product_ID = ?", cart.Quantity, cart.ModifiedAt, cart.UserID, cart.ProductID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return

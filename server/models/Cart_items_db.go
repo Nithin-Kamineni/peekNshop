@@ -10,4 +10,5 @@ type Cart_items_db struct {
 	Quantity      string `json:"quantity"`
 	CreatedAt     string `json:"created"`
 	ModifiedAt    string `json:"modified"`
+	StoreID       string `json:"store_id"`
 }

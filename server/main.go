@@ -71,6 +71,11 @@ func main() {
 	router.HandleFunc("/cart", controllers.CartManipulation).Methods("PATCH")    //*this
 	router.HandleFunc("/cart/additem", controllers.CartAddition).Methods("POST") //*this
 
+	//router.HandleFunc("/order/payment", controllers.OrderPayment).Methods("POST")                  //*this
+	router.HandleFunc("/order/{order_id}", controllers.DisplayOrder).Methods("POST")               //*this
+	router.HandleFunc("/order/{order_id}/reviw", controllers.OrderReview).Methods("POST")          //*this
+	router.HandleFunc("/order/{order_id}/reviw/edit", controllers.OrderReviewEdit).Methods("POST") //*this
+
 	http.Handle("/", router)
 
 	log.Fatal(http.ListenAndServe(":10000", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(router)))

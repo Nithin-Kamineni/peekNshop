@@ -50,13 +50,19 @@ type FavorateStoresObj struct {
 }
 
 type Orders struct {
-	OrderID     string
-	ProductID   string
-	storeID     string
-	UserID      string
-	orderedOn   string
-	deliveredOn string
-	pickedUpOn  string
+	OrderID       string `gorm:"primary_key"`
+	ProductID     string
+	Quantity      string
+	Product_name  string
+	Product_photo string
+	Description   string
+	StoreID       string
+	UserID        string
+	OrderedOn     string
+	DeliveredOn   string
+	PickedUpOn    string
+	Rating        int
+	Review        string
 }
 
 type ChangeUserAddress struct {
