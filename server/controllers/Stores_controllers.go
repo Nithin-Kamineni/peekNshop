@@ -11,6 +11,22 @@ import (
 	"src/utils"
 )
 
+func AddStore(w http.ResponseWriter, r *http.Request) {
+	var storeInfo models.Stores_Information
+	err := json.NewDecoder(r.Body).Decode(&storeInfo)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = utils.DB.Save(&storeInfo).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	} else {
+		w.WriteHeader(http.StatusCreated)
+	}
+}
+
 func AddInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store models.Store_inventory
@@ -225,6 +241,40 @@ func ReturnStoreInv(w http.ResponseWriter, r *http.Request) {
 }
 
 func ReturnProductPage(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+	var store models.Store_inventory
+	product_id := r.URL.Query().Get("product_id")
+
+	err := utils.DB.Raw("SELECT * FROM store_inventories WHERE product_id = ?", product_id).Scan(&store).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	err = json.NewEncoder(w).Encode(store)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
+func SendProductReview(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json")
+	var store models.Store_inventory
+	product_id := r.URL.Query().Get("product_id")
+
+	err := utils.DB.Raw("SELECT * FROM store_inventories WHERE product_id = ?", product_id).Scan(&store).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	err = json.NewEncoder(w).Encode(store)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
+func SendProductRating(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	var store models.Store_inventory
