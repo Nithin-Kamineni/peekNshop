@@ -71,10 +71,11 @@ func main() {
 	router.HandleFunc("/cart", controllers.CartManipulation).Methods("PATCH")    //*this
 	router.HandleFunc("/cart/additem", controllers.CartAddition).Methods("POST") //*this
 
-	//router.HandleFunc("/order/payment", controllers.OrderPayment).Methods("POST")                  //*this
-	router.HandleFunc("/order/{order_id}", controllers.DisplayOrder).Methods("POST")               //*this
-	router.HandleFunc("/order/{order_id}/reviw", controllers.OrderReview).Methods("POST")          //*this
-	router.HandleFunc("/order/{order_id}/reviw/edit", controllers.OrderReviewEdit).Methods("POST") //*this
+	router.HandleFunc("/order/payment", controllers.OrderPayment).Methods("POST")                  //secure
+	router.HandleFunc("/order/{order_id}", controllers.DisplayOrders).Methods("POST")              //secure
+	router.HandleFunc("/order/{order_id}/reviw", controllers.OrderReview).Methods("POST")          //secure
+	router.HandleFunc("/order/{order_id}/reviw/edit", controllers.OrderReviewEdit).Methods("POST") //secure
+	router.HandleFunc("/order/{order_id}/delivary", controllers.OrderDelivary).Methods("POST")     //secure
 
 	http.Handle("/", router)
 
