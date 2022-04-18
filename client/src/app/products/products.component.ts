@@ -25,6 +25,7 @@ export class ProductsComponent implements OnInit {
   ngOnInit() {
     this.productsdetails=this.api.getProducts().subscribe((data: any) => {
       this.productsdetails = data
+      console.log(this.productsdetails)
     })
     
   }
