@@ -42,23 +42,28 @@ func OrderPayment(w http.ResponseWriter, r *http.Request) {
 		orderProc.Review = ""
 		orderProc.Rating = 0.0
 	}
-
 }
 
-func DisplayOrder(w http.ResponseWriter, r *http.Request) {
+func DisplayOrders(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var cart models.Cart_items_db
+	var orders []models.Orders
+	var user models.User3
 
-	err := json.NewDecoder(r.Body).Decode(&cart)
+	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	err = utils.DB.Exec("DELETE cart_items_dbs where userID = ?", cart.UserID).Error
+	err = utils.DB.Raw("SELECT orders FROM favorate_stores_objs WHERE user_id = ?", user.ID).Scan(&orders).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
+	}
+
+	err = json.NewEncoder(w).Encode(orders)
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
 }
 
