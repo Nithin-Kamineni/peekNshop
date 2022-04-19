@@ -155,3 +155,20 @@ func OrderDelivary(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func OrderPickUp(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var OrderReview models.Orders
+
+	err := json.NewDecoder(r.Body).Decode(&OrderReview)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = utils.DB.Exec("Update orders set deliveredon = ?, pickedOn = ? where orderID = ? and productID = ?", OrderReview.DeliveredOn, OrderReview.PickedUpOn, OrderReview.OrderID, OrderReview.ProductID).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+}

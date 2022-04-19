@@ -70,6 +70,7 @@ func main() {
 	router.HandleFunc("/cart/clear-cart", controllers.ClearCart).Methods("POST") //*this
 	router.HandleFunc("/cart", controllers.CartManipulation).Methods("PATCH")    //*this
 	router.HandleFunc("/cart/additem", controllers.CartAddition).Methods("POST") //*this
+	router.HandleFunc("/cart/", controllers.CartDeletion).Methods("PUT")         //*this
 
 	router.HandleFunc("/order/payment", controllers.OrderPayment).Methods("POST")                  //secure
 	router.HandleFunc("/order/{order_id}", controllers.DisplayOrders).Methods("POST")              //secure
