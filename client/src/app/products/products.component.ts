@@ -51,6 +51,7 @@ export class ProductsComponent implements OnInit {
         this.cartItems=i
       }
       console.log(environment.numberOfItemsInCart)
+      
     })
   }
 }
