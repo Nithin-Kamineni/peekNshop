@@ -45,6 +45,7 @@ import { FavorateStoresComponent } from './favorate-stores/favorate-stores.compo
 import { CartComponent } from './cart/cart.component';
 import { AdminProductsComponent } from './admin/admin-products/admin-products.component';
 import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
     CartComponent,
     AdminProductsComponent,
     AdminUsersComponent,
+    CheckoutComponent,
   ],
   imports: [
     BrowserModule,
