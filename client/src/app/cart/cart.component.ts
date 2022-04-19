@@ -26,7 +26,19 @@ export class CartComponent implements OnInit {
   checkout(){
     this.router.navigate(['/user-homepage/user/cart/payment'])
   }
-  deleteFromCart(){
+  deleteFromCart(i:number){
+    var k=0
+    console.log(i)
+    for (let cart of this.cartdetails){
+      if (k==i){
+        this.productID=cart.productID
+        this.quantity=cart.quantity
+        this.created=cart.created
+        this.modified=cart.modified
+        console.log(userdetails.id, this.productID, this.quantity, this.created, this.modified)
+      }
+      k=k+1
+    }
     this.api.removeProductFromCart(userdetails.id, this.productID, this.quantity, this.created, this.modified)
   }
 }
