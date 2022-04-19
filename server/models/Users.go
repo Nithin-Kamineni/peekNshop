@@ -19,6 +19,13 @@ type Coardinates struct {
 	Lon string
 }
 
+type AddressForm struct {
+	Street  string
+	City    string
+	State   string
+	Zipcode string
+}
+
 type HomePageCity struct {
 	City string `json:"city"`
 }

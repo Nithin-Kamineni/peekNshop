@@ -63,8 +63,25 @@ func HomePageReload(w http.ResponseWriter, r *http.Request) {
 func ConvAddressToCord(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
+	reply := models.SignInReply{Msg: "Coudn't get your address"}
+	var addressForm models.AddressForm
 
-	address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
+	err := json.NewDecoder(r.Body).Decode(&addressForm)
+	if err != nil {
+		// sendErr(w, http.StatusBadRequest, err.Error())
+		w.WriteHeader(http.StatusCreated)
+		err = json.NewEncoder(w).Encode(reply)
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+
+	searchAdd := addressForm.Street + addressForm.City + addressForm.State + addressForm.Zipcode
+
+	//address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
+
+	address := searchAdd
 	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
 
 	params := "address=" + url.QueryEscape(address) + "&" +

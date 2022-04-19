@@ -40,7 +40,7 @@ func main() {
 
 	router.HandleFunc("/user", controllers.UserLogin).Methods("GET")                            //jwt proc
 	router.HandleFunc("/user", controllers.UserSignUp).Methods("POST")                          //jwt proc
-	router.HandleFunc("/user", controllers.ChangeUserDetails).Methods("PUT")                    //*changing user details
+	router.HandleFunc("/user", controllers.ChangeUserDetails).Methods("PATCH")                  //*changing user details
 	router.HandleFunc("/user/forgotpassword", controllers.ForgotUserDetails).Methods("POST")    //progress
 	router.HandleFunc("/user/address", controllers.ChangeUserAddress).Methods("POST")           //address change user proc
 	router.HandleFunc("/user/orders", controllers.SendUserOrders).Methods("POST")               //*sending user orders *list

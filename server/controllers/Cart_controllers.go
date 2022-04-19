@@ -7,6 +7,7 @@ import (
 	"src/models"
 	"src/utils"
 	"strconv"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -21,8 +22,8 @@ func CartAddition(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusCreated)
 	}
-
-	err = utils.DB.Raw("SELECT product_name, product_photo, description FROM store_inventories WHERE product_id = ?", cart.ProductID).Scan(&cart).Error
+	cart.Quantity = "1"
+	err = utils.DB.Raw("SELECT product_name, product_photo, description, price FROM store_inventories WHERE product_id = ?", cart.ProductID).Scan(&cart).Error
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
@@ -123,6 +124,10 @@ func CartDisplay(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
+	}
+
+	for i := 0; i < len(cart); i++ {
+		cart[0].Price = strings.Replace(cart[0].Price, "$", "", 1)
 	}
 
 	err = json.NewEncoder(w).Encode(cart)
