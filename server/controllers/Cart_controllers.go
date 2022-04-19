@@ -62,7 +62,7 @@ func CartManipulation(w http.ResponseWriter, r *http.Request) {
 	}
 	quantityInt, _ := strconv.ParseInt(cart.Quantity, 10, 0)
 	if quantity >= quantityInt {
-		err = utils.DB.Exec("UPDATE cart_items_dbs SET quantity = ?, modified_at = ? where user_ID = ? and product_ID = ?", cart.Quantity, cart.ModifiedAt, cart.UserID, cart.ProductID).Error
+		err = utils.DB.Exec("UPDATE cart_items_dbs SET quantity = ?, modified_at = ? where user_ID = ? and product_ID = ?", quantityInt, cart.ModifiedAt, cart.UserID, cart.ProductID).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
@@ -85,11 +85,10 @@ func CartDeletion(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
-		err = utils.DB.Exec("DELETE cart_items_dbs where user_ID = ? and product_ID = ?", cart.UserID, cart.ProductID).Error
-		if err != nil {
-			sendErr(w, http.StatusInternalServerError, err.Error())
-			return
-		}
+	err = utils.DB.Exec("DELETE cart_items_dbs where user_ID = ? and product_ID = ?", cart.UserID, cart.ProductID).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
 	}
 }
 
