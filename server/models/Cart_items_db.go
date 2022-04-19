@@ -6,7 +6,7 @@ type Cart_items_db struct {
 	ProductID     string `json:"productID"`
 	Product_name  string
 	Product_photo string
-	Description   string
+	Description   string `json:"Description"`
 	Quantity      string `json:"quantity"`
 	CreatedAt     string `json:"created"`
 	ModifiedAt    string `json:"modified"`

@@ -76,6 +76,23 @@ func CartManipulation(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func CartDeletion(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var cart models.Cart_items_db
+
+	err := json.NewDecoder(r.Body).Decode(&cart)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+		err = utils.DB.Exec("DELETE cart_items_dbs where user_ID = ? and product_ID = ?", cart.UserID, cart.ProductID).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+	}
+}
+
 func ClearCart(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var cart models.Cart_items_db
