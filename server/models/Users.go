@@ -19,6 +19,13 @@ type Coardinates struct {
 	Lon string
 }
 
+type AddressForm struct {
+	Street  string
+	City    string
+	State   string
+	Zipcode string
+}
+
 type HomePageCity struct {
 	City string `json:"city"`
 }
@@ -50,13 +57,19 @@ type FavorateStoresObj struct {
 }
 
 type Orders struct {
-	OrderID     string
-	ProductID   string
-	storeID     string
-	UserID      string
-	orderedOn   string
-	deliveredOn string
-	pickedUpOn  string
+	OrderID       string `gorm:"primary_key"`
+	ProductID     string
+	Quantity      string
+	Product_name  string
+	Product_photo string
+	Description   string
+	StoreID       string
+	UserID        string
+	OrderedOn     string
+	DeliveredOn   string
+	PickedUpOn    string
+	Rating        int
+	Review        string
 }
 
 type ChangeUserAddress struct {

@@ -40,7 +40,7 @@ func main() {
 
 	router.HandleFunc("/user", controllers.UserLogin).Methods("GET")                            //jwt proc
 	router.HandleFunc("/user", controllers.UserSignUp).Methods("POST")                          //jwt proc
-	router.HandleFunc("/user", controllers.ChangeUserDetails).Methods("PUT")                    //*changing user details
+	router.HandleFunc("/user", controllers.ChangeUserDetails).Methods("PATCH")                  //*changing user details
 	router.HandleFunc("/user/forgotpassword", controllers.ForgotUserDetails).Methods("POST")    //progress
 	router.HandleFunc("/user/address", controllers.ChangeUserAddress).Methods("POST")           //address change user proc
 	router.HandleFunc("/user/orders", controllers.SendUserOrders).Methods("POST")               //*sending user orders *list
@@ -70,6 +70,13 @@ func main() {
 	router.HandleFunc("/cart/clear-cart", controllers.ClearCart).Methods("POST") //*this
 	router.HandleFunc("/cart", controllers.CartManipulation).Methods("PATCH")    //*this
 	router.HandleFunc("/cart/additem", controllers.CartAddition).Methods("POST") //*this
+	router.HandleFunc("/cart/", controllers.CartDeletion).Methods("PUT")         //*this
+
+	router.HandleFunc("/order/payment", controllers.OrderPayment).Methods("POST")                  //secure
+	router.HandleFunc("/order/{order_id}", controllers.DisplayOrders).Methods("POST")              //secure
+	router.HandleFunc("/order/{order_id}/reviw", controllers.OrderReview).Methods("POST")          //secure
+	router.HandleFunc("/order/{order_id}/reviw/edit", controllers.OrderReviewEdit).Methods("POST") //secure
+	router.HandleFunc("/order/{order_id}/delivary", controllers.OrderDelivary).Methods("POST")     //secure
 
 	http.Handle("/", router)
 
