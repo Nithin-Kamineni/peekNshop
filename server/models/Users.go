@@ -11,7 +11,7 @@ type LogInReply struct {
 }
 
 type Address struct {
-	Address string
+	Address string `json:"address"`
 }
 
 type Coardinates struct {
