@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import {MapsService} from '../services/maps.service';
 import {LoginModel} from '../models/common_models'
 import { SignupModel } from '../models/common_models'
@@ -30,11 +30,20 @@ export class SidenavComponent implements OnInit {
   storesSearchForm!:FormGroup
   storesSearchText!:string;
   cartItems = environment.numberOfItemsInCart;
+  returnUrl!: string;
 
   
 
-  constructor(private http: HttpClient, private router: Router,public service: MapsService, private api: ApiService) { }
+  constructor(private http: HttpClient, private router: Router,public service: MapsService, private api: ApiService, private route: ActivatedRoute,) { }
   ngOnInit(): void {
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    let token = localStorage.getItem('token');
+    if (token){
+      this.updateUserDetails()
+      userdetails.loggedIn = true
+      this.isLogin=true
+      this.router.navigate(['/user-homepage'])
+    }
     this.isLogin=userdetails.loggedIn
     this.isLocation=environment.isLocation
     this.cartItems=environment.numberOfItemsInCart
@@ -113,26 +122,26 @@ export class SidenavComponent implements OnInit {
     this.signupForm.controls['signup_confirm_password'].setValue('');
   }
   logout(){
-    // localStorage.removeItem('token');
+    localStorage.removeItem('token');
     this.removeFormDetails()
     this.isLogin=false
     userdetails.loggedIn=false
     this.router.navigate(['/'])
   }
   
-  updateUserDetails(id:string, firstname:string, lastname:string, email:string, password:string, 
-    accesskey:string, refreshkey:string, address1:string, address2:string, address3:string){
-      userdetails.id=id
-      userdetails.firstname=firstname
-      userdetails.lastname=lastname
-      userdetails.email=email
-      userdetails.password=password
-      userdetails.accesskey=accesskey
-      userdetails.refreshkey=refreshkey
-      userdetails.address1=address1
-      userdetails.address2=address2
-      userdetails.address3=address3
-      userdetails.fullname=userdetails.firstname.concat(" ", userdetails.lastname)
+  updateUserDetails(){
+      userdetails.id=this.CurrentUser.data.id
+      userdetails.firstname=this.CurrentUser.data.firstname
+      userdetails.lastname=this.CurrentUser.data.lastname
+      userdetails.email=this.CurrentUser.data.email
+      userdetails.password=this.CurrentUser.data.password
+      userdetails.accesskey=this.CurrentUser.data.Accesskey
+      userdetails.refreshkey=this.CurrentUser.data.RefreshKey
+      userdetails.address1=this.CurrentUser.data.Address1
+      userdetails.address2=this.CurrentUser.data.Address2
+      userdetails.address3=this.CurrentUser.data.Address3
+      userdetails.fullname=this.CurrentUser.data.firstname.concat(" ", this.CurrentUser.data.lastname)
+      console.log(userdetails.fullname)
       this.name=userdetails.fullname
   }
   delivery(){
@@ -166,48 +175,33 @@ export class SidenavComponent implements OnInit {
   
 
   loginFormSubmit(): void {
-    // let returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
-    // localStorage.setItem('returnUrl',returnUrl);
+    let returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+    localStorage.setItem('returnUrl',returnUrl);
     if (this.loginForm.valid) {
       var email = this.loginForm.getRawValue().email;
       var password = this.loginForm.getRawValue().password;
-      console.log(email,password)
+
       password = shajs('sha256').update(password).digest('hex')
 
-      this.api.login(email, password).subscribe((data: LoginModel) => {
-        // if(data && data.token){
-          //   localStorage.setItem('token',data.token);
-          //   alert("Login Successful");
-          //   this.router.navigate([returnUrl || '/']);
-          // }else{
-          //   alert("Login Unsuccessful");
-          //   this.router.navigate(['/login']);
-          // }
+      this.api.login(email, password).subscribe((data: any) => {
         console.log(data)
-        var details = Object.values(data.UserDetails)
-        console.log(details[0])
-        this.updateUserDetails(details[0],details[1],details[2],details[3],
-          details[4], details[5], details[6], details[7], details[8], details[9]);
-          if (data.Msg == "Login Sucessfull"){
+        console.log(data.JWToken)
+        if(data && data.JWToken){
+            localStorage.setItem('token',data.JWToken);
             this.getNumberOfitemsInCart()
             userdetails.loggedIn = true
             this.isLogin=true
-            alert(data.Msg) 
+            alert("Login Successful");
             let element: HTMLElement = document.getElementsByClassName('btn-close')[1] as HTMLElement;
             element.click();
-            
             this.router.navigate(['/user-homepage'])
+            this.updateUserDetails()
           }else{
-            alert(data.Msg)
-            this.router.navigate([''])
+            alert("Login Unsuccessful");
+            this.router.navigate(['/']);
           }
-
-      });
-
-    } else {
-        console.log('There is a problem with the login form');
-    }
-}
+        })
+}}
   signupFormSubmit(): void {
 
     if (this.signupForm.valid) {
@@ -222,22 +216,23 @@ export class SidenavComponent implements OnInit {
       console.log(confirm_password)
 
       if (password==confirm_password){
-        this.api.signup(first_name, last_name, email, password).subscribe((data: SignupModel) => {
-            if (data.Msg == "Login and sign-up Sucessfull"){
-              userdetails.loggedIn = true
-              this.isLogin=true
-              var details = Object.values(data.UserDetails)
-              this.updateUserDetails(details[0],details[1],details[2],details[3],
-                details[4], details[5], details[6], details[7], details[8], details[9])
-              alert(data.Msg)
-              let element: HTMLElement = document.getElementsByClassName('btn-close')[2] as HTMLElement;
-              element.click();
-              this.router.navigate(['/user-homepage'])
-            }else{
-              console.log(data.Msg)
-              alert("User already registered")
-              this.router.navigate([''])
-            }
+        this.api.signup(first_name, last_name, email, password).subscribe((data: any) => {
+          console.log(data)
+          console.log(data.JWToken)
+        if(data && data.JWToken){
+            localStorage.setItem('token',data.JWToken);
+            this.getNumberOfitemsInCart()
+            userdetails.loggedIn = true
+            this.isLogin=true
+            alert("Login Successful");
+            let element: HTMLElement = document.getElementsByClassName('btn-close')[2] as HTMLElement;
+            element.click();
+            this.router.navigate(['/user-homepage'])
+            this.updateUserDetails()
+          }else{
+            alert("Login Unsuccessful");
+            this.router.navigate(['/']);
+          }
         })
       }else{
         alert("Your passwords doesn't match")
@@ -250,13 +245,13 @@ export class SidenavComponent implements OnInit {
     }  
   
   }
-  // get CurrentUser(){
-  //   let token = localStorage.getItem('token');
-  //   if(!token) return null;
+  get CurrentUser(){
+    let token = localStorage.getItem('token');
+    if(!token) return null;
 
-  //   return new JwtHelperService().decodeToken(token);
+    return new JwtHelperService().decodeToken(token);
 
-  // }
+  }
 
 }
 
