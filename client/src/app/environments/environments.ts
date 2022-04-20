@@ -9,5 +9,6 @@ export const environment = {
     selectedStore:"",
     storeId:"",
     city:"Gainesville",
-    numberOfItemsInCart:0
+    numberOfItemsInCart:0,
+    
 }

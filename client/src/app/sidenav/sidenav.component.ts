@@ -40,6 +40,7 @@ export class SidenavComponent implements OnInit {
     let token = localStorage.getItem('token');
     if (token){
       this.updateUserDetails()
+      this.getNumberOfitemsInCart()
       userdetails.loggedIn = true
       this.isLogin=true
       this.router.navigate(['/user-homepage'])
@@ -158,7 +159,9 @@ export class SidenavComponent implements OnInit {
   }
   getNumberOfitemsInCart(){
     this.api.cartdisplay(userdetails.id).subscribe((data: any) => {
-      var cartdetails= data
+      console.log(data.JWToken)
+      var cartdetails= new JwtHelperService().decodeToken(data.JWToken)
+      cartdetails=cartdetails.data
       var i=0
       for (let products of cartdetails){
         i = i+1

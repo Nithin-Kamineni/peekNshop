@@ -21,6 +21,8 @@ export class MapsService{
                 "Longitude: " + position.coords.longitude);
               this.lat = position.coords.latitude;
               this.lon = position.coords.longitude;
+              localStorage.setItem('lat',this.lat.toString());
+              localStorage.setItem('lan',this.lon.toString());
               environment.lat = this.lat.toString()
               environment.lon = this.lon.toString()
               environment.isLocation=true

@@ -87,7 +87,7 @@ func CartDeletion(w http.ResponseWriter, r *http.Request) {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	err = utils.DB.Exec("DELETE cart_items_dbs where user_ID = ? and product_ID = ?", cart.UserID, cart.ProductID).Error
+	err = utils.DB.Exec("DELETE from cart_items_dbs where user_ID = ? and product_ID = ?", cart.UserID, cart.ProductID).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
@@ -104,7 +104,7 @@ func ClearCart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = utils.DB.Exec("DELETE cart_items_dbs where userID = ?", cart.UserID).Error
+	err = utils.DB.Exec("DELETE from cart_items_dbs where user_id = ?", cart.UserID).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return

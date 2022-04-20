@@ -40,7 +40,10 @@ export class ApiService {
   cartdisplay(user_id:string){
     return this.http.post<any>('http://localhost:10000/cart', {"user_id":user_id})
   } 
-  removeProductFromCart(user_id:string, productID:string, quantity:string, created:string, modified:string){
-    return this.http.patch<any>('http://localhost:10000/cart', {"user_id":user_id,"productID":productID, "quantity":quantity,"created":created, "modified":modified})
+  removeProductFromCart(user_id:string, productID:string){
+    return this.http.put<any>('http://localhost:10000/cart/', {"user_id":user_id,"productID":productID})
+  }
+  emptycart(user_id:String){
+    return this.http.post<any>('http://localhost:10000/cart/clear-cart', {"user_id":user_id})
   }
 } 

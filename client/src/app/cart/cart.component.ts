@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { ApiService } from '../services/api.service';
 import { userdetails } from '../environments/User_Details'
 import { environment } from '../environments/environments';
+import { JwtHelperService } from '@auth0/angular-jwt';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -19,12 +20,16 @@ export class CartComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.cartdisplay(userdetails.id).subscribe((data: any) => {
-      this.cartdetails= data
-      console.log(data)
+      this.cartdetails= new JwtHelperService().decodeToken(data.JWToken)
+      this.cartdetails=this.cartdetails.data
+      
     })
   }
   checkout(){
     this.router.navigate(['/user-homepage/user/cart/payment'])
+  }
+  emptycart(){
+    this.api.emptycart(userdetails.id).subscribe((data: any) => {})
   }
   deleteFromCart(i:number){
     var k=0
@@ -35,10 +40,10 @@ export class CartComponent implements OnInit {
         this.quantity=cart.quantity
         this.created=cart.created
         this.modified=cart.modified
-        console.log(userdetails.id, this.productID, this.quantity, this.created, this.modified)
+        console.log(userdetails.id, this.productID)
       }
       k=k+1
     }
-    this.api.removeProductFromCart(userdetails.id, this.productID, this.quantity, this.created, this.modified)
+    this.api.removeProductFromCart(userdetails.id, this.productID).subscribe((data: any) => {})
   }
 }
