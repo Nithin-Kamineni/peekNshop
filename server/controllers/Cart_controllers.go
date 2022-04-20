@@ -8,7 +8,9 @@ import (
 	"src/utils"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 )
 
@@ -129,8 +131,22 @@ func CartDisplay(w http.ResponseWriter, r *http.Request) {
 		cart[0].Product_price = strings.Replace(cart[0].Product_price, "$", "", 1)
 	}
 
-	err = json.NewEncoder(w).Encode(cart)
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"issuer":  nil,
+		"expires": time.Now().Add(time.Hour * 24).Unix(),
+		"data":    cart,
+	})
+
+	token, err := claims.SignedString(jwtKey)
+	if err != nil {
+		// reply = models.LoginSignupReply{Message: "Internal Server Error", Allow: false}
+		// json.NewEncoder(w).Encode(reply)
+		json.NewEncoder(w).Encode(nil)
+	}
+
+	err = json.NewEncoder(w).Encode(models.JWToken{Token: token})
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
+
 }
