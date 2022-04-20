@@ -97,6 +97,7 @@ export class CatogoriesComponent implements OnInit {
 
       this.api.favstores(user_id, accesskey, favoriteStoreId).subscribe((data: any) => {
       console.log(data)
+      console.log(data.JWToken)
       })
 
       if(this.arr[i]==false){

@@ -128,17 +128,17 @@ export class SidenavComponent implements OnInit {
     this.isLogin=false
     userdetails.loggedIn=false
     userdetails.id=this.CurrentUser.data.id
-      userdetails.firstname=""
-      userdetails.lastname=""
-      userdetails.email=""
-      userdetails.password=""
-      userdetails.accesskey=""
-      userdetails.refreshkey=""
-      userdetails.address1=""
-      userdetails.address2=""
-      userdetails.address3=""
-      userdetails.fullname=""
-      environment.numberOfItemsInCart=0
+    userdetails.firstname=""
+    userdetails.lastname=""
+    userdetails.email=""
+    userdetails.password=""
+    userdetails.accesskey=""
+    userdetails.refreshkey=""
+    userdetails.address1=""
+    userdetails.address2=""
+    userdetails.address3=""
+    userdetails.fullname=""
+    environment.numberOfItemsInCart=0
     this.router.navigate(['/'])
   }
   
@@ -166,6 +166,9 @@ export class SidenavComponent implements OnInit {
     }
     
   }
+  favStores(){
+    this.router.navigate(['/user/favorate-stores'])
+  }
   cart(){
     this.router.navigate(['/user-homepage/user/cart'])
   }
@@ -185,7 +188,13 @@ export class SidenavComponent implements OnInit {
   }
 
   locationFormSubmit(){
-
+    var Street = this.locationForm.getRawValue().street;
+    var City = this.locationForm.getRawValue().city;
+    var State = this.locationForm.getRawValue().sate;
+    var Zipcode = this.locationForm.getRawValue().zipcode;
+    this.api.location(Street, City, State, Zipcode).subscribe((data: any) => {
+      console.log(data)
+    })
   }
   
 

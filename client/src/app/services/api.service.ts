@@ -46,4 +46,10 @@ export class ApiService {
   emptycart(user_id:String){
     return this.http.post<any>('http://localhost:10000/cart/clear-cart', {"user_id":user_id})
   }
+  location(street:string, city:string, state:string, zipcode:string){
+    return this.http.post<any>('http://localhost:10000/address', {"Street":street, "City":city, "State":state, "Zipcode":zipcode})
+  }
+  displayFavoriteStores(UserID:string){
+    return this.http.post<any>('http://localhost:10000/user/favorate-stores', { "UserID": UserID})
+  }
 } 
