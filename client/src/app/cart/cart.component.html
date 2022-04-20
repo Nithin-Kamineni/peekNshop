@@ -24,7 +24,7 @@
                             <td style="width: 25%;">{{product.Description}}</td>
                             <th style="width: 12%;">{{product.product_price}}</th>
                             <td style="width: 12%;">{{product.quantity}}</td>
-                            <td style="width: 12%;">Total</td>
+                            <td style="width: 12%;">{{product.product_price * product.quantity}}</td>
                             <td>
                                 <button class="btn btn-danger" (click)=deleteFromCart(i)><i class="fas fa-trash-alt"></i></button>
                             </td>
@@ -34,7 +34,7 @@
                             <td><button (click)="emptycart()" class="btn btn-danger">Empty Cart</button></td>
                             <td><button routerLink="/products" class="btn btn-primary">Shop More</button></td>
                             <td><button class="btn btn-success" (click)="checkout()">Checkout</button></td>
-                            <td><strong>Grand Total : $20</strong></td>
+                            <td><strong>Grand Total : ${{totalPrice}}</strong></td>
                         </tr>
                     </tbody>
                 </table>

@@ -127,6 +127,18 @@ export class SidenavComponent implements OnInit {
     this.removeFormDetails()
     this.isLogin=false
     userdetails.loggedIn=false
+    userdetails.id=this.CurrentUser.data.id
+      userdetails.firstname=""
+      userdetails.lastname=""
+      userdetails.email=""
+      userdetails.password=""
+      userdetails.accesskey=""
+      userdetails.refreshkey=""
+      userdetails.address1=""
+      userdetails.address2=""
+      userdetails.address3=""
+      userdetails.fullname=""
+      environment.numberOfItemsInCart=0
     this.router.navigate(['/'])
   }
   

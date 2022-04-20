@@ -16,13 +16,15 @@ export class CartComponent implements OnInit {
   quantity:any
   created:any
   modified:any
+  totalPrice!:number
+
   constructor(private api: ApiService, private router: Router) { }
 
   ngOnInit(): void {
     this.api.cartdisplay(userdetails.id).subscribe((data: any) => {
       this.cartdetails= new JwtHelperService().decodeToken(data.JWToken)
       this.cartdetails=this.cartdetails.data
-      
+      this.calculateTotalPrice()
     })
   }
   checkout(){
@@ -30,6 +32,13 @@ export class CartComponent implements OnInit {
   }
   emptycart(){
     this.api.emptycart(userdetails.id).subscribe((data: any) => {})
+  }
+  calculateTotalPrice(){
+    var sum=0
+    for (let cart of this.cartdetails){
+      sum=sum+(cart.product_price * cart.quantity)
+    }
+    this.totalPrice=sum
   }
   deleteFromCart(i:number){
     var k=0
