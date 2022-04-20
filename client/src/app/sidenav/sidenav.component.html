@@ -1,7 +1,7 @@
 <mat-toolbar >
   <mat-toolbar-row>
       <button mat-icon-button>
-          <mat-icon (click)="sidenav.toggle();">menu</mat-icon>
+          <mat-icon id="sidenavleftbutton"(click)="sidenav.toggle();">menu</mat-icon>
 
       </button>
       <h1>PeekNshop</h1>
@@ -54,8 +54,8 @@
          <a mat-list-item routerLink=""> Home</a>
          <a mat-list-item (click)=delivery()> Delivery</a>
          <a mat-list-item routerLink=""> Favorite stores</a>
-         <a mat-list-item routerLink="about"> About us</a>
-         <a mat-list-item routerLink="contact"> Contact us</a>
+         <a id ="about_us_btn"mat-list-item routerLink="about"> About us</a>
+         <a id ="contact_us_btn"mat-list-item routerLink="contact"> Contact us</a>
      </mat-nav-list>
  </mat-sidenav>
 
