@@ -33,13 +33,17 @@ export class ProductsComponent implements OnInit {
   }
   addtocart(i:number){
     console.log(this.productsdetails)
-      let k=0
+      var k=0
     for(let products of this.productsdetails){ 
       if (k==i){
-        this.api.addtocart(userdetails.id,products.id,products.quantity, products.created, products.modified).subscribe((data: any) => {
+        console.log(products)
+        var quantity = products.quantity
+        quantity=quantity.toString()
+        console.log(userdetails.id, products.productID, products.quantity, products.created, products.modified)
+        this.api.addtocart(userdetails.id, products.productID, quantity, products.created, products.modified).subscribe((data: any) => {
         })
-        
       }
+      k = k+1
     }
     this.getNumberOfItemsInCart()
   }
@@ -57,11 +61,23 @@ export class ProductsComponent implements OnInit {
     })
     
   }
-  increase(){
-    this.quantity++
+  increase(i:number){
+    var k=0
+    for (let products of this.productsdetails){
+      if (k==i){
+        products.quantity++
+      }
+      k=k+1
+    }
   }
-  decrease(){
-    this.quantity--
+  decrease(i:number){
+    var k=0
+    for (let products of this.productsdetails){
+      if (k==i){
+        products.quantity--
+      }
+      k=k+1
+    }
   }
   
 }
