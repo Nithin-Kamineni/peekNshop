@@ -6,9 +6,13 @@ import (
 	"net/http"
 	"src/models"
 	"src/utils"
+	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 )
+
+var jwtKey = []byte("SecretKey")
 
 func SendUserOrders(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -331,9 +335,6 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	//w.WriteHeader(statusCode: 200)
 	w.Header().Set("Content-Type", "application/json")
 
-	//params := mux.Vars(r)
-	//username := params["username"]
-	//fmt.Println(username)
 	var s models.User3
 	var reply models.LogInReply
 
@@ -368,8 +369,21 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 			}
 		} else {
 			fmt.Println("Login Sucessfull")
-			reply = models.LogInReply{Msg: "Login Sucessfull", UserDetails: s, AllowUsers: true}
-			err = json.NewEncoder(w).Encode(reply)
+
+			claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+				"issuer":  s.ID,
+				"expires": time.Now().Add(time.Hour * 24).Unix(),
+				"data":    s,
+			})
+
+			token, err := claims.SignedString(jwtKey)
+			if err != nil {
+				// reply = models.LoginSignupReply{Message: "Internal Server Error", Allow: false}
+				// json.NewEncoder(w).Encode(reply)
+				json.NewEncoder(w).Encode(nil)
+			}
+
+			err = json.NewEncoder(w).Encode(models.JWToken{Token: token})
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
 			}
@@ -393,6 +407,10 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(s.Email)
 	err = utils.DB.Raw("SELECT * FROM user3 WHERE email = ?", s.Email).Scan(&s1).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+
 	fmt.Println(s1.ID)
 	if s1.ID == "" {
 		s.ID = uuid.New().String()
@@ -402,8 +420,21 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusCreated)
 		} else {
 			w.WriteHeader(http.StatusCreated)
-			reply := models.LogInReply{Msg: "Login and sign-up Sucessfull", UserDetails: s, AllowUsers: true}
-			err = json.NewEncoder(w).Encode(reply)
+
+			claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+				"issuer":  s.ID,
+				"expires": time.Now().Add(time.Hour * 24).Unix(),
+				"data":    s,
+			})
+
+			token, err := claims.SignedString(jwtKey)
+			if err != nil {
+				// reply = models.LoginSignupReply{Message: "Internal Server Error", Allow: false}
+				// json.NewEncoder(w).Encode(reply)
+				json.NewEncoder(w).Encode(nil)
+			}
+
+			err = json.NewEncoder(w).Encode(models.JWToken{Token: token})
 			if err != nil {
 				sendErr(w, http.StatusInternalServerError, err.Error())
 			}
