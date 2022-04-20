@@ -7,6 +7,8 @@ describe('Contact us redirecting',()=>{
         cy.get("#name_label_cs").type("Nikhil Annarapu");
         cy.get("#email_label_cs").type("nikhil18@gmail.com");
         cy.get("#message_cs").type("fcgcjhvjhvjh");
-        cy.get("#contactussubmit_btn").click(); 
+        cy.get("#contactussubmit_btn").click();
+        cy.screenshot() 
+       
 
     })})
