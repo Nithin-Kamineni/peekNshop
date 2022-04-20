@@ -11,5 +11,5 @@ type Cart_items_db struct {
 	CreatedAt     string `json:"created"`
 	ModifiedAt    string `json:"modified"`
 	StoreID       string `json:"store_id"`
-	Price         string
+	Product_price string
 }

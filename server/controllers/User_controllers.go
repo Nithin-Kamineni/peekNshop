@@ -327,7 +327,6 @@ func ForgotUserDetails(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
-
 }
 
 func UserLogin(w http.ResponseWriter, r *http.Request) {

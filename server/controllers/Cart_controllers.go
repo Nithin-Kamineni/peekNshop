@@ -23,7 +23,7 @@ func CartAddition(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 	}
 	cart.Quantity = "1"
-	err = utils.DB.Raw("SELECT product_name, product_photo, description, price FROM store_inventories WHERE product_id = ?", cart.ProductID).Scan(&cart).Error
+	err = utils.DB.Raw("SELECT product_name, product_photo, description, product_price FROM store_inventories WHERE product_id = ?", cart.ProductID).Scan(&cart).Error
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
@@ -93,6 +93,22 @@ func CartDeletion(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func CartRemoval(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var cart models.Cart_items_db
+
+	err := json.NewDecoder(r.Body).Decode(&cart)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = utils.DB.Exec("DELETE cart_items_dbs where user_ID = ? and product_ID = ?", cart.UserID, cart.ProductID).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+}
+
 func ClearCart(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var cart models.Cart_items_db
@@ -127,7 +143,7 @@ func CartDisplay(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i := 0; i < len(cart); i++ {
-		cart[0].Price = strings.Replace(cart[0].Price, "$", "", 1)
+		cart[0].Product_price = strings.Replace(cart[0].Product_price, "$", "", 1)
 	}
 
 	err = json.NewEncoder(w).Encode(cart)
