@@ -43,6 +43,20 @@ func OrderPayment(w http.ResponseWriter, r *http.Request) {
 
 		orderProc.Review = ""
 		orderProc.Rating = 0.0
+
+		///
+		orderProc.ProductID = cartItems[i].ProductID
+		orderProc.UserID = cartItems[i].UserID
+		orderProc.Quantity = cartItems[i].Quantity
+
+		orderProc.Product_name = cartItems[i].Product_name
+		orderProc.Product_photo = cartItems[i].Product_photo
+
+		orderProc.Product_name = cartItems[i].Description
+
+		orderProc.StoreID = cartItems[i].StoreID //
+		///
+
 	}
 
 	err = utils.DB.Raw("SELECT quantity FROM store_inventories WHERE product_id = ?", orderProc.ProductID).Scan(&productQuantity).Error
