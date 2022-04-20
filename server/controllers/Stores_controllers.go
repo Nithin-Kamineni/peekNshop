@@ -317,14 +317,17 @@ func SendProductRating(w http.ResponseWriter, r *http.Request) {
 
 func ReturnLat(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Content-Type", "application/json")
 	var address models.Address
+
+	w.Header().Set("Content-Type", "application/json")
+
 	err := json.NewDecoder(r.Body).Decode(&address)
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	//address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
+
+	// address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
 	Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
 
 	params := "address=" + url.QueryEscape(address.Address) + "&" +
@@ -344,13 +347,47 @@ func ReturnLat(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//data1 := result{}
-	var f interface {
-		getHtml() string
-	}
-
+	var f interface{}
 	json.Unmarshal(body, &f)
 	fmt.Println(f)
 
 	json.NewEncoder(w).Encode(f)
 	defer resp.Body.Close()
+
+	// w.Header().Set("Content-Type", "application/json")
+	// var address models.Address
+	// err := json.NewDecoder(r.Body).Decode(&address)
+	// if err != nil {
+	// 	sendErr(w, http.StatusBadRequest, err.Error())
+	// 	return
+	// }
+	// //address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
+	// Key := "AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk"
+
+	// params := "address=" + url.QueryEscape(address.Address) + "&" +
+	// 	"key=" + url.QueryEscape(Key)
+	// path := fmt.Sprint("https://maps.googleapis.com/maps/api/geocode/json?", params)
+	// fmt.Println(path)
+	// resp, err := http.Get(path)
+
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// body, err := ioutil.ReadAll(resp.Body)
+
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// //data1 := result{}
+	// var f interface {
+	// 	getHtml() string
+	// }
+
+	// json.Unmarshal(body, &f)
+	// fmt.Println(f)
+
+	// json.NewEncoder(w).Encode(f)
+	// defer resp.Body.Close()
 }

@@ -16,6 +16,7 @@ export class ProductsComponent implements OnInit {
   productName=""
   price=""
   productsdetails:any
+  cartItems=environment.numberOfItemsInCart
   
   constructor(private productService: ProductService, private http: HttpClient, private api: ApiService) {}
 
@@ -24,6 +25,7 @@ export class ProductsComponent implements OnInit {
   ngOnInit() {
     this.productsdetails=this.api.getProducts().subscribe((data: any) => {
       this.productsdetails = data
+      console.log(this.productsdetails)
     })
     
   }
@@ -37,7 +39,19 @@ export class ProductsComponent implements OnInit {
         
       }
     }
-    
-    
+    this.getNumberOfItemsInCart()
+  }
+  getNumberOfItemsInCart(){
+    this.api.cartdisplay(userdetails.id).subscribe((data: any) => {
+      var cartdetails= data
+      var i=0
+      for (let products of cartdetails){
+        i = i+1
+        environment.numberOfItemsInCart=i
+        this.cartItems=i
+      }
+      console.log(environment.numberOfItemsInCart)
+      
+    })
   }
 }
