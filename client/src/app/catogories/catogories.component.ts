@@ -21,6 +21,7 @@ export class CatogoriesComponent implements OnInit {
   status = 'Enable';
   arr = new Array(19).fill(false);
   storesarr = new Array(19)
+  publix="Psublix"
 
   constructor(private http: HttpClient, private router: Router, private api: ApiService) { }
 

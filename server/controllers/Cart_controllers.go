@@ -22,7 +22,6 @@ func CartAddition(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusCreated)
 	}
-	cart.Quantity = "1"
 	err = utils.DB.Raw("SELECT product_name, product_photo, description, product_price FROM store_inventories WHERE product_id = ?", cart.ProductID).Scan(&cart).Error
 	if err != nil {
 		sendErr(w, http.StatusBadRequest, err.Error())
