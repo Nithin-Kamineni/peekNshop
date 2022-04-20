@@ -241,7 +241,7 @@ func ReturnStoreInv(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < len(store); i++ {
 		store[i].Quantity = "0"
 	}
-
+	//fmt.Print(userID)
 	if userID != "" {
 		err = utils.DB.Raw("SELECT * FROM cart_items_dbs WHERE user_id = ?", userID).Scan(&cart).Error
 		if err != nil {
@@ -252,7 +252,9 @@ func ReturnStoreInv(w http.ResponseWriter, r *http.Request) {
 		for i := 0; i < len(store); i++ {
 			for j := 0; j < len(cart); j++ {
 				if store[i].ProductID == cart[j].ProductID {
+					//fmt.Print(store[i].Quantity, cart[j].Quantity, " | ")
 					store[i].Quantity = cart[j].Quantity
+					break
 				}
 			}
 		}

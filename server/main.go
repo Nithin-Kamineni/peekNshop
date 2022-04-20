@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"src/controllers"
@@ -24,8 +23,17 @@ func CORS(next http.Handler) http.Handler {
 			return
 		}
 
-		fmt.Println("ok")
+		// cookie, err := r.Cookie("token")
+		// if err != nil {
+		// 	if err == http.ErrNoCookie {
+		// 		w.WriteHeader(http.StatusUnauthorized)
+		// 		return
+		// 	}
+		// 	w.WriteHeader(http.StatusBadRequest)
+		// 	return
+		// }
 
+		// tokenStr := cookie.Value
 		// Next
 		next.ServeHTTP(w, r)
 		return

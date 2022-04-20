@@ -1,5 +1,7 @@
 package models
 
+import "github.com/dgrijalva/jwt-go"
+
 type SignInReply struct {
 	Msg string
 }
@@ -12,6 +14,10 @@ type LogInReply struct {
 
 type Address struct {
 	Address string `json:"address"`
+}
+
+type JWToken struct {
+	Token string `json:"JWToken"`
 }
 
 type Coardinates struct {
@@ -28,6 +34,11 @@ type AddressForm struct {
 
 type HomePageCity struct {
 	City string `json:"city"`
+}
+
+type Claims struct {
+	Username string `json:"username"`
+	jwt.StandardClaims
 }
 
 type User3 struct {
