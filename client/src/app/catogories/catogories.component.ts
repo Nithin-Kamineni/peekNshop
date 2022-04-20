@@ -49,8 +49,8 @@ export class CatogoriesComponent implements OnInit {
     }
     
     this.api.getoffers().subscribe(data => {
-      this.offers = data;})
-
+      this.offers = data
+      console.log(this.offers);})
 
 
   // setTimeout(() => {  this.http.get<Stores>('http://localhost:10000/address/?'+'search=store'+'&lat='+ environment.lat+'&long='+environment.lon, {}).subscribe( (data: Stores) => {

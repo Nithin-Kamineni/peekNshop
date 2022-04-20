@@ -1,5 +1,5 @@
 <br>
-<ng-container >
+<ng-container *ngIf="cartdetails" >
     <div class="container">
         <div class="card-table">
             <div class="cart-product">
@@ -44,7 +44,7 @@
 </ng-container>
 
 
-<!-- <ng-container >
+<ng-container *ngIf="!cartdetails">
     <div class="container">
         <div class="card">
             <h5 class="card-title">My Cart</h5>
@@ -56,4 +56,4 @@
             <button routerLink="/products" class="btn btn-primary">Shop Now</button>
         </div>
     </div>
-</ng-container> -->
+</ng-container>
