@@ -339,15 +339,11 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 
 	username := r.URL.Query().Get("email")
 	passkey := r.URL.Query().Get("passkey")
-	//credentials := a.db.First(&s, "email = ?", username)
 	err := utils.DB.Raw("SELECT id FROM user3 WHERE email = ?", username).Scan(&s).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	// a.db.where("username = ?",username)
-	//fmt.Println(&s)
-	//data, err := json.Marshal(&s)
 
 	if s.ID == "" {
 		fmt.Println("User does not exist/registered")
@@ -400,10 +396,7 @@ func UserSignUp(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(s1.ID)
 	if s1.ID == "" {
 		s.ID = uuid.New().String()
-		//fmt.Println("if")
-		//fmt.Println(s.Firstname)
 		err = utils.DB.Table("user3").Save(&s).Error
-		//fmt.Println("if2")
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			w.WriteHeader(http.StatusCreated)

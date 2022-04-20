@@ -227,13 +227,37 @@ func FilterInventory(w http.ResponseWriter, r *http.Request) {
 func ReturnStoreInv(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store []models.Store_inventory
+	var cart []models.Cart_items_db
+
 	storeID := r.URL.Query().Get("store_id")
+	userID := r.URL.Query().Get("user_id")
 
 	err := utils.DB.Raw("SELECT * FROM store_inventories WHERE store_id = ?", storeID).Scan(&store).Error
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	for i := 0; i < len(store); i++ {
+		store[i].Quantity = "0"
+	}
+
+	if userID != "" {
+		err = utils.DB.Raw("SELECT * FROM cart_items_dbs WHERE user_id = ?", userID).Scan(&cart).Error
+		if err != nil {
+			sendErr(w, http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		for i := 0; i < len(store); i++ {
+			for j := 0; j < len(cart); j++ {
+				if store[i].ProductID == cart[j].ProductID {
+					store[i].Quantity = cart[j].Quantity
+				}
+			}
+		}
+	}
+
 	err = json.NewEncoder(w).Encode(store)
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
