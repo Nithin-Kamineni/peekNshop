@@ -19,6 +19,7 @@ import { StoresComponent } from './stores/stores.component';
 import { DelivaryPageComponent } from './delivary-page/delivary-page.component';
 import { FavorateStoresComponent } from './favorate-stores/favorate-stores.component';
 import { CartComponent } from './cart/cart.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 
 const routes: Routes = [
@@ -41,6 +42,7 @@ const routes: Routes = [
   {path: "delivaty-page", component: DelivaryPageComponent},
   {path: "user/favorate-stores", component: FavorateStoresComponent},
   {path: "user-homepage/user/cart", component: CartComponent},
+  {path: "user-homepage/user/cart/checkout", component: CheckoutComponent},
 ];
 
 @NgModule({

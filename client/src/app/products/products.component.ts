@@ -5,6 +5,7 @@ import { environment} from '../environments/environments'
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http"
 import { ApiService } from '../services/api.service';
 import { userdetails } from '../environments/User_Details'
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -18,6 +19,7 @@ export class ProductsComponent implements OnInit {
   productsdetails:any
   cartItems=environment.numberOfItemsInCart
   
+  quantity=0;
   constructor(private productService: ProductService, private http: HttpClient, private api: ApiService) {}
 
   
@@ -53,5 +55,13 @@ export class ProductsComponent implements OnInit {
       console.log(environment.numberOfItemsInCart)
       
     })
+    
   }
+  increase(){
+    this.quantity++
+  }
+  decrease(){
+    this.quantity--
+  }
+  
 }

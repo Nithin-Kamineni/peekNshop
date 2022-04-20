@@ -43,6 +43,9 @@ import { StoresComponent } from './stores/stores.component';
 import { DelivaryPageComponent } from './delivary-page/delivary-page.component';
 import { FavorateStoresComponent } from './favorate-stores/favorate-stores.component';
 import { CartComponent } from './cart/cart.component';
+import { AdminProductsComponent } from './admin/admin-products/admin-products.component';
+import { AdminUsersComponent } from './admin/admin-users/admin-users.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 
 @NgModule({
   declarations: [
@@ -74,6 +77,9 @@ import { CartComponent } from './cart/cart.component';
     DelivaryPageComponent,
     FavorateStoresComponent,
     CartComponent,
+    AdminProductsComponent,
+    AdminUsersComponent,
+    CheckoutComponent,
   ],
   imports: [
     BrowserModule,

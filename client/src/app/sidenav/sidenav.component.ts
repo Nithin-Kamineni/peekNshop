@@ -10,6 +10,7 @@ import * as shajs from 'sha.js';
 import { ApiService } from '../services/api.service'
 import { userdetails } from '../environments/User_Details'
 import { observable } from 'rxjs/internal/symbol/observable';
+import { JwtHelperService } from '@auth0/angular-jwt';
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -112,6 +113,7 @@ export class SidenavComponent implements OnInit {
     this.signupForm.controls['signup_confirm_password'].setValue('');
   }
   logout(){
+    // localStorage.removeItem('token');
     this.removeFormDetails()
     this.isLogin=false
     userdetails.loggedIn=false
@@ -164,7 +166,8 @@ export class SidenavComponent implements OnInit {
   
 
   loginFormSubmit(): void {
-
+    // let returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/';
+    // localStorage.setItem('returnUrl',returnUrl);
     if (this.loginForm.valid) {
       var email = this.loginForm.getRawValue().email;
       var password = this.loginForm.getRawValue().password;
@@ -172,6 +175,14 @@ export class SidenavComponent implements OnInit {
       password = shajs('sha256').update(password).digest('hex')
 
       this.api.login(email, password).subscribe((data: LoginModel) => {
+        // if(data && data.token){
+          //   localStorage.setItem('token',data.token);
+          //   alert("Login Successful");
+          //   this.router.navigate([returnUrl || '/']);
+          // }else{
+          //   alert("Login Unsuccessful");
+          //   this.router.navigate(['/login']);
+          // }
         console.log(data)
         var details = Object.values(data.UserDetails)
         console.log(details[0])
@@ -239,6 +250,13 @@ export class SidenavComponent implements OnInit {
     }  
   
   }
+  // get CurrentUser(){
+  //   let token = localStorage.getItem('token');
+  //   if(!token) return null;
+
+  //   return new JwtHelperService().decodeToken(token);
+
+  // }
 
 }
 
