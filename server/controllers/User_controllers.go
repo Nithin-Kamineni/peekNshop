@@ -38,10 +38,28 @@ func SendUserOrders(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		err = json.NewEncoder(w).Encode(orders)
+		claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+			"issuer":  nil,
+			"expires": time.Now().Add(time.Hour * 24).Unix(),
+			"data":    orders,
+		})
+
+		token, err := claims.SignedString(jwtKey)
+		if err != nil {
+			// reply = models.LoginSignupReply{Message: "Internal Server Error", Allow: false}
+			// json.NewEncoder(w).Encode(reply)
+			json.NewEncoder(w).Encode(nil)
+		}
+
+		err = json.NewEncoder(w).Encode(models.JWToken{Token: token})
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 		}
+
+		// err = json.NewEncoder(w).Encode(orders)
+		// if err != nil {
+		// 	sendErr(w, http.StatusInternalServerError, err.Error())
+		// }
 	}
 }
 
@@ -148,7 +166,20 @@ func ShowFavorateStores(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("----------")
 			storeInfs = append(storeInfs, storeInf)
 		}
-		err = json.NewEncoder(w).Encode(storeInfs)
+		claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+			"issuer":  nil,
+			"expires": time.Now().Add(time.Hour * 24).Unix(),
+			"data":    storeInfs,
+		})
+
+		token, err := claims.SignedString(jwtKey)
+		if err != nil {
+			// reply = models.LoginSignupReply{Message: "Internal Server Error", Allow: false}
+			// json.NewEncoder(w).Encode(reply)
+			json.NewEncoder(w).Encode(nil)
+		}
+
+		err = json.NewEncoder(w).Encode(models.JWToken{Token: token})
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 		}
@@ -327,7 +358,6 @@ func ForgotUserDetails(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
-
 }
 
 func UserLogin(w http.ResponseWriter, r *http.Request) {
@@ -371,7 +401,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Login Sucessfull")
 
 			claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-				"issuer":  s.ID,
+				"issuer":  nil,
 				"expires": time.Now().Add(time.Hour * 24).Unix(),
 				"data":    s,
 			})

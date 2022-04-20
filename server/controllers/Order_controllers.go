@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 )
 
@@ -43,6 +44,20 @@ func OrderPayment(w http.ResponseWriter, r *http.Request) {
 
 		orderProc.Review = ""
 		orderProc.Rating = 0.0
+
+		///
+		orderProc.ProductID = cartItems[i].ProductID
+		orderProc.UserID = cartItems[i].UserID
+		orderProc.Quantity = cartItems[i].Quantity
+
+		orderProc.Product_name = cartItems[i].Product_name
+		orderProc.Product_photo = cartItems[i].Product_photo
+
+		orderProc.Product_name = cartItems[i].Description
+
+		orderProc.StoreID = cartItems[i].StoreID //
+		///
+
 	}
 
 	err = utils.DB.Raw("SELECT quantity FROM store_inventories WHERE product_id = ?", orderProc.ProductID).Scan(&productQuantity).Error
@@ -98,11 +113,24 @@ func DisplayOrders(w http.ResponseWriter, r *http.Request) { //secure
 		sendErr(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"issuer":  nil,
+		"expires": time.Now().Add(time.Hour * 24).Unix(),
+		"data":    orders,
+	})
 
-	err = json.NewEncoder(w).Encode(orders)
+	token, err := claims.SignedString(jwtKey)
+	if err != nil {
+		// reply = models.LoginSignupReply{Message: "Internal Server Error", Allow: false}
+		// json.NewEncoder(w).Encode(reply)
+		json.NewEncoder(w).Encode(nil)
+	}
+
+	err = json.NewEncoder(w).Encode(models.JWToken{Token: token})
 	if err != nil {
 		sendErr(w, http.StatusInternalServerError, err.Error())
 	}
+
 }
 
 func OrderReview(w http.ResponseWriter, r *http.Request) { //secure
