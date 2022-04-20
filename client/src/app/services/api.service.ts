@@ -32,7 +32,7 @@ export class ApiService {
     return  this.http.get<Stores>('http://localhost:10000/stores/?'+'search=store'+'&lat='+ lat+'&long='+lon, {})
   }
   getProducts(){
-    return this.http.get<any>('http://localhost:10000/stores/items?store_id='+environment.storeId+"&Suser_id"+userdetails.id, {})
+    return this.http.get<any>('http://localhost:10000/stores/items?store_id='+environment.storeId+"&user_id="+userdetails.id, {})
   }
   addtocart(user_id:string, productID:string, quantity:string, created:string, modified:string){
     return this.http.post<any>('http://localhost:10000/cart/additem', {"user_id":user_id,"productID":productID, "quantity":quantity,"created":created, "modified":modified})
