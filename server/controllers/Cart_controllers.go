@@ -128,7 +128,7 @@ func CartDisplay(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i := 0; i < len(cart); i++ {
-		cart[0].Product_price = strings.Replace(cart[0].Product_price, "$", "", 1)
+		cart[i].Product_price = strings.Replace(cart[i].Product_price, "$", "", 1)
 	}
 
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
