@@ -62,7 +62,7 @@ func main() {
 	router.HandleFunc("/address/city", controllers.HomePageReload).Methods("POST") //static to google api
 	router.HandleFunc("/contact", controllers.Contact).Methods("POST")             //this
 	router.HandleFunc("/offers", controllers.ReturnOffers)                         //static
-	router.HandleFunc("/address", controllers.ReturnLat).Methods("POST")           //*returning lat
+	router.HandleFunc("/address", controllers.ConvAddressToCord).Methods("POST")   //*returning lat
 	router.HandleFunc("/stores/", controllers.ReturnNearBy)                        //filter data from interface
 
 	router.HandleFunc("/stores/add", controllers.AddStore).Methods("POST")                         //*add store information

@@ -77,8 +77,8 @@ func ConvAddressToCord(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	searchAdd := addressForm.Street + addressForm.City + addressForm.State + addressForm.Zipcode
-
+	searchAdd := addressForm.Street + "+" + addressForm.City + "+" + addressForm.State + "+" + addressForm.Zipcode
+	fmt.Println(searchAdd)
 	//address := "1600+Amphitheatre+Parkway,+Mountain+View,+CA"
 
 	address := searchAdd
