@@ -25,13 +25,18 @@ Backend: Golang #using Mux
 ```
 
 <strong>Demo Video of the project - </strong>
-[Demo Video of PeekNshop](https://www.youtube.com/watch?v=bLQmdahIzR0)
+[Demo Video of PeekNshop](https://www.youtube.com/watch?v=bLQmdahIzR0)  (Too big to upload)
 
 <strong>Cypress test video - </strong>
-[Cypress test video](https://youtu.be/RTktAoyVcZU)
+[Cypress test video]
+
+https://user-images.githubusercontent.com/45183759/164371453-d06eae09-7d30-4060-9d6d-0eda3d9ebe6a.mp4
+
 
 <strong>Backend unit test video - </strong>
-[Backend unit test video](https://youtu.be/fgYtMIBUJJQ)
+[Backend unit test video]
+
+https://user-images.githubusercontent.com/45183759/164371471-27594764-d700-4af8-ab74-eb358dab1803.mp4
 
 
 ### API Documentation is [here](https://github.com/Nithin-Kamineni/peekNshop/wiki/REST-API-Documentation)
