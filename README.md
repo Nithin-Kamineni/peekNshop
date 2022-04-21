@@ -24,11 +24,23 @@ Database: SQLite #using gorm
 Backend: Golang #using Mux
 ```
 
+<strong>Demo Video of the project - </strong>
+
+
+<strong>Cypress test video - </strong>
+
+
+<strong>Backend unit test video - </strong>
+
+
+
 ### API Documentation is [here](https://github.com/Nithin-Kamineni/peekNshop/wiki/REST-API-Documentation)
 
 ### Project Sprint Board is [here](https://github.com/Nithin-Kamineni/peekNshop/projects/1)
 
-### Sprint 4 delivarables is [here](https://github.com/Nithin-Kamineni/peekNshop/projects/1)
+### Sprint 4 delivarables are [here](https://github.com/Nithin-Kamineni/peekNshop/blob/main/sprint.md)
+
+### File structure is [here](https://github.com/Nithin-Kamineni/peekNshop/wiki/File-Structure)
 
 # Running the project
 Step 1: [Introduction and Environment Setup for GoLang (Windows & Mac)](https://www.youtube.com/watch?v=dgIh-VYcWYw "Introduction and Environment Setup for GoLang (Windows & Mac)")
