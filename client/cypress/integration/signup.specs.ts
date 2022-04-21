@@ -36,7 +36,7 @@ describe('Signup Feature',()=>{
         cy.get('#signupbutton').click()
         cy.get('#id_firstname2').type("Name 1");
         cy.get('#id_lastname2').type("Name 2")
-        cy.get('#id_signup_email2').type("T014@gmail.com");
+        cy.get('#id_signup_email2').type("T017@gmail.com");
         cy.get('#id_Signup_Password2').type("Password1");
         cy.get('#id_ConfPassword2').type("Password1");
         cy.get("#btn_Signup_Submit2").should("not.be.disabled");
