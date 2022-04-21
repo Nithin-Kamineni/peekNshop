@@ -34,7 +34,7 @@
      
 
      <button *ngIf="isLogin" class="byn btn-primary" style="background-color: Transparent;background-repeat:no-repeat; border: none;">
-      <i style="font-size:30px;" (click)="cart()" class="fas fa-cart-plus"></i>
+      <i style="font-size:30px;" id="cartButton" (click)="cart()" class="fas fa-cart-plus"></i>
       <div style="font-size: 10px;" class="badge bg-danger">{{cartItems}}</div>
     </button>
      <button *ngIf = "isLogin" type="button" class="btn btn-outline-danger" style="margin-left: 10px;" id="logoutbutton" data-bs-toggle="modal" (click)='logout()'data-bs-target="#logoutModal">
@@ -54,8 +54,8 @@
          <a mat-list-item routerLink=""> Home</a>
          <a mat-list-item id="deliverySidenav" (click)=delivery()> Delivery</a>
          <a mat-list-item id="favoriteSidenav"(click)="favStores()" routerLink=""> Favorite stores</a>
-         <a mat-list-item routerLink="about"> About us</a>
-         <a mat-list-item routerLink="contact"> Contact us</a>
+         <a mat-list-item id="aboutUsSidenav"routerLink="about"> About us</a>
+         <a mat-list-item id="contactUs" routerLink="contact"> Contact us</a>
      </mat-nav-list>
  </mat-sidenav>
 
@@ -118,7 +118,7 @@
    <div class="modal-content">
      <div class="modal-header">
        <h3 class="modal-title" id="loginModalLabel">PeekNshop login</h3>
-       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       <button type="button" class="btn-close" id="loginCloseButton" data-bs-dismiss="modal" aria-label="Close"></button>
      </div>
      <div class="modal-body">
        <form id="loginform" [formGroup]="loginForm" (ngSubmit)="loginFormSubmit()" >

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-contact',
@@ -9,9 +10,13 @@ export class ContactComponent implements OnInit {
   focus: any;
   focus1: any;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+  sendMessage(){
+    alert("message sent")
+    this.router.navigate(['/'])
   }
 
 }
