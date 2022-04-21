@@ -19,11 +19,13 @@ By using peekNshop users can look at the store's inventory and know whether the 
 > Technical stack, their pre-requisites and how to setup and run both frontend and backend can be found at this [wiki](https://github.com/Nithin-Kamineni/peekNshop/wiki/Installation)
 
 ### DEMO
+[Demo Video of PeekNshop](https://www.youtube.com/watch?v=bLQmdahIzR0)
 
-Front End Tests:
+<strong>Cypress test video - </strong>
+[Cypress test video](https://github.com/Nithin-Kamineni/peekNshop/tree/main/client/cypress/videos)
 
-  
-Backend Tests:
+<strong>Backend unit test video - </strong>
+[Backend unit test video](https://youtu.be/fgYtMIBUJJQ)
 
 
 
