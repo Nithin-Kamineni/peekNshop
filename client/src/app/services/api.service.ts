@@ -23,7 +23,7 @@ export class ApiService {
     return this.http.post<SignupModel>('http://localhost:10000/user', { firstname: first_name, lastname: last_name, email: email, password: password })
   }
   favstores(user_id: string, accesskey:string, favoriteStoreId: string): Observable<any>{
-    return this.http.post<any>('http://localhost:10000/user/favorate-stores', { UserId: user_id, Acesskey: accesskey, FavorateStoreId: favoriteStoreId})
+    return this.http.post<any>('http://localhost:10000/user/favorate-stores', { UserId: user_id, FavorateStoreId: favoriteStoreId})
   }
   getoffers(): Observable<any>{
     return  this.http.get<offers>('http://localhost:10000/offers')

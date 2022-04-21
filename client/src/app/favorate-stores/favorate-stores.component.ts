@@ -13,7 +13,6 @@ export class FavorateStoresComponent implements OnInit {
   ngOnInit(): void {
     this.api.displayFavoriteStores(userdetails.id).subscribe((data: any) => {
       console.log(data)
-      console.log(data.JWToken)
     })
   }
 

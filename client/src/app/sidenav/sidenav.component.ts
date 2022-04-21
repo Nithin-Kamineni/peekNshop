@@ -31,11 +31,12 @@ export class SidenavComponent implements OnInit {
   storesSearchText!:string;
   cartItems = environment.numberOfItemsInCart;
   returnUrl!: string;
-
+  routerString!:String
   
 
   constructor(private http: HttpClient, private router: Router,public service: MapsService, private api: ApiService, private route: ActivatedRoute,) { }
   ngOnInit(): void {
+    this.routerString='/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
     let token = localStorage.getItem('token');
     if (token){
@@ -194,7 +195,18 @@ export class SidenavComponent implements OnInit {
     var Zipcode = this.locationForm.getRawValue().zipcode;
     this.api.location(Street, City, State, Zipcode).subscribe((data: any) => {
       console.log(data)
+      environment.lat = data.results[0].geometry.location.lat
+      environment.lon = data.results[0].geometry.location.lng
     })
+    let element: HTMLElement = document.getElementsByClassName('btn-close')[0] as HTMLElement;
+            element.click();
+    if (this.routerString == '/'){
+      this.router.navigate(['/.'])
+      this.routerString='/.'
+    }else{
+      this.router.navigate(['/'])
+      this.routerString='/'
+    }
   }
   
 

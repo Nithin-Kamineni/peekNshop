@@ -104,11 +104,11 @@
 
   <div class="card-columns"> 
     <div *ngFor="let x of stores.results; let i = index" class="card">
-      <img class="card-img-top" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=200&photo_reference={{x.photos[0].photo_reference}}&key=AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk" height="250px" width="200px" alt="Card image cap">
+      <img class="card-img-top" src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=10000&photo_reference={{x.photos[0].photo_reference}}&key=AIzaSyD02WdNCJWC82GGZJ_4rkSKAmQetLJSbDk" height="250px" width="200px" alt="Card image cap">
       <div class="card-body">
         <h3 class="card-title" style="color: black;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;"><strong>{{x.name}}</strong></h3>
         <p style="color: black;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{x.vicinity}}</p> 
-        <a class="btn btn-primary" (click)="visitStore(i)" style="background-color:gray;">Visit</a>
+        <a class="btn btn-primary" (click)="visitStore(i)">Visit</a>
         <a class="btn btn-primary" style="margin-left: 10px;background-color:gray;"
         (click)="favorite(i)"><i class="bi bi-heart-fill"></i></a>
       </div> 
