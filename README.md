@@ -25,14 +25,13 @@ Backend: Golang #using Mux
 ```
 
 <strong>Demo Video of the project - </strong>
-
+[Demo Video of PeekNshop](https://www.youtube.com/watch?v=bLQmdahIzR0)
 
 <strong>Cypress test video - </strong>
-
+[Cypress test video](https://github.com/Nithin-Kamineni/peekNshop/tree/main/client/cypress/videos)
 
 <strong>Backend unit test video - </strong>
-
-https://youtu.be/fgYtMIBUJJQ
+[Backend unit test video](https://youtu.be/fgYtMIBUJJQ)
 
 
 ### API Documentation is [here](https://github.com/Nithin-Kamineni/peekNshop/wiki/REST-API-Documentation)
@@ -80,4 +79,4 @@ Vamsi Pachamatla: vamsi.pachamatla@ufl.edu github - vamsi3379
 Mattaparthi Nitish Veera: nitish.veera@ufl.edu github - VeeraNitish7
 
 
-### Deployment of the application is [peekNShop](https://github.com/Nithin-Kamineni/peekNshop/projects/1)
+### Deployment of the backend of thee application is [Back end peekNShop](https://git.heroku.com/pure-temple-70794.git)
