@@ -85,3 +85,24 @@ Mattaparthi Nitish Veera: nitish.veera@ufl.edu github - VeeraNitish7
 
 ### Deployment of the frontendapp of the application is [frontend peekNShop](https://ubiquitous-biscochitos-d3a939.netlify.app)
 ### Deployment of the backend of the application is [backend peekNShop](https://git.heroku.com/pure-temple-70794.git)
+
+## Frontend screenshots
+<img width="1440" alt="Screenshot 2022-04-21 at 12 34 28 AM" src="https://user-images.githubusercontent.com/48962308/164381966-91edf596-5d0b-4957-951f-ce17009ad6c5.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 34 42 AM" src="https://user-images.githubusercontent.com/48962308/164381978-90f23600-16b4-4046-9b78-38b8122be4db.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 34 56 AM" src="https://user-images.githubusercontent.com/48962308/164381993-9e9c7eda-5b29-46a5-9f5b-829f57172f60.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 35 02 AM" src="https://user-images.githubusercontent.com/48962308/164382024-d2665e80-92a2-48fe-a786-887842c939de.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 35 10 AM" src="https://user-images.githubusercontent.com/48962308/164382041-56046a3b-fc81-4f4b-9b8c-a05370355940.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 35 16 AM" src="https://user-images.githubusercontent.com/48962308/164382054-177cb551-5025-4aad-9b1c-d5de5145ce5f.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 35 22 AM" src="https://user-images.githubusercontent.com/48962308/164382069-150061d7-8f71-4cc9-af8f-bb6e59fbb100.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 35 32 AM" src="https://user-images.githubusercontent.com/48962308/164382080-ad3f29bb-3580-4d5d-85ff-003c1d92edd9.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 35 37 AM" src="https://user-images.githubusercontent.com/48962308/164382085-20b3168f-16f9-4755-873b-6cc8c4c49851.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 37 42 AM" src="https://user-images.githubusercontent.com/48962308/164382087-598040c9-f2f2-4ee7-9edc-5194b9af02af.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 37 57 AM" src="https://user-images.githubusercontent.com/48962308/164382093-5d6b8fe1-d88e-40cc-9f72-b6e51aa98f24.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 38 02 AM" src="https://user-images.githubusercontent.com/48962308/164382099-1479c0fc-d972-461c-8744-68a7fa3d0784.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 38 18 AM" src="https://user-images.githubusercontent.com/48962308/164382105-dbe31766-5c87-49e9-bf48-e7e151a7f8ab.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 38 26 AM" src="https://user-images.githubusercontent.com/48962308/164382111-885199e2-370d-4fcc-9307-e76df3a4e193.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 38 42 AM" src="https://user-images.githubusercontent.com/48962308/164382114-b7463322-a0a8-476f-a796-98e3ec566b94.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 38 51 AM" src="https://user-images.githubusercontent.com/48962308/164382119-ace1af1a-3789-4edf-bad3-737ebf679988.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 38 58 AM" src="https://user-images.githubusercontent.com/48962308/164382132-2917193d-ba64-4823-8c7f-f345dc899e0c.png">
+<img width="1440" alt="Screenshot 2022-04-21 at 12 39 06 AM" src="https://user-images.githubusercontent.com/48962308/164382135-0e91d390-b65e-40e5-88ab-d7c1a1ef6be1.png">
+
