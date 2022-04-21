@@ -8,7 +8,7 @@
 #### FrontEnd
 - Vamsi Pachamatla: vamsi.pachamatla@ufl.edu github - vamsi3379
 
-- Mattaparthi Nitish Veera: nitish.veera@ufl.edu github - VeeraNitish7
+- Mattaparthi Nitish Veera: veeramattaparthi@ufl.edu github - VeeraNitish7
 
 Github repository link: https://github.com/Nithin-Kamineni/peekNshop.git
 
