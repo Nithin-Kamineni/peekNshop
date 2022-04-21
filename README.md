@@ -78,5 +78,5 @@ Vamsi Pachamatla: vamsi.pachamatla@ufl.edu github - vamsi3379
 
 Mattaparthi Nitish Veera: nitish.veera@ufl.edu github - VeeraNitish7
 
-
-### Deployment of the backend of thee application is [Back end peekNShop](https://git.heroku.com/pure-temple-70794.git)
+### Deployment of the frontendapp of the application is [frontend peekNShop](https://ubiquitous-biscochitos-d3a939.netlify.app)
+### Deployment of the backend of the application is [backend peekNShop](https://git.heroku.com/pure-temple-70794.git)
