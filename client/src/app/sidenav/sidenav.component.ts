@@ -31,7 +31,8 @@ export class SidenavComponent implements OnInit {
   storesSearchText!:string;
   cartItems = environment.numberOfItemsInCart;
   returnUrl!: string;
-  routerString!:String
+  routerString!:String;
+  wrongUser!:boolean;
   
 
   constructor(private http: HttpClient, private router: Router,public service: MapsService, private api: ApiService, private route: ActivatedRoute,) { }
@@ -233,6 +234,7 @@ export class SidenavComponent implements OnInit {
             this.router.navigate(['/user-homepage'])
             this.updateUserDetails()
           }else{
+            this.wrongUser=true
             alert("Login Unsuccessful");
             this.router.navigate(['/']);
           }
@@ -266,6 +268,7 @@ export class SidenavComponent implements OnInit {
             this.router.navigate(['/user-homepage'])
             this.updateUserDetails()
           }else{
+            this.wrongUser=true
             alert("Login Unsuccessful");
             this.router.navigate(['/']);
           }

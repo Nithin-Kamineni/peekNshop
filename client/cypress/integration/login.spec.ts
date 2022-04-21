@@ -3,17 +3,19 @@ describe('Login Feature',()=>{
     it("Valid Credential Testing",()=>{
         cy.visit('http://localhost:4200/');
         cy.get('#loginbutton').click()
-        cy.get("#id_email").type("nitin1@gmail.com");
-        cy.get("#id_Password").type("sai");
-        cy.get("#btn_init_submit").click(); 
+        cy.get("#id_email1").type("admin@gmail.com");
+        cy.get("#id_Password1").type("admin");
+        cy.get("#btn_init_submit1").click(); 
+        cy.url().should('include', '/user-homepage')
         cy.screenshot() 
     })
     it("Invalid Credential Testing",()=>{
         cy.visit('http://localhost:4200/');
         cy.get('#loginbutton').click()
-        cy.get("#id_email").type("T01@gmail.com");
-        cy.get("#id_Password").type("Test_Password_001");
-        cy.get("#btn_init_submit").click();
+        cy.get("#id_email1").type("T01@gmail.com");
+        cy.get("#id_Password1").type("Test_Password_001");
+        cy.get("#btn_init_submit1").click();
+        cy.url().should('include', '/')
         cy.screenshot() 
     })
     
