@@ -23,7 +23,7 @@ export class ApiService {
     return this.http.post<SignupModel>('http://localhost:10000/user', { firstname: first_name, lastname: last_name, email: email, password: password })
   }
   favstores(user_id: string, accesskey:string, favoriteStoreId: string): Observable<any>{
-    return this.http.post<any>('http://localhost:10000/user/favorate-stores', { UserId: user_id, Acesskey: accesskey, FavorateStoreId: favoriteStoreId})
+    return this.http.post<any>('http://localhost:10000/user/favorate-stores', { UserId: user_id, FavorateStoreId: favoriteStoreId})
   }
   getoffers(): Observable<any>{
     return  this.http.get<offers>('http://localhost:10000/offers')
@@ -45,5 +45,11 @@ export class ApiService {
   }
   emptycart(user_id:String){
     return this.http.post<any>('http://localhost:10000/cart/clear-cart', {"user_id":user_id})
+  }
+  location(street:string, city:string, state:string, zipcode:string){
+    return this.http.post<any>('http://localhost:10000/address', {"Street":street, "City":city, "State":state, "Zipcode":zipcode})
+  }
+  displayFavoriteStores(UserID:string){
+    return this.http.post<any>('http://localhost:10000/user/favorate-stores', { "UserID": UserID})
   }
 } 

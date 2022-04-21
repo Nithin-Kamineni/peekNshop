@@ -25,6 +25,7 @@ import { CheckoutComponent } from './checkout/checkout.component';
 const routes: Routes = [
   {path: "product/:id", component: ProductPageComponent},
   {path: "", component: HomepageComponent},
+  {path: ".", component: HomepageComponent},
 
   {path: "user-homepage/user", component: UserComponent},
   {path: "user-homepage/userchangeaddress", component: ChangeAddresspageComponent},

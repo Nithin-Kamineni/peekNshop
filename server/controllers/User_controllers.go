@@ -166,20 +166,20 @@ func ShowFavorateStores(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("----------")
 			storeInfs = append(storeInfs, storeInf)
 		}
-		claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-			"issuer":  nil,
-			"expires": time.Now().Add(time.Hour * 24).Unix(),
-			"data":    storeInfs,
-		})
+		// claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		// 	"issuer":  nil,
+		// 	"expires": time.Now().Add(time.Hour * 24).Unix(),
+		// 	"data":    storeInfs,
+		// })
 
-		token, err := claims.SignedString(jwtKey)
-		if err != nil {
-			// reply = models.LoginSignupReply{Message: "Internal Server Error", Allow: false}
-			// json.NewEncoder(w).Encode(reply)
-			json.NewEncoder(w).Encode(nil)
-		}
+		// token, err := claims.SignedString(jwtKey)
+		// if err != nil {
+		// 	// reply = models.LoginSignupReply{Message: "Internal Server Error", Allow: false}
+		// 	// json.NewEncoder(w).Encode(reply)
+		// 	json.NewEncoder(w).Encode(nil)
+		// }
 
-		err = json.NewEncoder(w).Encode(models.JWToken{Token: token})
+		err = json.NewEncoder(w).Encode(storeInfs)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 		}
