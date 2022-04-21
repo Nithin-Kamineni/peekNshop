@@ -1,3 +1,6 @@
+# Project description:
+The application will display items and inventories of local stores. The user can view the stores near their vicinity and observe the items available in that store. The users can also order the things they want to be delivered to their homes or office. The items that need to be paid will be done by freelance delivery personnel, like students who pass by the exact location and want to earn some quick money to provide the items. The user can observe the store traffic from the application. The newly available inventory can be added, and not available stock can be updated or deleted. This application helps local stores deliver their items by implementing a freelance delivery feature.
+
 # Problem Statement
 
 People go to the store to buy things, but sometimes those things may not be available in that store. This waste lot of time for people who want to buy things and not find them in the store they went to.
@@ -5,9 +8,6 @@ People go to the store to buy things, but sometimes those things may not be avai
 # Solutions
 
 By using peekNShop users can look at the store's inventory and know whether the items they are looking for are available or not. They can also find the best deal in terms of cost and quality for the items they are looking for with our application.
-
-# Project description:
-The application displays the inventories of the stores that the user wants to see on the website. The application has all kinds of filters from which the user can look at his choices of where he wants to buy and make an informed decision.
 
 # Features
 - finding the items avilable in the stores near the user
@@ -23,6 +23,12 @@ Frontend: Angular, Typescript
 Database: SQLite #using gorm
 Backend: Golang #using Mux
 ```
+
+### API Documentation is [here](https://github.com/Nithin-Kamineni/peekNshop/wiki/REST-API-Documentation)
+
+### Project Sprint Board is [here](https://github.com/Nithin-Kamineni/peekNshop/projects/1)
+
+### Sprint 4 delivarables is [here](https://github.com/Nithin-Kamineni/peekNshop/projects/1)
 
 # Running the project
 Step 1: [Introduction and Environment Setup for GoLang (Windows & Mac)](https://www.youtube.com/watch?v=dgIh-VYcWYw "Introduction and Environment Setup for GoLang (Windows & Mac)")
@@ -59,3 +65,6 @@ Saieswar Reddy Vaka: vaka.s@ufl.edu github - sai6221
 Vamsi Pachamatla: vamsi.pachamatla@ufl.edu github - vamsi3379
 
 Mattaparthi Nitish Veera: nitish.veera@ufl.edu github - VeeraNitish7
+
+
+### Deployment of the application is [peekNShop](https://github.com/Nithin-Kamineni/peekNshop/projects/1)
