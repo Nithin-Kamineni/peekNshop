@@ -10,16 +10,6 @@ import (
 	"testing"
 )
 
-// import (
-// 	"bytes"
-// 	"encoding/json"
-// 	"net/http"
-// 	"net/http/httptest"
-// 	"src/models"
-// 	"src/utils"
-// 	"testing"
-// )
-
 func Test_OrderPayment(t *testing.T) {
 	utils.ConnectTestDatabase()
 
