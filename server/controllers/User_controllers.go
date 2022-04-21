@@ -133,9 +133,8 @@ func ShowFavorateStores(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var s1 models.FavorateStoresObj
 	var s2 models.User3
-	var FavStores []string
-	var storeInf models.Stores_Information
-	var storeInfs []models.Stores_Information
+	var FavStores []models.FavorateStoresObj
+	// var storeInfs []models.Stores_Information
 
 	err := json.NewDecoder(r.Body).Decode(&s1) //ID, accesskey, storeID
 	if err != nil {
@@ -151,22 +150,22 @@ func ShowFavorateStores(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(s1.Acesskey)
 	// if s2.Acesskey == s1.Acesskey {
 	if "" == s1.Acesskey {
-		err = utils.DB.Raw("SELECT favorate_store_id FROM favorate_stores_objs WHERE user_id = ?", s1.UserID).Scan(&FavStores).Error
+		err = utils.DB.Raw("SELECT * FROM favorate_stores_objs WHERE user_id = ?", s1.UserID).Scan(&FavStores).Error
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 			return
 		}
 		//storeID, photo ref, name, address
 
-		for i := 0; i < len(FavStores); i++ {
-			fmt.Println("++++++")
-			fmt.Println(FavStores[i])
-			err = utils.DB.Raw("SELECT * from Stores_informations where store_id = ?", FavStores[i]).Scan(&storeInf).Error
-			fmt.Println("----------")
-			fmt.Println(storeInf)
-			fmt.Println("----------")
-			storeInfs = append(storeInfs, storeInf)
-		}
+		// for i := 0; i < len(FavStores); i++ {
+		// 	fmt.Println("++++++")
+		// 	fmt.Println(FavStores[i])
+		// 	err = utils.DB.Raw("SELECT * from Stores_informations where store_id = ?", FavStores[i]).Scan(&storeInf).Error
+		// 	fmt.Println("----------")
+		// 	fmt.Println(storeInf)
+		// 	fmt.Println("----------")
+		// 	storeInfs = append(storeInfs, storeInf)
+		// }
 		// claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		// 	"issuer":  nil,
 		// 	"expires": time.Now().Add(time.Hour * 24).Unix(),
@@ -180,7 +179,7 @@ func ShowFavorateStores(w http.ResponseWriter, r *http.Request) {
 		// 	json.NewEncoder(w).Encode(nil)
 		// }
 
-		err = json.NewEncoder(w).Encode(storeInfs)
+		err = json.NewEncoder(w).Encode(FavStores)
 		if err != nil {
 			sendErr(w, http.StatusInternalServerError, err.Error())
 		}

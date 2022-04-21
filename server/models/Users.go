@@ -65,6 +65,9 @@ type FavorateStoresObj struct {
 	UserID          string
 	Acesskey        string
 	FavorateStoreID string
+	PhotoRef        string
+	StoreName       string
+	Address         string
 }
 
 type Orders struct {
