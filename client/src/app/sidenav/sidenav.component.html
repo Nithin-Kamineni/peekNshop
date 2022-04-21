@@ -78,7 +78,7 @@
        <div class="mb-3"> 
          <label for="id_Street" class="form-label">Street</label>
          <input formControlName="street" [class.is-invalid]="streetField.touched && streetField.invalid" type="text"
-           class="form-control" id="id_email">
+           class="form-control" id="locationStreet">
          <div *ngIf="streetField.touched && streetField.hasError('required')" class="d-block invalid-feedback">Please
            enter your street.</div>
        </div>
@@ -86,25 +86,25 @@
        <div class="mb-3">
          <label for="id_City" class="form-label">City</label>
          <input formControlName="city" [class.is-invalid]="cityField.touched && cityField.invalid"
-           type="text" class="form-control" id="id_City">
+           type="text" class="form-control" id="city">
          <div *ngIf="cityField.touched && cityField.hasError('required')" class="d-block invalid-feedback">
            Please provide your city</div>
        </div>
        <div class="mb-3">
          <label for="id_State" class="form-label">State</label>
          <input formControlName="state" [class.is-invalid]="stateField.touched && stateField.invalid"
-           type="text" class="form-control" id="id_State">
+           type="text" class="form-control" id="state">
          <div *ngIf="stateField.touched && stateField.hasError('required')" class="d-block invalid-feedback">
            Please provide your state</div>
        </div>
        <div class="mb-3">
          <label for="id_Zipcode" class="form-label">Zip code</label>
          <input formControlName="zipcode" [class.is-invalid]="zipcodeField.touched && zipcodeField.invalid"
-           type="text" class="form-control" id="id_Zipcode">
+           type="text" class="form-control" id="zipcode">
          <div *ngIf="zipcodeField.touched && zipcodeField.hasError('required')" class="d-block invalid-feedback">
            Please provide your Zipcode</div>
        </div>
-       <button [disabled]="locationForm.invalid" id="btn_init_submit" type="submit"  class=" mt-3 btn btn-primary w-100">Submit</button>
+       <button [disabled]="locationForm.invalid" id="locationSubmit" type="submit"  class=" mt-3 btn btn-primary w-100">Submit</button>
        <hr class="my-4">
        </form>
    </div>
