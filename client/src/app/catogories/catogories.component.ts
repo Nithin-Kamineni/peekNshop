@@ -29,7 +29,7 @@ export class CatogoriesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if (!environment.isLocation){
+    if (environment.lat){
       this.getStores()
     }else{
       setTimeout(() => {
@@ -94,14 +94,15 @@ export class CatogoriesComponent implements OnInit {
       console.log(favoriteStoreId)
       console.log(user_id)
       var accesskey = userdetails.accesskey
-
+      console.log(user_id, favoriteStoreId)
       this.api.favstores(user_id, accesskey, favoriteStoreId).subscribe((data: any) => {
       console.log(data)
+      console.log(data.JWToken)
       })
 
       if(this.arr[i]==false){
         this.arr[i]=true
-        document.getElementsByTagName("a")[k].style.backgroundColor = "pink";
+        document.getElementsByTagName("a")[k].style.backgroundColor = "red";
       }else{
         this.arr[i]=false
         document.getElementsByTagName("a")[k].style.backgroundColor = "gray";
