@@ -22,7 +22,7 @@ By using peekNshop users can look at the store's inventory and know whether the 
 [Demo Video of PeekNshop](https://www.youtube.com/watch?v=bLQmdahIzR0)
 
 <strong>Cypress test video - </strong>
-[Cypress test video](https://github.com/Nithin-Kamineni/peekNshop/tree/main/client/cypress/videos)
+[Cypress test video](https://youtu.be/RTktAoyVcZU)
 
 <strong>Backend unit test video - </strong>
 [Backend unit test video](https://youtu.be/fgYtMIBUJJQ)
