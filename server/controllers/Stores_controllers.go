@@ -27,6 +27,20 @@ func AddStore(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func AddingStores(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var storeInfo models.Stores_Information
+	err := json.NewDecoder(r.Body).Decode(&storeInfo)
+	if err != nil {
+		sendErr(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = utils.DB.Save(&storeInfo).Error
+	if err != nil {
+		sendErr(w, http.StatusInternalServerError, err.Error())
+	}
+}
+
 func AddInventory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var store models.Store_inventory

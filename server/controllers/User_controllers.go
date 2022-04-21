@@ -159,8 +159,9 @@ func ShowFavorateStores(w http.ResponseWriter, r *http.Request) {
 		//storeID, photo ref, name, address
 
 		for i := 0; i < len(FavStores); i++ {
-			//fmt.Println(i)
-			err = utils.DB.Raw("SELECT * from Stores_informations where store_id = ? limit 1", FavStores[i]).Scan(&storeInf).Error
+			fmt.Println("++++++")
+			fmt.Println(FavStores[i])
+			err = utils.DB.Raw("SELECT * from Stores_informations where store_id = ?", FavStores[i]).Scan(&storeInf).Error
 			fmt.Println("----------")
 			fmt.Println(storeInf)
 			fmt.Println("----------")
