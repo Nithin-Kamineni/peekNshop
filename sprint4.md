@@ -16,16 +16,15 @@ Github repository link: https://github.com/Nithin-Kamineni/peekNshop.git
 
 By using peekNshop users can look at the store's inventory and know whether the items they are looking for are available or not. They can also find the best deal in terms of cost and quality for the items they are looking for with our application.
 
-### DEMO
-<demo video>
+> Technical stack, their pre-requisites and how to setup and run both frontend and backend can be found at this [wiki](https://github.com/Nithin-Kamineni/peekNshop/wiki/Installation)
 
-Technical stack, their pre-requisites and how to setup and run both frontend and backend can be found at this [wiki](https://github.com/Nithin-Kamineni/peekNshop/wiki/Installation)
+### DEMO
 
 Front End Tests:
-<front_test>
+
   
 Backend Tests:
-<bac_test>
+
 
 
 #  Frontend File Structure
